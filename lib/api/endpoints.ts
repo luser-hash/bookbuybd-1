@@ -55,4 +55,8 @@ export const endpoints = {
   cart: {
     summary: '/cart/summary',
   },
+  orders: {
+    list: '/orders/',
+    create: '/orders/',
+  },
 } as const;

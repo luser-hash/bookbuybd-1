@@ -1,6 +1,14 @@
 'use client';
-import { useState } from 'react';
-import { CartItem, INITIAL_CART, DELIVERY_CHARGE, FREE_DELIVERY_THRESHOLD } from './cartStore';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import {
+  CartItem,
+  INITIAL_CART,
+  DELIVERY_CHARGE,
+  FREE_DELIVERY_THRESHOLD,
+  getStoredCartItems,
+  persistCartItems,
+} from './cartStore';
 
 /* ── Fallback image ── */
 function Img({ src, alt = '', className = '', fallback = '#e2e8f0' }: { src: string; alt?: string; className?: string; fallback?: string }) {
@@ -14,11 +22,15 @@ interface CartProps {
 }
 
 export default function Cart({ onCheckout }: CartProps) {
-  const [items, setItems] = useState<CartItem[]>(INITIAL_CART);
+  const [items, setItems] = useState<CartItem[]>(() => {
+    const stored = getStoredCartItems();
+    return stored.length > 0 ? stored : INITIAL_CART;
+  });
   const [removing, setRemoving] = useState<number | null>(null);
-  const [coupon, setCoupon] = useState('');
-  const [couponApplied, setCouponApplied] = useState(false);
-  const [couponError, setCouponError] = useState('');
+
+  useEffect(() => {
+    persistCartItems(items);
+  }, [items]);
 
   const updateQty = (id: number, delta: number) => {
     setItems(prev => prev.map(it => it.id === id ? { ...it, qty: Math.max(1, it.qty + delta) } : it));
@@ -30,20 +42,12 @@ export default function Cart({ onCheckout }: CartProps) {
   };
 
   const subtotal = items.reduce((s, it) => s + it.price * it.qty, 0);
-  const discount = couponApplied ? Math.round(subtotal * 0.1) : 0;
+  const discount = 0;
   const delivery = subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_CHARGE;
   const total = subtotal - discount + delivery;
   const savings = items.reduce((s, it) => s + ((it.originalPrice ?? it.price) - it.price) * it.qty, 0);
   const totalQty = items.reduce((s, it) => s + it.qty, 0);
   const freeProgress = Math.min(100, (subtotal / FREE_DELIVERY_THRESHOLD) * 100);
-
-  const applyCoupon = () => {
-    if (coupon.trim().toUpperCase() === 'BOOK10') {
-      setCouponApplied(true); setCouponError('');
-    } else {
-      setCouponError('Invalid coupon code'); setCouponApplied(false);
-    }
-  };
 
   return (
     <>
@@ -101,10 +105,13 @@ export default function Cart({ onCheckout }: CartProps) {
                 <p className="text-2xl font-black text-gray-900">Your cart is empty</p>
                 <p className="text-sm text-gray-400 mt-2">Discover thousands of books and add them here!</p>
               </div>
-              <button className="px-8 py-4 rounded-2xl font-black text-white text-sm transition-all hover:-translate-y-1 shadow-xl shadow-blue-200/50"
-                style={{ background: 'linear-gradient(135deg,#3b82f6,#1d4ed8)' }}>
+              <Link
+                href="/"
+                className="px-8 py-4 rounded-2xl font-black text-white text-sm transition-all hover:-translate-y-1 shadow-xl shadow-blue-200/50"
+                style={{ background: 'linear-gradient(135deg,#3b82f6,#1d4ed8)' }}
+              >
                 Browse Books
-              </button>
+              </Link>
             </div>
           )}
 
@@ -171,34 +178,6 @@ export default function Cart({ onCheckout }: CartProps) {
                   </div>
                 ))}
 
-                {/* ── Coupon Card ── */}
-                <div className="bg-white rounded-[1.75rem] p-6 border border-gray-100 shadow-sm">
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
-                    </div>
-                    <h3 className="font-black text-gray-900 text-base">Apply Coupon</h3>
-                  </div>
-                  <div className="flex gap-3">
-                    <input
-                      type="text"
-                      placeholder="Enter code (try: BOOK10)"
-                      value={coupon}
-                      onChange={e => { setCoupon(e.target.value); setCouponError(''); }}
-                      className="flex-1 px-5 py-3.5 text-sm font-semibold rounded-2xl border bg-gray-50 outline-none transition-all focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
-                      style={{ borderColor: couponApplied ? '#3b82f6' : couponError ? '#ef4444' : '#e5e7eb' }}
-                    />
-                    <button
-                      onClick={applyCoupon}
-                      className="px-6 py-3.5 rounded-2xl text-sm font-black text-white transition-all hover:-translate-y-0.5 flex-shrink-0"
-                      style={{ background: couponApplied ? 'linear-gradient(135deg,#10b981,#059669)' : 'linear-gradient(135deg,#1e293b,#0f172a)', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}
-                    >
-                      {couponApplied ? '✓ Applied' : 'Apply'}
-                    </button>
-                  </div>
-                  {couponError && <p className="text-rose-500 text-xs font-bold mt-3 px-1">{couponError}</p>}
-                  {couponApplied && <p className="text-emerald-600 text-xs font-black mt-3 px-1">🎉 10% discount successfully applied!</p>}
-                </div>
               </div>
 
               {/* ── RIGHT: Dark Order Summary ── */}
@@ -214,7 +193,7 @@ export default function Cart({ onCheckout }: CartProps) {
                     {savings > 0 && (
                       <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 mb-6">
                         <svg className="w-5 h-5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <p className="text-xs font-black text-emerald-400">You're saving <span className="text-emerald-300">৳{savings.toLocaleString()}</span> on this order!</p>
+                        <p className="text-xs font-black text-emerald-400">You&apos;re saving <span className="text-emerald-300">৳{savings.toLocaleString()}</span> on this order!</p>
                       </div>
                     )}
 
@@ -224,9 +203,9 @@ export default function Cart({ onCheckout }: CartProps) {
                         <span className="text-gray-400 font-semibold">Subtotal ({totalQty} items)</span>
                         <span className="font-black">৳{subtotal.toLocaleString()}</span>
                       </div>
-                      {couponApplied && (
+                      {discount > 0 && (
                         <div className="flex justify-between items-center text-sm">
-                          <span className="text-purple-400 font-semibold">Coupon (BOOK10)</span>
+                          <span className="text-purple-400 font-semibold">Coupon Discount</span>
                           <span className="font-black text-purple-400">−৳{discount.toLocaleString()}</span>
                         </div>
                       )}

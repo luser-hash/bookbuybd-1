@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ApiError, booksService, type BookAuthor, type BookDetailResponse } from '@/lib/api';
+import { addItemToStoredCart } from './cartStore';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || '';
 const BACKEND_ORIGIN = (() => {
@@ -80,6 +81,7 @@ function DetailState({
 }
 
 export default function BookDetails() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const slug = useMemo(() => searchParams.get('slug')?.trim() ?? '', [searchParams]);
 
@@ -335,8 +337,23 @@ export default function BookDetails() {
               <div className="mt-4 flex flex-wrap gap-2">
                 <button
                   onClick={() => {
+                    const parsedPrice = Number(book.price);
+                    const safePrice = Number.isFinite(parsedPrice) && parsedPrice >= 0 ? parsedPrice : 0;
+
+                    addItemToStoredCart({
+                      id: book.id,
+                      title: book.title,
+                      author: authorName,
+                      cover: coverSrc,
+                      coverFallback: '#1d4ed8',
+                      price: safePrice,
+                      qty: 1,
+                      edition: categoryName,
+                    });
+
                     setAdded(true);
                     setTimeout(() => setAdded(false), 2000);
+                    router.push('/shop');
                   }}
                   className="shop-btn"
                   style={added ? { background: '#10b981', boxShadow: '0 4px 14px rgba(16,185,129,0.35)' } : {}}

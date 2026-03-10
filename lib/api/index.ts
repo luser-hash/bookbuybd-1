@@ -10,5 +10,5 @@ export type * from '@/lib/api/contracts/home';
 export type * from '@/lib/api/contracts/books';
 export type * from '@/lib/api/contracts/printing';
 export type * from '@/lib/api/contracts/contact';
+export type * from '@/lib/api/contracts/orders';
 export type * from '@/lib/api/types';
-

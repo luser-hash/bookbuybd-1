@@ -11,8 +11,10 @@ function Img({ src, alt = '', className = '', fallback = '#e2e8f0' }: { src: str
 interface CheckoutProps {
   items: CartItem[];
   onBack: () => void;
-  onConfirm: (form: CheckoutForm) => void;
+  onConfirm: (form: CheckoutForm) => Promise<void> | void;
   onEdit: (form: CheckoutForm) => void;
+  isSubmitting?: boolean;
+  submitError?: string | null;
 }
 
 type Step = 'form' | 'review';
@@ -30,7 +32,7 @@ function validate(f: CheckoutForm): Errors {
   return e;
 }
 
-export default function Checkout({ items, onBack, onConfirm, onEdit }: CheckoutProps) {
+export default function Checkout({ items, onBack, onConfirm, onEdit, isSubmitting = false, submitError = null }: CheckoutProps) {
   const [step, setStep] = useState<Step>('form');
   const [form, setForm] = useState<CheckoutForm>(EMPTY_FORM);
   const [errors, setErrors] = useState<Errors>({});
@@ -318,18 +320,31 @@ export default function Checkout({ items, onBack, onConfirm, onEdit }: CheckoutP
                         </div>
                         <h2 className="text-xl font-black text-amber-900 tracking-tight">Your Note</h2>
                       </div>
-                      <p className="text-sm text-amber-800 font-medium leading-relaxed italic bg-amber-100/50 rounded-2xl p-5 border border-amber-200/50">"{form.note}"</p>
+                      <p className="text-sm text-amber-800 font-medium leading-relaxed italic bg-amber-100/50 rounded-2xl p-5 border border-amber-200/50">&quot;{form.note}&quot;</p>
+                    </div>
+                  )}
+
+                  {submitError && (
+                    <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700">
+                      {submitError}
                     </div>
                   )}
 
                   <button
-                    onClick={() => onConfirm(form)}
+                    onClick={() => { void onConfirm(form); }}
+                    disabled={isSubmitting}
                     className="group w-full flex items-center justify-center gap-3 py-5 rounded-3xl font-black text-sm transition-all hover:-translate-y-1 active:scale-95 relative overflow-hidden"
-                    style={{ background: 'linear-gradient(135deg,#10b981,#059669)', boxShadow: '0 6px 24px rgba(16,185,129,0.35)', color: '#fff' }}
+                    style={{
+                      background: 'linear-gradient(135deg,#10b981,#059669)',
+                      boxShadow: '0 6px 24px rgba(16,185,129,0.35)',
+                      color: '#fff',
+                      opacity: isSubmitting ? 0.75 : 1,
+                      cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                    }}
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
-                    Confirm & Place Order
+                    {isSubmitting ? 'Placing Order...' : 'Confirm & Place Order'}
                   </button>
                 </div>
               )}
