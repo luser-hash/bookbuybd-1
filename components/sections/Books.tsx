@@ -1,27 +1,16 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { ApiError, booksService } from '@/lib/api';
 
-/* ══════════════════════════════════════════════════════
-   DATA
-══════════════════════════════════════════════════════ */
-const AUTHORS_OF_WEEK = [
-  { name: 'Sebastian Jeremy', img: '/images/authors/author1.jpg', initials: 'SJ', color: '#0d9488' },
-  { name: 'Jonathan Doe', img: '/images/authors/author2.jpg', initials: 'JD', color: '#2563eb' },
-  { name: 'Angeline Summer', img: '/images/authors/author3.jpg', initials: 'AS', color: '#7c3aed' },
-  { name: 'Noah Jones', img: '/images/authors/author4.jpg', initials: 'NJ', color: '#b45309' },
-  { name: 'Tommy Adam', img: '/images/authors/author5.jpg', initials: 'TA', color: '#be185d' },
-  { name: 'Ian Cassandra', img: '/images/authors/author6.jpg', initials: 'IC', color: '#047857' },
+interface GenreOption {
+  name: string;
+  slug: string;
+}
+
+const DEFAULT_GENRE_OPTIONS: GenreOption[] = [
+  { name: 'All Genres', slug: '' },
 ];
-
-const BOOKS_OF_YEAR = [
-  { title: 'Big Magic: Creative Living Beyond Fear', author: 'by Elizabeth Gilbert', img: '/images/books/year1.jpg' },
-  { title: 'Big Magic: Creative Living Beyond Fear', author: 'by Elizabeth Gilbert', img: '/images/books/year2.jpg' },
-  { title: 'Big Magic: Creative Living Beyond Fear', author: 'by Elizabeth Gilbert', img: '/images/books/year3.jpg' },
-  { title: 'Big Magic: Creative Living Beyond Fear', author: 'by Elizabeth Gilbert', img: '/images/books/year4.jpg' },
-];
-
-const GENRES = ['All Genres', 'Business', 'Science', 'Fiction', 'Philosophy', 'Biography'];
 
 const GENRE_META: Record<string, { description: string; color: string; accent: string }> = {
   'All Genres': { description: 'Explore our full collection across all genres.', color: '#1e40af', accent: '#dbeafe' },
@@ -32,29 +21,407 @@ const GENRE_META: Record<string, { description: string; color: string; accent: s
   'Biography': { description: 'Real lives, real lessons — stories of people who shaped the world.', color: '#831843', accent: '#fce7f3' },
 };
 
-const BOOKS = [
-  { id: 1, title: 'Act Like It', author: 'by Lucy Parker', genre: 'Fiction', rating: 4, reviews: 291, likes: 498, excerpt: 'Lorem ipsum dolor sit amet, consec te adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore si.', img: '/images/books/book1.jpg', imgFallbackColor: '#e11d48', likedBy: 'Samantha William and 2 other friends like this', likedByImg: ['/images/avatars/av1.jpg', '/images/avatars/av2.jpg'] },
-  { id: 2, title: 'Alone On The Wall', author: 'by Alex Honnold', genre: 'Biography', rating: 4, reviews: 148, likes: 612, excerpt: 'Lorem ipsum dolor sit amet, consec te adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore si.', img: '/images/books/book2.jpg', imgFallbackColor: '#0284c7', likedBy: 'Kimberly Jones like this', likedByImg: ['/images/avatars/av3.jpg'] },
-  { id: 3, title: "The Painter's Daughter", author: 'by Lucy Parker', genre: 'Fiction', rating: 4, reviews: 291, likes: 384, excerpt: 'Lorem ipsum dolor sit amet, consec te adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore si.', img: '/images/books/book3.jpg', imgFallbackColor: '#7c3aed', likedBy: 'Adam and Kimberly like this', likedByImg: ['/images/avatars/av4.jpg', '/images/avatars/av5.jpg'] },
-  { id: 4, title: 'Dark Murder', author: 'by Alex Ferguson', genre: 'Fiction', rating: 5, reviews: 100, likes: 219, excerpt: 'Lorem ipsum dolor sit amet, consec te adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore si.', img: '/images/books/book4.jpg', imgFallbackColor: '#1e293b', likedBy: 'Samantha William and 2 other friends like this', likedByImg: ['/images/avatars/av1.jpg', '/images/avatars/av2.jpg'] },
-  { id: 5, title: 'Alex Ferguson: My Auto...', author: 'by Alex Ferguson', genre: 'Biography', rating: 4, reviews: 291, likes: 742, excerpt: 'Lorem ipsum dolor sit amet, consec te adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore si.', img: '/images/books/book5.jpg', imgFallbackColor: '#374151', likedBy: 'Samantha William and 2 other friends like this', likedByImg: ['/images/avatars/av1.jpg', '/images/avatars/av2.jpg'] },
-  { id: 6, title: 'The Devils Playground', author: 'by Elvis Freed', genre: 'Fiction', rating: 3, reviews: 80, likes: 155, excerpt: 'Lorem ipsum dolor sit amet, consec te adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore si.', img: '/images/books/book6.jpg', imgFallbackColor: '#b45309', likedBy: 'Kimberly Jones like this', likedByImg: ['/images/avatars/av3.jpg'] },
-  { id: 7, title: 'Inconceivable', author: 'by Tegan Wren', genre: 'Business', rating: 4, reviews: 115, likes: 329, excerpt: 'Lorem ipsum dolor sit amet, consec te adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore si.', img: '/images/books/book7.jpg', imgFallbackColor: '#6b7280', likedBy: 'Adam and Kimberly like this', likedByImg: ['/images/avatars/av4.jpg', '/images/avatars/av5.jpg'] },
-  { id: 8, title: 'Four Days', author: 'by Alex Ryan', genre: 'Science', rating: 4, reviews: 200, likes: 410, excerpt: 'Lorem ipsum dolor sit amet, consec te adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore si.', img: '/images/books/book8.jpg', imgFallbackColor: '#0d9488', likedBy: 'Samantha William and 2 other friends like this', likedByImg: ['/images/avatars/av1.jpg', '/images/avatars/av2.jpg'] },
-  { id: 9, title: 'The Lean Startup', author: 'by Eric Ries', genre: 'Business', rating: 5, reviews: 512, likes: 890, excerpt: 'How today\'s entrepreneurs use continuous innovation to create radically successful businesses from scratch.', img: '/images/books/book9.jpg', imgFallbackColor: '#0f766e', likedBy: 'Samantha William and 2 others like this', likedByImg: ['/images/avatars/av1.jpg', '/images/avatars/av2.jpg'] },
-  { id: 10, title: 'Zero to One', author: 'by Peter Thiel', genre: 'Business', rating: 5, reviews: 444, likes: 720, excerpt: 'Notes on startups, or how to build the future. A must-read for every entrepreneur.', img: '/images/books/book10.jpg', imgFallbackColor: '#1d4ed8', likedBy: 'Adam and Kimberly like this', likedByImg: ['/images/avatars/av4.jpg', '/images/avatars/av5.jpg'] },
-  { id: 11, title: 'A Brief History of Time', author: 'by Stephen Hawking', genre: 'Science', rating: 5, reviews: 820, likes: 1200, excerpt: 'From the Big Bang to black holes, a landmark book by the world\'s most famous scientist.', img: '/images/books/book11.jpg', imgFallbackColor: '#1e3a8a', likedBy: 'Kimberly Jones and others like this', likedByImg: ['/images/avatars/av3.jpg'] },
-  { id: 12, title: 'Sapiens', author: 'by Yuval Noah Harari', genre: 'Science', rating: 5, reviews: 950, likes: 1450, excerpt: 'A brief history of humankind — from the Stone Age to the twenty-first century.', img: '/images/books/book12.jpg', imgFallbackColor: '#0369a1', likedBy: 'Samantha William and 2 others like this', likedByImg: ['/images/avatars/av1.jpg', '/images/avatars/av2.jpg'] },
-  { id: 13, title: 'Meditations', author: 'by Marcus Aurelius', genre: 'Philosophy', rating: 5, reviews: 640, likes: 980, excerpt: 'Personal writings of Roman Emperor Marcus Aurelius — a timeless guide to Stoic wisdom.', img: '/images/books/book13.jpg', imgFallbackColor: '#5b21b6', likedBy: 'Adam and Kimberly like this', likedByImg: ['/images/avatars/av4.jpg', '/images/avatars/av5.jpg'] },
-  { id: 14, title: 'The Republic', author: 'by Plato', genre: 'Philosophy', rating: 4, reviews: 310, likes: 540, excerpt: 'One of the most influential works in Western philosophy — exploring justice, beauty and equality.', img: '/images/books/book14.jpg', imgFallbackColor: '#4c1d95', likedBy: 'Kimberly Jones like this', likedByImg: ['/images/avatars/av3.jpg'] },
-  { id: 15, title: 'Steve Jobs', author: 'by Walter Isaacson', genre: 'Biography', rating: 5, reviews: 730, likes: 1100, excerpt: 'The exclusive biography of Apple\'s visionary co-founder, based on more than forty interviews.', img: '/images/books/book15.jpg', imgFallbackColor: '#be185d', likedBy: 'Samantha William and 2 others like this', likedByImg: ['/images/avatars/av1.jpg', '/images/avatars/av2.jpg'] },
-  { id: 16, title: 'Educated', author: 'by Tara Westover', genre: 'Biography', rating: 5, reviews: 610, likes: 870, excerpt: 'A memoir about a young woman who grows up in a strict survivalist family and goes on to earn a PhD from Cambridge.', img: '/images/books/book16.jpg', imgFallbackColor: '#9d174d', likedBy: 'Adam and Kimberly like this', likedByImg: ['/images/avatars/av4.jpg', '/images/avatars/av5.jpg'] },
-];
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function slugifyCategory(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+function extractGenreOptions(payload: unknown): GenreOption[] {
+  let list: unknown[] = [];
+
+  if (Array.isArray(payload)) {
+    list = payload;
+  } else if (isRecord(payload)) {
+    if (Array.isArray(payload.results)) {
+      list = payload.results;
+    } else if (Array.isArray(payload.items)) {
+      list = payload.items;
+    } else if (Array.isArray(payload.data)) {
+      list = payload.data;
+    }
+  }
+
+  const options = list
+    .map((item) => {
+      if (typeof item === 'string') {
+        const name = item.trim();
+        if (!name) return null;
+        return { name, slug: slugifyCategory(name) };
+      }
+      if (isRecord(item)) {
+        const nameCandidate = typeof item.name === 'string'
+          ? item.name
+          : typeof item.title === 'string'
+            ? item.title
+            : '';
+        const name = nameCandidate.trim();
+        if (!name) return null;
+        const slugCandidate = typeof item.slug === 'string' ? item.slug : slugifyCategory(name);
+        const slug = slugCandidate.trim();
+        return { name, slug };
+      }
+      return null;
+    })
+    .filter((option): option is GenreOption => option !== null);
+
+  const unique = new Map<string, GenreOption>();
+  options.forEach((option) => {
+    if (!unique.has(option.slug)) {
+      unique.set(option.slug, option);
+    }
+  });
+
+  return Array.from(unique.values());
+}
 
 /* ══════════════════════════════════════
    HELPERS
 ══════════════════════════════════════ */
-type Book = typeof BOOKS[0];
+interface Book {
+  id: number;
+  title: string;
+  author: string;
+  genre: string;
+  rating: number;
+  reviews: number;
+  likes: number;
+  excerpt: string;
+  img: string;
+  imgFallbackColor: string;
+  likedBy: string;
+  likedByImg: string[];
+}
+
+interface SidebarAuthor {
+  name: string;
+  initials: string;
+  color: string;
+  src: string;
+}
+
+interface SidebarBook {
+  title: string;
+  author: string;
+  img: string;
+}
+
+type AuthorLookup = Record<number, string>;
+
+const AUTHOR_COLORS = ['#0d9488', '#2563eb', '#7c3aed', '#b45309', '#be185d', '#047857'];
+const BOOK_FALLBACK_COLORS = ['#e11d48', '#0284c7', '#7c3aed', '#1e293b', '#374151', '#b45309', '#6b7280', '#0d9488'];
+const BOOK_FALLBACK_LIKED_BY = ['/images/avatars/av1.jpg', '/images/avatars/av2.jpg'];
+const SIDEBAR_BOOKS_OF_YEAR_LIMIT = 5;
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+}
+
+function formatAuthorLabel(value: string): string {
+  const author = value.trim();
+  if (!author) return 'by Unknown Author';
+  return author.toLowerCase().startsWith('by ') ? author : `by ${author}`;
+}
+
+function asTrimmedString(value: unknown): string {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+function toInteger(value: unknown): number | null {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return Math.trunc(value);
+  }
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (!trimmed) return null;
+    if (!/^\d+$/.test(trimmed)) return null;
+    const parsed = Number(trimmed);
+    return Number.isFinite(parsed) ? Math.trunc(parsed) : null;
+  }
+  return null;
+}
+
+function getExplicitAuthorName(item: Record<string, unknown>): string {
+  const authorObject = isRecord(item.author) ? item.author : null;
+  const authorDetail = isRecord(item.author_detail) ? item.author_detail : null;
+  const authorDetails = isRecord(item.author_details) ? item.author_details : null;
+  const userObject = isRecord(item.user) ? item.user : null;
+
+  return (
+    asTrimmedString(item.author_name) ||
+    asTrimmedString(item.authorName) ||
+    asTrimmedString(item.writer_name) ||
+    asTrimmedString(item.writerName) ||
+    (authorObject ? asTrimmedString(authorObject.name) || asTrimmedString(authorObject.full_name) : '') ||
+    (authorDetail ? asTrimmedString(authorDetail.name) || asTrimmedString(authorDetail.full_name) : '') ||
+    (authorDetails ? asTrimmedString(authorDetails.name) || asTrimmedString(authorDetails.full_name) : '') ||
+    (userObject ? asTrimmedString(userObject.name) : '')
+  );
+}
+
+function resolveAuthorName(item: Record<string, unknown>, authorLookup: AuthorLookup = {}): string {
+  const explicitName = getExplicitAuthorName(item);
+  if (explicitName) return explicitName;
+
+  const authorIdFromAuthor = toInteger(item.author);
+  if (authorIdFromAuthor !== null && authorLookup[authorIdFromAuthor]) {
+    return authorLookup[authorIdFromAuthor];
+  }
+
+  const authorIdFromField = toInteger(item.author_id);
+  if (authorIdFromField !== null && authorLookup[authorIdFromField]) {
+    return authorLookup[authorIdFromField];
+  }
+
+  const authorRaw = asTrimmedString(item.author);
+  if (authorRaw && toInteger(authorRaw) === null) {
+    return authorRaw;
+  }
+
+  return '';
+}
+
+function extractAuthorLookupFromPayload(payload: unknown): AuthorLookup {
+  const lookup: AuthorLookup = {};
+  const list = extractBookListFromPayload(payload);
+
+  list.forEach((entry) => {
+    if (!isRecord(entry)) return;
+
+    const authorObject = isRecord(entry.author) ? entry.author : null;
+    const authorId =
+      (authorObject ? toInteger(authorObject.id) : null) ??
+      toInteger(entry.author_id) ??
+      toInteger(entry.author);
+
+    if (authorId === null) return;
+
+    const explicitName = getExplicitAuthorName(entry);
+    if (explicitName) {
+      lookup[authorId] = explicitName;
+    }
+  });
+
+  return lookup;
+}
+
+function mergeAuthorLookups(base: AuthorLookup, incoming: AuthorLookup): AuthorLookup {
+  const entries = Object.entries(incoming);
+  if (entries.length === 0) return base;
+
+  let changed = false;
+  const next: AuthorLookup = { ...base };
+
+  entries.forEach(([idKey, name]) => {
+    const id = Number(idKey);
+    if (!Number.isFinite(id)) return;
+    if (!name || next[id] === name) return;
+    next[id] = name;
+    changed = true;
+  });
+
+  return changed ? next : base;
+}
+
+function extractAuthorsFromPayload(payload: unknown): SidebarAuthor[] {
+  let list = extractBookListFromPayload(payload);
+
+  if (list.length === 0 && isRecord(payload)) {
+    if (isRecord(payload.author)) {
+      list = [payload.author];
+    } else if (
+      typeof payload.name === 'string' ||
+      typeof payload.author_name === 'string' ||
+      typeof payload.author === 'string'
+    ) {
+      list = [payload];
+    }
+  }
+
+  return list
+    .map((item, index) => {
+      if (typeof item === 'string') {
+        const name = item.trim();
+        if (!name) return null;
+        return {
+          name,
+          initials: getInitials(name),
+          color: AUTHOR_COLORS[index % AUTHOR_COLORS.length],
+          src: '',
+        };
+      }
+
+      if (!isRecord(item)) return null;
+
+      const name =
+        typeof item.name === 'string'
+          ? item.name
+          : typeof item.author_name === 'string'
+            ? item.author_name
+            : typeof item.author === 'string'
+              ? item.author
+              : isRecord(item.user) && typeof item.user.name === 'string'
+                ? item.user.name
+                : '';
+
+      if (!name.trim()) return null;
+
+      const src =
+        typeof item.image === 'string'
+          ? item.image
+          : typeof item.avatar === 'string'
+            ? item.avatar
+            : typeof item.photo === 'string'
+              ? item.photo
+              : typeof item.profile_image === 'string'
+                ? item.profile_image
+                : isRecord(item.author) && typeof item.author.image === 'string'
+                  ? item.author.image
+                : '';
+
+      return {
+        name,
+        initials: getInitials(name),
+        color: AUTHOR_COLORS[index % AUTHOR_COLORS.length],
+        src,
+      };
+    })
+    .filter((author): author is SidebarAuthor => author !== null);
+}
+
+function extractBooksOfYearFromPayload(payload: unknown, authorLookup: AuthorLookup = {}): SidebarBook[] {
+  let list = extractBookListFromPayload(payload);
+
+  if (list.length === 0 && isRecord(payload)) {
+    if (Array.isArray(payload.books)) {
+      list = payload.books;
+    } else if (isRecord(payload.book)) {
+      list = [payload.book];
+    } else if (typeof payload.title === 'string') {
+      list = [payload];
+    }
+  }
+
+  return list
+    .map((item) => {
+      if (!isRecord(item)) return null;
+
+      const title =
+        typeof item.title === 'string'
+          ? item.title.trim()
+          : typeof item.name === 'string'
+            ? item.name.trim()
+            : '';
+      if (!title) return null;
+
+      const authorRaw = resolveAuthorName(item, authorLookup);
+
+      const image =
+        typeof item.image === 'string'
+          ? item.image
+          : typeof item.cover_image === 'string'
+            ? item.cover_image
+            : typeof item.coverImage === 'string'
+              ? item.coverImage
+              : '';
+
+      return {
+        title,
+        author: formatAuthorLabel(authorRaw),
+        img: image,
+      };
+    })
+    .filter((book): book is SidebarBook => book !== null);
+}
+
+function toNumber(value: unknown, fallback: number): number {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  if (typeof value === 'string') {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) return parsed;
+  }
+  return fallback;
+}
+
+function extractBookListFromPayload(payload: unknown): unknown[] {
+  if (Array.isArray(payload)) return payload;
+  if (isRecord(payload)) {
+    if (Array.isArray(payload.results)) return payload.results;
+    if (Array.isArray(payload.items)) return payload.items;
+    if (Array.isArray(payload.data)) return payload.data;
+  }
+  return [];
+}
+
+function normalizeApiBook(item: unknown, index: number): Book | null {
+  if (!isRecord(item)) return null;
+
+  const title = typeof item.title === 'string' ? item.title.trim() : '';
+  if (!title) return null;
+
+  const id = toNumber(item.id, index + 1);
+  const authorRaw = resolveAuthorName(item);
+  const author = formatAuthorLabel(authorRaw);
+
+  const categoryName =
+    typeof item.category_name === 'string'
+      ? item.category_name
+      : isRecord(item.category) && typeof item.category.name === 'string'
+        ? item.category.name
+        : typeof item.genre === 'string'
+          ? item.genre
+          : 'Uncategorized';
+
+  const image =
+    typeof item.image === 'string'
+      ? item.image
+      : typeof item.cover_image === 'string'
+        ? item.cover_image
+        : typeof item.coverImage === 'string'
+          ? item.coverImage
+          : '/images/books/book1.jpg';
+
+  return {
+    id,
+    title,
+    author,
+    genre: categoryName,
+    rating: Math.max(1, Math.min(5, Math.round(toNumber(item.rating, 4)))),
+    reviews: toNumber(item.review_count ?? item.reviews, 0),
+    likes: toNumber(item.likes ?? item.total_sold, 0),
+    excerpt:
+      typeof item.excerpt === 'string'
+        ? item.excerpt
+        : typeof item.description === 'string'
+          ? item.description
+          : 'Read more about this book in the detail page.',
+    img: image,
+    imgFallbackColor: BOOK_FALLBACK_COLORS[index % BOOK_FALLBACK_COLORS.length],
+    likedBy: 'Readers from BookBuyBD like this',
+    likedByImg: BOOK_FALLBACK_LIKED_BY,
+  };
+}
+
+function normalizeApiBooks(payload: unknown, authorLookup: AuthorLookup = {}): Book[] {
+  const list = extractBookListFromPayload(payload);
+  return list
+    .map((item, index) => {
+      if (!isRecord(item)) return null;
+      const authorName = resolveAuthorName(item, authorLookup);
+      const normalized = authorName ? { ...item, author: authorName } : item;
+      return normalizeApiBook(normalized, index);
+    })
+    .filter((book): book is Book => book !== null);
+}
 
 function Stars({ count }: { count: number }) {
   return (
@@ -70,12 +437,13 @@ function Stars({ count }: { count: number }) {
 
 function AvatarImg({ src, initials, size = 24, color = '#6b7280' }: { src: string; initials: string; size?: number; color?: string }) {
   const [err, setErr] = useState(false);
+  const showFallback = err || !src;
   return (
     <div
       className="rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center text-white font-bold"
-      style={{ width: size, height: size, background: err ? color : undefined, fontSize: size * 0.38 }}
+      style={{ width: size, height: size, background: showFallback ? color : undefined, fontSize: size * 0.38 }}
     >
-      {!err
+      {!showFallback
         ? <img src={src} alt={initials} className="w-full h-full object-cover" onError={() => setErr(true)} />
         : <span>{initials[0]}</span>}
     </div>
@@ -84,9 +452,10 @@ function AvatarImg({ src, initials, size = 24, color = '#6b7280' }: { src: strin
 
 function BookCoverImg({ src, color, title }: { src: string; color: string; title: string }) {
   const [err, setErr] = useState(false);
+  const showFallback = err || !src;
   return (
-    <div className="w-full h-full rounded overflow-hidden" style={{ background: err ? color : undefined }}>
-      {!err
+    <div className="w-full h-full rounded overflow-hidden" style={{ background: showFallback ? color : undefined }}>
+      {!showFallback
         ? <img src={src} alt={title} className="w-full h-full object-cover" onError={() => setErr(true)} />
         : (
           <div className="w-full h-full flex items-center justify-center p-2" style={{ background: color }}>
@@ -100,25 +469,47 @@ function BookCoverImg({ src, color, title }: { src: string; color: string; title
 /* ══════════════════════════════════════
    SIDEBAR
 ══════════════════════════════════════ */
-function Sidebar({ onGenreClick }: { onGenreClick: (g: string) => void }) {
+function Sidebar({
+  onGenreClick,
+  genres,
+  books,
+  authorsOfWeek,
+  authorsLoading,
+  booksOfYear,
+  booksOfYearLoading,
+}: {
+  onGenreClick: (g: string) => void;
+  genres: string[];
+  books: Book[];
+  authorsOfWeek: SidebarAuthor[];
+  authorsLoading: boolean;
+  booksOfYear: SidebarBook[];
+  booksOfYearLoading: boolean;
+}) {
   return (
     <aside className="flex flex-col gap-8" style={{ width: 180, minWidth: 180 }}>
       <div>
         <h3 className="text-sm font-bold text-gray-800 mb-3">Author of the week</h3>
         <ul className="space-y-2.5">
-          {AUTHORS_OF_WEEK.map((a, i) => (
+          {authorsOfWeek.map((a, i) => (
             <li key={i} className="flex items-center gap-2.5 group cursor-pointer">
-              <AvatarImg src={a.img} initials={a.initials} size={30} color={a.color} />
+              <AvatarImg src={a.src} initials={a.initials} size={30} color={a.color} />
               <span className="text-xs text-gray-700 group-hover:text-blue-600 transition font-medium">{a.name}</span>
             </li>
           ))}
+          {authorsLoading && (
+            <li className="text-[11px] text-gray-400">Loading authors...</li>
+          )}
+          {!authorsLoading && authorsOfWeek.length === 0 && (
+            <li className="text-[11px] text-gray-400">No authors available</li>
+          )}
         </ul>
       </div>
       <div className="h-px bg-gray-100" />
       <div>
         <h3 className="text-sm font-bold text-gray-800 mb-3">Books of the year</h3>
         <ul className="space-y-3">
-          {BOOKS_OF_YEAR.map((b, i) => (
+          {booksOfYear.map((b, i) => (
             <li key={i} className="flex gap-2.5 group cursor-pointer">
               <div className="flex-shrink-0 rounded-md shadow-sm overflow-hidden w-12 aspect-[2/3]">
                 <BookCoverImg src={b.img} color={['#7c3aed', '#0d9488', '#b45309', '#be185d'][i % 4]} title={b.title} />
@@ -129,6 +520,12 @@ function Sidebar({ onGenreClick }: { onGenreClick: (g: string) => void }) {
               </div>
             </li>
           ))}
+          {booksOfYearLoading && (
+            <li className="text-[11px] text-gray-400">Loading books...</li>
+          )}
+          {!booksOfYearLoading && booksOfYear.length === 0 && (
+            <li className="text-[11px] text-gray-400">No books available</li>
+          )}
         </ul>
       </div>
       {/* Genre quick links */}
@@ -136,8 +533,8 @@ function Sidebar({ onGenreClick }: { onGenreClick: (g: string) => void }) {
       <div>
         <h3 className="text-sm font-bold text-gray-800 mb-3">Browse Genres</h3>
         <ul className="space-y-1.5">
-          {GENRES.filter(g => g !== 'All Genres').map(g => {
-            const meta = GENRE_META[g];
+          {genres.filter(g => g !== 'All Genres').map(g => {
+            const meta = GENRE_META[g] ?? GENRE_META['All Genres'];
             return (
               <li key={g}>
                 <button
@@ -149,7 +546,7 @@ function Sidebar({ onGenreClick }: { onGenreClick: (g: string) => void }) {
                     className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
                     style={{ background: meta.accent, color: meta.color }}
                   >
-                    {BOOKS.filter(b => b.genre === g).length}
+                    {books.filter(b => b.genre === g).length}
                   </span>
                 </button>
               </li>
@@ -254,10 +651,14 @@ const DETAIL_PAGE_SIZE = 6;
 
 function CategoryDetailPage({
   genre,
+  genres,
+  books,
   onBack,
   onGenreSwitch,
 }: {
   genre: string;
+  genres: string[];
+  books: Book[];
   onBack: () => void;
   onGenreSwitch: (g: string) => void;
 }) {
@@ -265,7 +666,7 @@ function CategoryDetailPage({
   const [sort, setSort] = useState<'popular' | 'rating' | 'reviews'>('popular');
 
   const meta = GENRE_META[genre] ?? GENRE_META['All Genres'];
-  const allBooks = genre === 'All Genres' ? BOOKS : BOOKS.filter(b => b.genre === genre);
+  const allBooks = books;
 
   const sorted = [...allBooks].sort((a, b) => {
     if (sort === 'popular') return b.likes - a.likes;
@@ -312,7 +713,7 @@ function CategoryDetailPage({
 
           {/* Other genre quick links */}
           <div className="flex gap-2 flex-wrap justify-end max-w-xs">
-            {GENRES.filter(g => g !== 'All Genres' && g !== genre).map(g => (
+            {genres.filter(g => g !== 'All Genres' && g !== genre).map(g => (
               <button
                 key={g}
                 onClick={() => onGenreSwitch(g)}
@@ -389,14 +790,16 @@ const PREVIEW_SIZE = 4;
 
 function GenrePreviewSection({
   genre,
+  books,
   onViewMore,
 }: {
   genre: string;
+  books: Book[];
   onViewMore: (g: string) => void;
 }) {
-  const meta = GENRE_META[genre];
-  const books = BOOKS.filter(b => b.genre === genre).slice(0, PREVIEW_SIZE);
-  const total = BOOKS.filter(b => b.genre === genre).length;
+  const meta = GENRE_META[genre] ?? GENRE_META['All Genres'];
+  const genreBooks = books.filter(b => b.genre === genre).slice(0, PREVIEW_SIZE);
+  const total = books.filter(b => b.genre === genre).length;
 
   return (
     <div className="mb-8">
@@ -431,7 +834,7 @@ function GenrePreviewSection({
 
       {/* Preview cards row */}
       <div className="grid grid-cols-2 gap-x-6">
-        {books.map(book => <BookCard key={book.id} book={book} />)}
+        {genreBooks.map(book => <BookCard key={book.id} book={book} />)}
       </div>
     </div>
   );
@@ -441,9 +844,162 @@ function GenrePreviewSection({
    MAIN EXPORT
 ══════════════════════════════════════ */
 export default function Books() {
+  const [genreOptions, setGenreOptions] = useState<GenreOption[]>(DEFAULT_GENRE_OPTIONS);
   const [activeGenre, setActiveGenre] = useState('All Genres');
   const [detailGenre, setDetailGenre] = useState<string | null>(null);
   const [allGenreVisible, setAllGenreVisible] = useState(PREVIEW_SIZE);
+  const [genreError, setGenreError] = useState<string | null>(null);
+  const [allBooks, setAllBooks] = useState<Book[]>([]);
+  const [genreBooks, setGenreBooks] = useState<Book[]>([]);
+  const [booksLoading, setBooksLoading] = useState(true);
+  const [booksError, setBooksError] = useState<string | null>(null);
+  const [authorLookup, setAuthorLookup] = useState<AuthorLookup>({});
+  const [authorsOfWeek, setAuthorsOfWeek] = useState<SidebarAuthor[]>([]);
+  const [authorsLoading, setAuthorsLoading] = useState(true);
+  const [authorsError, setAuthorsError] = useState<string | null>(null);
+  const [booksOfYear, setBooksOfYear] = useState<SidebarBook[]>([]);
+  const [booksOfYearLoading, setBooksOfYearLoading] = useState(true);
+  const [booksOfYearError, setBooksOfYearError] = useState<string | null>(null);
+
+  const genres = genreOptions.map((option) => option.name);
+
+  useEffect(() => {
+    const loadGenres = async () => {
+      try {
+        setGenreError(null);
+        const payload = await booksService.getCategories();
+        const apiGenres = extractGenreOptions(payload);
+
+        if (apiGenres.length === 0) {
+          setGenreOptions(DEFAULT_GENRE_OPTIONS);
+          return;
+        }
+
+        setGenreOptions([
+          { name: 'All Genres', slug: '' },
+          ...apiGenres.filter((genre) => genre.slug !== ''),
+        ]);
+      } catch (error) {
+        setGenreError(error instanceof ApiError ? error.message : 'Failed to load genres.');
+        setGenreOptions(DEFAULT_GENRE_OPTIONS);
+      }
+    };
+
+    void loadGenres();
+  }, []);
+
+  useEffect(() => {
+    const loadAllBooks = async () => {
+      setBooksLoading(true);
+      setBooksError(null);
+
+      try {
+        const payload = await booksService.getCatalog();
+        const lookupFromPayload = extractAuthorLookupFromPayload(payload);
+        setAuthorLookup((prev) => mergeAuthorLookups(prev, lookupFromPayload));
+        const mapped = normalizeApiBooks(payload, lookupFromPayload);
+        setAllBooks(mapped);
+      } catch (error) {
+        setBooksError(error instanceof ApiError ? error.message : 'Failed to load books.');
+        setAllBooks([]);
+      } finally {
+        setBooksLoading(false);
+      }
+    };
+
+    void loadAllBooks();
+  }, []);
+
+  useEffect(() => {
+    const loadAuthorsOfWeek = async () => {
+      setAuthorsLoading(true);
+      setAuthorsError(null);
+
+      try {
+        const payload = await booksService.getAuthorOfWeek();
+        setAuthorsOfWeek(extractAuthorsFromPayload(payload));
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 404) {
+          setAuthorsError(null);
+        } else {
+          setAuthorsError(error instanceof ApiError ? error.message : 'Failed to load author of the week.');
+        }
+        setAuthorsOfWeek([]);
+      } finally {
+        setAuthorsLoading(false);
+      }
+    };
+
+    void loadAuthorsOfWeek();
+  }, []);
+
+  useEffect(() => {
+    const loadBooksOfYear = async () => {
+      setBooksOfYearLoading(true);
+      setBooksOfYearError(null);
+
+      try {
+        const currentYear = new Date().getFullYear();
+        const payload = await booksService.getBooksOfYear({
+          year: currentYear,
+          limit: SIDEBAR_BOOKS_OF_YEAR_LIMIT,
+        });
+        const lookupFromPayload = extractAuthorLookupFromPayload(payload);
+        setAuthorLookup((prev) => mergeAuthorLookups(prev, lookupFromPayload));
+        const mergedLookup = mergeAuthorLookups(authorLookup, lookupFromPayload);
+        setBooksOfYear(extractBooksOfYearFromPayload(payload, mergedLookup));
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 404) {
+          setBooksOfYearError(null);
+        } else {
+          setBooksOfYearError(error instanceof ApiError ? error.message : 'Failed to load books of the year.');
+        }
+        setBooksOfYear([]);
+      } finally {
+        setBooksOfYearLoading(false);
+      }
+    };
+
+    void loadBooksOfYear();
+  }, [authorLookup]);
+
+  const effectiveActiveGenre = genres.includes(activeGenre) ? activeGenre : 'All Genres';
+  const effectiveDetailGenre = detailGenre && genres.includes(detailGenre) ? detailGenre : null;
+  const targetGenre = effectiveDetailGenre ?? effectiveActiveGenre;
+
+  useEffect(() => {
+    const loadGenreBooks = async () => {
+      if (targetGenre === 'All Genres') {
+        setGenreBooks(allBooks);
+        return;
+      }
+
+      const slug = genreOptions.find((option) => option.name === targetGenre)?.slug || slugifyCategory(targetGenre);
+      if (!slug) {
+        setGenreBooks([]);
+        return;
+      }
+
+      setBooksLoading(true);
+      setBooksError(null);
+      setGenreBooks([]);
+
+      try {
+        const payload = await booksService.getCatalog({ category: slug });
+        const lookupFromPayload = extractAuthorLookupFromPayload(payload);
+        setAuthorLookup((prev) => mergeAuthorLookups(prev, lookupFromPayload));
+        const mergedLookup = mergeAuthorLookups(authorLookup, lookupFromPayload);
+        setGenreBooks(normalizeApiBooks(payload, mergedLookup));
+      } catch (error) {
+        setBooksError(error instanceof ApiError ? error.message : 'Failed to load books.');
+        setGenreBooks([]);
+      } finally {
+        setBooksLoading(false);
+      }
+    };
+
+    void loadGenreBooks();
+  }, [allBooks, genreOptions, targetGenre, authorLookup]);
 
   // navigate to detail view
   const goToDetail = (g: string) => {
@@ -455,11 +1011,11 @@ export default function Books() {
   const goBack = () => setDetailGenre(null);
 
   /* ── filtered list for "All Genres" tab ── */
-  const filteredAll = BOOKS.filter(b =>
-    activeGenre === 'All Genres' ? true : b.genre === activeGenre
-  );
+  const filteredAll = effectiveActiveGenre === 'All Genres' ? allBooks : genreBooks;
   const shownAll = filteredAll.slice(0, allGenreVisible);
   const hasMoreAll = allGenreVisible < filteredAll.length;
+  const activeMeta = GENRE_META[effectiveActiveGenre] ?? GENRE_META['All Genres'];
+  const detailBooks = effectiveDetailGenre === 'All Genres' ? allBooks : genreBooks;
 
   return (
     <>
@@ -474,7 +1030,15 @@ export default function Books() {
         <div className="flex gap-8">
 
           {/* ── Sidebar ── */}
-          <Sidebar onGenreClick={goToDetail} />
+          <Sidebar
+            onGenreClick={goToDetail}
+            genres={genres}
+            books={allBooks}
+            authorsOfWeek={authorsOfWeek}
+            authorsLoading={authorsLoading}
+            booksOfYear={booksOfYear}
+            booksOfYearLoading={booksOfYearLoading}
+          />
 
           {/* ── Divider ── */}
           <div className="w-px bg-gray-100 flex-shrink-0" />
@@ -483,9 +1047,11 @@ export default function Books() {
           <div className="flex-1 min-w-0">
 
             {/* ════ DETAIL PAGE ════ */}
-            {detailGenre ? (
+            {effectiveDetailGenre ? (
               <CategoryDetailPage
-                genre={detailGenre}
+                genre={effectiveDetailGenre}
+                genres={genres}
+                books={detailBooks}
                 onBack={goBack}
                 onGenreSwitch={g => { setDetailGenre(g); }}
               />
@@ -493,11 +1059,11 @@ export default function Books() {
               <>
                 {/* Genre tab bar */}
                 <div className="flex items-center gap-1 mb-2 flex-wrap">
-                  {GENRES.map(g => (
+                  {genres.map(g => (
                     <button
                       key={g}
                       onClick={() => { setActiveGenre(g); setAllGenreVisible(PREVIEW_SIZE); }}
-                      className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${activeGenre === g
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${effectiveActiveGenre === g
                         ? 'bg-blue-600 text-white shadow-sm shadow-blue-200'
                         : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'
                         }`}
@@ -509,11 +1075,11 @@ export default function Books() {
                 <div className="h-0.5 bg-gray-100 rounded-full mb-4" />
 
                 {/* ── "All Genres" shows per-genre sections with fixed View More buttons ── */}
-                {activeGenre === 'All Genres' ? (
+                {effectiveActiveGenre === 'All Genres' ? (
                   <div>
-                    {GENRES.filter(g => g !== 'All Genres').map(g => (
-                      BOOKS.some(b => b.genre === g) && (
-                        <GenrePreviewSection key={g} genre={g} onViewMore={goToDetail} />
+                    {genres.filter(g => g !== 'All Genres').map(g => (
+                      allBooks.some(b => b.genre === g) && (
+                        <GenrePreviewSection key={g} genre={g} books={allBooks} onViewMore={goToDetail} />
                       )
                     ))}
                   </div>
@@ -523,21 +1089,21 @@ export default function Books() {
                     {/* Genre banner */}
                     <div
                       className="rounded-xl px-5 py-4 mb-4 flex items-center justify-between"
-                      style={{ background: GENRE_META[activeGenre]?.accent }}
+                      style={{ background: activeMeta.accent }}
                     >
                       <div>
-                        <h3 className="text-base font-extrabold" style={{ color: GENRE_META[activeGenre]?.color }}>{activeGenre}</h3>
-                        <p className="text-xs mt-0.5" style={{ color: GENRE_META[activeGenre]?.color, opacity: 0.75 }}>
-                          {GENRE_META[activeGenre]?.description}
+                        <h3 className="text-base font-extrabold" style={{ color: activeMeta.color }}>{effectiveActiveGenre}</h3>
+                        <p className="text-xs mt-0.5" style={{ color: activeMeta.color, opacity: 0.75 }}>
+                          {activeMeta.description}
                         </p>
                       </div>
                       {/* ── Fixed View More button always visible ── */}
                       <button
-                        onClick={() => goToDetail(activeGenre)}
+                        onClick={() => goToDetail(effectiveActiveGenre)}
                         className="flex items-center gap-1.5 text-white font-bold text-xs px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:opacity-90 active:scale-[0.97] flex-shrink-0"
                         style={{
-                          background: GENRE_META[activeGenre]?.color,
-                          boxShadow: `0 4px 14px ${GENRE_META[activeGenre]?.color}55`,
+                          background: activeMeta.color,
+                          boxShadow: `0 4px 14px ${activeMeta.color}55`,
                         }}
                       >
                         View More
@@ -574,6 +1140,36 @@ export default function Books() {
                       </div>
                     )}
                   </div>
+                )}
+
+                {genreError && (
+                  <p className="text-xs text-amber-600 mt-4">
+                    Showing default genres. {genreError}
+                  </p>
+                )}
+
+                {booksError && (
+                  <p className="text-xs text-amber-600 mt-2">
+                    Failed to load books. {booksError}
+                  </p>
+                )}
+
+                {authorsError && (
+                  <p className="text-xs text-amber-600 mt-2">
+                    {authorsError}
+                  </p>
+                )}
+
+                {booksOfYearError && (
+                  <p className="text-xs text-amber-600 mt-2">
+                    {booksOfYearError}
+                  </p>
+                )}
+
+                {booksLoading && (
+                  <p className="text-xs text-gray-400 mt-2">
+                    Refreshing books...
+                  </p>
                 )}
               </>
             )}

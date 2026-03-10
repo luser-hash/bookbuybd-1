@@ -282,8 +282,8 @@ export default function BookDetails() {
                                         </svg>
                                         Mark Read
                                     </button>
-                                    <Link href="/shop">
-                                        <button className="shop-btn">Shop Now</button>
+                                    <Link href="/shop" className="shop-btn">
+                                        Shop Now
                                     </Link>
                                 </div>
                             </div>
@@ -373,8 +373,8 @@ export default function BookDetails() {
                                                     </button>
                                                 </div>
                                             ) : (
-                                                <Link href="/shop">
-                                                    <button className="shop-btn" style={{ padding: '7px 16px', fontSize: 12 }}>Shop Now</button>
+                                                <Link href="/shop" className="shop-btn" style={{ padding: '7px 16px', fontSize: 12 }}>
+                                                    Shop Now
                                                 </Link>
                                             )}
                                         </div>
@@ -403,10 +403,8 @@ export default function BookDetails() {
                                                 <Stars count={b.rating} />
                                                 <span style={{ fontSize: 10, color: '#94a3b8' }}>({b.reviews})</span>
                                             </div>
-                                            <Link href="/shop" className="w-full">
-                                                <button className="shop-btn mt-3 w-full" style={{ padding: '8px 0', fontSize: 11 }}>
-                                                    Shop Now
-                                                </button>
+                                            <Link href="/shop" className="shop-btn mt-3 w-full text-center" style={{ padding: '8px 0', fontSize: 11 }}>
+                                                Shop Now
                                             </Link>
                                         </div>
                                     </div>

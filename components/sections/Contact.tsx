@@ -1,5 +1,6 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
+import { ApiError, contactService, type ContactSubjectOption } from '@/lib/api';
 
 /* ══════════════════════════════════════════
    MINI CALENDAR DROPDOWN
@@ -9,6 +10,7 @@ const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',
 ];
+const DEFAULT_SUBJECTS: ContactSubjectOption[] = [{ id: 'general', label: 'General Inquiry' }];
 
 function CalendarDropdown({
   value, onChange,
@@ -227,24 +229,68 @@ function InfoCard({ icon, label, value }: { icon: React.ReactNode; label: string
    MAIN COMPONENT
 ══════════════════════════════════════════ */
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', subject: 'general', message: '' });
   const [date, setDate] = useState<Date | null>(null);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
+  const [subjectOptions, setSubjectOptions] = useState<ContactSubjectOption[]>(DEFAULT_SUBJECTS);
 
-  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-    setForm(f => ({ ...f, [k]: e.target.value }));
+  useEffect(() => {
+    const run = async () => {
+      try {
+        const options = await contactService.getSubjects();
+        if (options.length > 0) setSubjectOptions(options);
+      } catch {
+        setSubjectOptions(DEFAULT_SUBJECTS);
+      }
+    };
+    void run();
+  }, []);
+
+  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    setForm(f => {
+      if (sent) setSent(false);
+      if (sendError) setSendError(null);
+      return { ...f, [k]: e.target.value };
+    });
 
   const handleSend = () => {
-    if (sending || sent) return;
+    if (sending) return;
+
+    const payload = {
+      name: form.name.trim(),
+      email: form.email.trim(),
+      subject: form.subject.trim(),
+      message: form.message.trim(),
+    };
+
+    if (!payload.name || !payload.email || !payload.subject || !payload.message) {
+      setSendError('Please fill in name, email, subject, and message.');
+      return;
+    }
+
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email);
+    if (!emailOk) {
+      setSendError('Please enter a valid email address.');
+      return;
+    }
+
+    setSendError(null);
     setSending(true);
-    setTimeout(() => {
-      setSending(false);
-      setSent(true);
-      setForm({ name: '', email: '', subject: '', message: '' });
-      setDate(null);
-      setTimeout(() => setSent(false), 3000);
-    }, 1800);
+    void contactService.sendMessage(payload)
+      .then(() => {
+        setSent(true);
+        setForm((prev) => ({ ...prev, name: '', email: '', message: '' }));
+        setDate(null);
+        setTimeout(() => setSent(false), 3000);
+      })
+      .catch((error: unknown) => {
+        setSendError(error instanceof ApiError ? error.message : 'Failed to send message. Please try again.');
+      })
+      .finally(() => {
+        setSending(false);
+      });
   };
 
   const inputCls = `w-full rounded-xl px-4 py-3 text-sm text-gray-800 bg-gray-100 border border-transparent
@@ -345,19 +391,17 @@ export default function Contact() {
           {/* Subject */}
           <div>
             <label className="block text-xs font-semibold text-gray-700 mb-1.5">Subject</label>
-            <input
-              type="text"
-              placeholder="+625 2161 6526"
+            <select
               value={form.subject}
               onChange={set('subject')}
               className={inputCls}
-            />
-          </div>
-
-          {/* Preferred Date — calendar dropdown */}
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1.5">Preferred Date</label>
-            <CalendarDropdown value={date} onChange={setDate} />
+            >
+              {subjectOptions.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Message */}
@@ -373,7 +417,7 @@ export default function Contact() {
           </div>
 
           {/* Send button + success */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap">
             <SendButton onClick={handleSend} sending={sending} />
             {sent && (
               <span className="check-anim flex items-center gap-1.5 text-green-600 text-sm font-semibold">
@@ -383,6 +427,7 @@ export default function Contact() {
                 Message sent!
               </span>
             )}
+            {sendError && <p className="text-sm text-red-600">{sendError}</p>}
           </div>
         </div>
       </div>

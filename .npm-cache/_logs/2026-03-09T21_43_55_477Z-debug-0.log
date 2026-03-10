@@ -1,0 +1,1892 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.3
+2 info using node@v22.18.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:D:\BookBuyBd Front\bookbuybd\.npmrc
+5 silly config load:file:C:\Users\User\.npmrc
+6 silly config load:file:C:\Users\User\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm install
+8 verbose argv "install" "--cache" ".npm-cache"
+9 verbose logfile logs-max:10 dir:D:\BookBuyBd Front\bookbuybd\.npm-cache\_logs\2026-03-09T21_43_55_477Z-
+10 verbose logfile D:\BookBuyBd Front\bookbuybd\.npm-cache\_logs\2026-03-09T21_43_55_477Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+13 silly idealTree buildDeps
+14 http fetch GET https://registry.npmjs.org/npm attempt 1 failed with EACCES
+15 silly reify mark retired [ 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eciesjs' ]
+16 silly reify mark retired [ 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\flatted' ]
+17 silly reify mark retired [ 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\framer-motion' ]
+18 silly reify mark retired [ 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\jose' ]
+19 silly reify mark retired [
+19 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-android-arm64'
+19 silly reify ]
+20 silly reify mark retired [
+20 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-darwin-x64'
+20 silly reify ]
+21 silly reify mark retired [
+21 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-freebsd-x64'
+21 silly reify ]
+22 silly reify mark retired [
+22 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-linux-arm-gnueabihf'
+22 silly reify ]
+23 silly reify mark retired [
+23 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-linux-arm64-gnu'
+23 silly reify ]
+24 silly reify mark retired [
+24 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-linux-arm64-musl'
+24 silly reify ]
+25 silly reify mark retired [
+25 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-darwin-arm64'
+25 silly reify ]
+26 silly reify mark retired [
+26 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-linux-x64-gnu'
+26 silly reify ]
+27 silly reify mark retired [
+27 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-linux-x64-musl'
+27 silly reify ]
+28 silly reify mark retired [
+28 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-win32-arm64-msvc'
+28 silly reify ]
+29 silly reify mark retired [ 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\motion-dom' ]
+30 silly reify mark retired [ 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\motion-utils' ]
+31 silly reify mark retired [ 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\radix-ui' ]
+32 silly reify mark retired [ 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\react-day-picker' ]
+33 silly reify mark retired [
+33 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\react-resizable-panels'
+33 silly reify ]
+34 silly reify mark retired [
+34 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-darwin-arm64'
+34 silly reify ]
+35 silly reify mark retired [
+35 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-darwin-x64'
+35 silly reify ]
+36 silly reify mark retired [
+36 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-darwin-arm64'
+36 silly reify ]
+37 silly reify mark retired [
+37 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-darwin-x64'
+37 silly reify ]
+38 silly reify mark retired [
+38 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-arm'
+38 silly reify ]
+39 silly reify mark retired [
+39 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-arm64'
+39 silly reify ]
+40 silly reify mark retired [
+40 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-ppc64'
+40 silly reify ]
+41 silly reify mark retired [
+41 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-s390x'
+41 silly reify ]
+42 silly reify mark retired [
+42 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-riscv64'
+42 silly reify ]
+43 silly reify mark retired [
+43 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-x64'
+43 silly reify ]
+44 silly reify mark retired [
+44 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linuxmusl-arm64'
+44 silly reify ]
+45 silly reify mark retired [
+45 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linuxmusl-x64'
+45 silly reify ]
+46 silly reify mark retired [
+46 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-arm'
+46 silly reify ]
+47 silly reify mark retired [
+47 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-arm64'
+47 silly reify ]
+48 silly reify mark retired [
+48 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-ppc64'
+48 silly reify ]
+49 silly reify mark retired [
+49 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-riscv64'
+49 silly reify ]
+50 silly reify mark retired [
+50 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-s390x'
+50 silly reify ]
+51 silly reify mark retired [
+51 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-x64'
+51 silly reify ]
+52 silly reify mark retired [
+52 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linuxmusl-arm64'
+52 silly reify ]
+53 silly reify mark retired [
+53 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linuxmusl-x64'
+53 silly reify ]
+54 silly reify mark retired [ 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-wasm32' ]
+55 silly reify mark retired [
+55 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-win32-arm64'
+55 silly reify ]
+56 silly reify mark retired [
+56 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-win32-ia32'
+56 silly reify ]
+57 silly reify mark retired [
+57 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-darwin-arm64'
+57 silly reify ]
+58 silly reify mark retired [
+58 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-darwin-x64'
+58 silly reify ]
+59 silly reify mark retired [
+59 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-linux-arm64-gnu'
+59 silly reify ]
+60 silly reify mark retired [
+60 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-linux-arm64-musl'
+60 silly reify ]
+61 silly reify mark retired [
+61 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-linux-x64-gnu'
+61 silly reify ]
+62 silly reify mark retired [
+62 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-linux-x64-musl'
+62 silly reify ]
+63 silly reify mark retired [
+63 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-win32-arm64-msvc'
+63 silly reify ]
+64 silly reify mark retired [
+64 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-accessible-icon'
+64 silly reify ]
+65 silly reify mark retired [
+65 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-aspect-ratio'
+65 silly reify ]
+66 silly reify mark retired [
+66 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-avatar'
+66 silly reify ]
+67 silly reify mark retired [
+67 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-form'
+67 silly reify ]
+68 silly reify mark retired [
+68 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-label'
+68 silly reify ]
+69 silly reify mark retired [
+69 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-one-time-password-field'
+69 silly reify ]
+70 silly reify mark retired [
+70 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-password-toggle-field'
+70 silly reify ]
+71 silly reify mark retired [
+71 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-progress'
+71 silly reify ]
+72 silly reify mark retired [
+72 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-separator'
+72 silly reify ]
+73 silly reify mark retired [
+73 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-toast'
+73 silly reify ]
+74 silly reify mark retired [
+74 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-toolbar'
+74 silly reify ]
+75 silly reify mark retired [
+75 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tabby_ai\\hijri-converter'
+75 silly reify ]
+76 silly reify mark retired [
+76 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-android-arm64'
+76 silly reify ]
+77 silly reify mark retired [
+77 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-darwin-arm64'
+77 silly reify ]
+78 silly reify mark retired [
+78 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-darwin-x64'
+78 silly reify ]
+79 silly reify mark retired [
+79 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-freebsd-x64'
+79 silly reify ]
+80 silly reify mark retired [
+80 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-linux-arm-gnueabihf'
+80 silly reify ]
+81 silly reify mark retired [
+81 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-linux-arm64-gnu'
+81 silly reify ]
+82 silly reify mark retired [
+82 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-linux-arm64-musl'
+82 silly reify ]
+83 silly reify mark retired [
+83 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-linux-x64-gnu'
+83 silly reify ]
+84 silly reify mark retired [
+84 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-linux-x64-musl'
+84 silly reify ]
+85 silly reify mark retired [
+85 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-wasm32-wasi'
+85 silly reify ]
+86 silly reify mark retired [
+86 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-win32-arm64-msvc'
+86 silly reify ]
+87 silly reify mark retired [
+87 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-android-arm-eabi'
+87 silly reify ]
+88 silly reify mark retired [
+88 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-android-arm64'
+88 silly reify ]
+89 silly reify mark retired [
+89 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-darwin-arm64'
+89 silly reify ]
+90 silly reify mark retired [
+90 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-darwin-x64'
+90 silly reify ]
+91 silly reify mark retired [
+91 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-freebsd-x64'
+91 silly reify ]
+92 silly reify mark retired [
+92 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-arm-gnueabihf'
+92 silly reify ]
+93 silly reify mark retired [
+93 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-arm-musleabihf'
+93 silly reify ]
+94 silly reify mark retired [
+94 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-arm64-gnu'
+94 silly reify ]
+95 silly reify mark retired [
+95 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-arm64-musl'
+95 silly reify ]
+96 silly reify mark retired [
+96 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-ppc64-gnu'
+96 silly reify ]
+97 silly reify mark retired [
+97 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-riscv64-gnu'
+97 silly reify ]
+98 silly reify mark retired [
+98 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-riscv64-musl'
+98 silly reify ]
+99 silly reify mark retired [
+99 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-s390x-gnu'
+99 silly reify ]
+100 silly reify mark retired [
+100 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-x64-musl'
+100 silly reify ]
+101 silly reify mark retired [
+101 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-x64-gnu'
+101 silly reify ]
+102 silly reify mark retired [
+102 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-wasm32-wasi'
+102 silly reify ]
+103 silly reify mark retired [
+103 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-win32-arm64-msvc'
+103 silly reify ]
+104 silly reify mark retired [
+104 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-win32-ia32-msvc'
+104 silly reify ]
+105 silly reify mark retired [
+105 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\acorn',
+105 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\acorn',
+105 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\acorn.cmd',
+105 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\acorn.ps1'
+105 silly reify ]
+106 silly reify mark retired [
+106 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\baseline-browser-mapping',
+106 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\baseline-browser-mapping',
+106 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\baseline-browser-mapping.cmd',
+106 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\baseline-browser-mapping.ps1'
+106 silly reify ]
+107 silly reify mark retired [
+107 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\browserslist',
+107 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\browserslist',
+107 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\browserslist.cmd',
+107 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\browserslist.ps1'
+107 silly reify ]
+108 silly reify mark retired [
+108 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\cssesc',
+108 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\cssesc',
+108 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\cssesc.cmd',
+108 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\cssesc.ps1'
+108 silly reify ]
+109 silly reify mark retired [
+109 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eslint',
+109 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\eslint',
+109 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\eslint.cmd',
+109 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\eslint.ps1'
+109 silly reify ]
+110 silly reify mark retired [
+110 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eslint-plugin-react\\node_modules\\resolve',
+110 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eslint-plugin-react\\node_modules\\.bin\\resolve',
+110 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eslint-plugin-react\\node_modules\\.bin\\resolve.cmd',
+110 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eslint-plugin-react\\node_modules\\.bin\\resolve.ps1'
+110 silly reify ]
+111 silly reify mark retired [
+111 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\esprima',
+111 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\esparse',
+111 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\esparse.cmd',
+111 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\esparse.ps1',
+111 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\esvalidate',
+111 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\esvalidate.cmd',
+111 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\esvalidate.ps1'
+111 silly reify ]
+112 silly reify mark retired [
+112 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-bun-module\\node_modules\\semver',
+112 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-bun-module\\node_modules\\.bin\\semver',
+112 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-bun-module\\node_modules\\.bin\\semver.cmd',
+112 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-bun-module\\node_modules\\.bin\\semver.ps1'
+112 silly reify ]
+113 silly reify mark retired [
+113 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-docker',
+113 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\is-docker',
+113 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\is-docker.cmd',
+113 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\is-docker.ps1'
+113 silly reify ]
+114 silly reify mark retired [
+114 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-inside-container',
+114 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\is-inside-container',
+114 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\is-inside-container.cmd',
+114 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\is-inside-container.ps1'
+114 silly reify ]
+115 silly reify mark retired [
+115 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\js-yaml',
+115 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\js-yaml',
+115 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\js-yaml.cmd',
+115 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\js-yaml.ps1'
+115 silly reify ]
+116 silly reify mark retired [
+116 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\jsesc',
+116 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\jsesc',
+116 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\jsesc.cmd',
+116 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\jsesc.ps1'
+116 silly reify ]
+117 silly reify mark retired [
+117 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\jiti',
+117 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\jiti',
+117 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\jiti.cmd',
+117 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\jiti.ps1'
+117 silly reify ]
+118 silly reify mark retired [
+118 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\json5',
+118 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\json5',
+118 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\json5.cmd',
+118 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\json5.ps1'
+118 silly reify ]
+119 silly reify mark retired [
+119 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\loose-envify',
+119 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\loose-envify',
+119 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\loose-envify.cmd',
+119 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\loose-envify.ps1'
+119 silly reify ]
+120 silly reify mark retired [
+120 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\msw',
+120 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\msw',
+120 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\msw.cmd',
+120 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\msw.ps1'
+120 silly reify ]
+121 silly reify mark retired [
+121 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\nanoid',
+121 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nanoid',
+121 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nanoid.cmd',
+121 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nanoid.ps1'
+121 silly reify ]
+122 silly reify mark retired [
+122 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\napi-postinstall',
+122 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\napi-postinstall',
+122 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\napi-postinstall.cmd',
+122 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\napi-postinstall.ps1'
+122 silly reify ]
+123 silly reify mark retired [
+123 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\next',
+123 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\next',
+123 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\next.cmd',
+123 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\next.ps1'
+123 silly reify ]
+124 silly reify mark retired [
+124 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\resolve',
+124 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\resolve',
+124 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\resolve.cmd',
+124 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\resolve.ps1'
+124 silly reify ]
+125 silly reify mark retired [
+125 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\semver',
+125 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\semver',
+125 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\semver.cmd',
+125 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\semver.ps1'
+125 silly reify ]
+126 silly reify mark retired [
+126 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\shadcn',
+126 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\shadcn',
+126 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\shadcn.cmd',
+126 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\shadcn.ps1'
+126 silly reify ]
+127 silly reify mark retired [
+127 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\sharp\\node_modules\\semver',
+127 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\sharp\\node_modules\\.bin\\semver',
+127 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\sharp\\node_modules\\.bin\\semver.cmd',
+127 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\sharp\\node_modules\\.bin\\semver.ps1'
+127 silly reify ]
+128 silly reify mark retired [
+128 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\tldts',
+128 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tldts',
+128 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tldts.cmd',
+128 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tldts.ps1'
+128 silly reify ]
+129 silly reify mark retired [
+129 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\tsconfig-paths\\node_modules\\json5',
+129 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\tsconfig-paths\\node_modules\\.bin\\json5',
+129 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\tsconfig-paths\\node_modules\\.bin\\json5.cmd',
+129 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\tsconfig-paths\\node_modules\\.bin\\json5.ps1'
+129 silly reify ]
+130 silly reify mark retired [
+130 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\typescript',
+130 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tsc',
+130 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tsc.cmd',
+130 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tsc.ps1',
+130 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tsserver',
+130 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tsserver.cmd',
+130 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tsserver.ps1'
+130 silly reify ]
+131 silly reify mark retired [
+131 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\update-browserslist-db',
+131 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\update-browserslist-db',
+131 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\update-browserslist-db.cmd',
+131 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\update-browserslist-db.ps1'
+131 silly reify ]
+132 silly reify mark retired [
+132 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\which',
+132 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\node-which',
+132 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\node-which.cmd',
+132 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\node-which.ps1'
+132 silly reify ]
+133 silly reify mark retired [
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@antfu\\ni',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\ni',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\ni.cmd',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\ni.ps1',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nci',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nci.cmd',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nci.ps1',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nr',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nr.cmd',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nr.ps1',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nup',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nup.cmd',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nup.ps1',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nlx',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nlx.cmd',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nlx.ps1',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\na',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\na.cmd',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\na.ps1',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nun',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nun.cmd',
+133 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nun.ps1'
+133 silly reify ]
+134 silly reify mark retired [
+134 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@babel\\parser',
+134 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\parser',
+134 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\parser.cmd',
+134 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\parser.ps1'
+134 silly reify ]
+135 silly reify mark retired [
+135 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@dotenvx\\dotenvx',
+135 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\dotenvx',
+135 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\dotenvx.cmd',
+135 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\dotenvx.ps1'
+135 silly reify ]
+136 silly reify mark retired [
+136 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@typescript-eslint\\typescript-estree\\node_modules\\semver',
+136 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@typescript-eslint\\typescript-estree\\node_modules\\.bin\\semver',
+136 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@typescript-eslint\\typescript-estree\\node_modules\\.bin\\semver.cmd',
+136 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@typescript-eslint\\typescript-estree\\node_modules\\.bin\\semver.ps1'
+136 silly reify ]
+137 silly reify moves {
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eciesjs': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.eciesjs-gIqBJ1hx',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\flatted': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.flatted-BSLTIeLk',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\framer-motion': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.framer-motion-jJZu8BcQ',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\jose': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.jose-cFdfMtwj',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-android-arm64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.lightningcss-android-arm64-qkxHUNvt',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-darwin-x64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.lightningcss-darwin-x64-u36i2m3n',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-freebsd-x64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.lightningcss-freebsd-x64-yBSVxG2z',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-linux-arm-gnueabihf': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.lightningcss-linux-arm-gnueabihf-qlzBuXNC',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-linux-arm64-gnu': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.lightningcss-linux-arm64-gnu-70i8VuW8',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-linux-arm64-musl': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.lightningcss-linux-arm64-musl-e80f8ebV',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-darwin-arm64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.lightningcss-darwin-arm64-vPGXPiDT',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-linux-x64-gnu': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.lightningcss-linux-x64-gnu-d4vU14MD',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-linux-x64-musl': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.lightningcss-linux-x64-musl-nlYYdKoJ',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-win32-arm64-msvc': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.lightningcss-win32-arm64-msvc-j1eGNXIV',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\motion-dom': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.motion-dom-mUKSwpld',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\motion-utils': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.motion-utils-P8RvuqZw',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\radix-ui': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.radix-ui-fThPKVEY',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\react-day-picker': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.react-day-picker-tKmftE1g',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\react-resizable-panels': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.react-resizable-panels-kP9N7D9o',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-darwin-arm64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-darwin-arm64-L5F1cr7p',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-darwin-x64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-darwin-x64-7ds8vtgC',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-darwin-arm64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-libvips-darwin-arm64-TP6Qs8cu',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-darwin-x64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-libvips-darwin-x64-qePtiduF',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-arm': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-libvips-linux-arm-CEkzKCbT',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-arm64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-libvips-linux-arm64-yQCApowW',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-ppc64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-libvips-linux-ppc64-wV4wXi4d',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-s390x': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-libvips-linux-s390x-0mLfo6V0',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-riscv64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-libvips-linux-riscv64-RsEtBCpt',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-x64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-libvips-linux-x64-9F3gcPYP',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linuxmusl-arm64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-libvips-linuxmusl-arm64-vgSJXrzo',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linuxmusl-x64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-libvips-linuxmusl-x64-sWLL5XZu',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-arm': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-linux-arm-MiLiiIH4',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-arm64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-linux-arm64-bsJyeRjY',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-ppc64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-linux-ppc64-DaDagqFd',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-riscv64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-linux-riscv64-dEe8CnnJ',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-s390x': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-linux-s390x-gF6ACrqK',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-x64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-linux-x64-D1iI2m11',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linuxmusl-arm64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-linuxmusl-arm64-hV00QlQa',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linuxmusl-x64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-linuxmusl-x64-xU7RCLxL',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-wasm32': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-wasm32-v3a7trUo',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-win32-arm64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-win32-arm64-Tz842okX',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-win32-ia32': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\.sharp-win32-ia32-02bm4fmM',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-darwin-arm64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\.swc-darwin-arm64-qwVBzMRZ',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-darwin-x64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\.swc-darwin-x64-nmNUKnQf',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-linux-arm64-gnu': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\.swc-linux-arm64-gnu-GWu0xWAY',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-linux-arm64-musl': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\.swc-linux-arm64-musl-C85MADmp',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-linux-x64-gnu': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\.swc-linux-x64-gnu-jmrs7YjF',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-linux-x64-musl': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\.swc-linux-x64-musl-q8KooYyt',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-win32-arm64-msvc': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\.swc-win32-arm64-msvc-rBHV6GEo',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-accessible-icon': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\.react-accessible-icon-cysJVdIJ',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-aspect-ratio': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\.react-aspect-ratio-4YbFgIDy',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-avatar': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\.react-avatar-ChBpC2KZ',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-form': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\.react-form-6n9c7JUB',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-label': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\.react-label-rOem9yWd',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-one-time-password-field': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\.react-one-time-password-field-XPXbOXlc',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-password-toggle-field': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\.react-password-toggle-field-NJhGMWkS',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-progress': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\.react-progress-vJcj4HNB',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-separator': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\.react-separator-wteN4ADU',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-toast': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\.react-toast-KZfW6lFL',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\react-toolbar': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@radix-ui\\.react-toolbar-rbvBuxAS',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tabby_ai\\hijri-converter': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tabby_ai\\.hijri-converter-2yPxwgjX',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-android-arm64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\.oxide-android-arm64-BVi9ibq2',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-darwin-arm64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\.oxide-darwin-arm64-DO4moH2Z',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-darwin-x64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\.oxide-darwin-x64-OMsa6muE',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-freebsd-x64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\.oxide-freebsd-x64-vd3jT7fp',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-linux-arm-gnueabihf': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\.oxide-linux-arm-gnueabihf-xKQieQDs',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-linux-arm64-gnu': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\.oxide-linux-arm64-gnu-xbVUHPpe',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-linux-arm64-musl': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\.oxide-linux-arm64-musl-ALuOJNuo',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-linux-x64-gnu': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\.oxide-linux-x64-gnu-XdU9mJvy',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-linux-x64-musl': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\.oxide-linux-x64-musl-JxMAvYRm',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-wasm32-wasi': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\.oxide-wasm32-wasi-VtoHeCQN',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-win32-arm64-msvc': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\.oxide-win32-arm64-msvc-eVDJRna3',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-android-arm-eabi': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-android-arm-eabi-fgRzDw3Y',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-android-arm64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-android-arm64-LBF13V4l',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-darwin-arm64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-darwin-arm64-CEC09XGn',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-darwin-x64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-darwin-x64-eXsVnfD4',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-freebsd-x64': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-freebsd-x64-3J5mdM5s',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-arm-gnueabihf': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-linux-arm-gnueabihf-Tw3i6H56',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-arm-musleabihf': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-linux-arm-musleabihf-FmDYDjH6',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-arm64-gnu': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-linux-arm64-gnu-0bMprsPT',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-arm64-musl': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-linux-arm64-musl-Yc3HviVL',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-ppc64-gnu': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-linux-ppc64-gnu-pd6k2ma0',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-riscv64-gnu': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-linux-riscv64-gnu-OBSnp1D5',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-riscv64-musl': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-linux-riscv64-musl-aD31O8Dm',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-s390x-gnu': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-linux-s390x-gnu-zwNkamJi',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-x64-musl': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-linux-x64-musl-4LGurl1i',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-x64-gnu': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-linux-x64-gnu-E8sdCZyf',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-wasm32-wasi': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-wasm32-wasi-9BpiCiFS',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-win32-arm64-msvc': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-win32-arm64-msvc-U2ZUBTHM',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-win32-ia32-msvc': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\.resolver-binding-win32-ia32-msvc-NzuNdnls',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\acorn': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.acorn-xKyBqPDm',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\acorn': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.acorn-lrHVMoUx',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\acorn.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.acorn.cmd-NsEFzob6',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\acorn.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.acorn.ps1-ftXFcFxW',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\baseline-browser-mapping': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.baseline-browser-mapping-H3IAKQMI',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\baseline-browser-mapping': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.baseline-browser-mapping-3Iu5ItzV',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\baseline-browser-mapping.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.baseline-browser-mapping.cmd-bSdcsGJ5',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\baseline-browser-mapping.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.baseline-browser-mapping.ps1-4nslfzGI',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\browserslist': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.browserslist-Gy0pbDk1',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\browserslist': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.browserslist-U7oOKvW1',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\browserslist.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.browserslist.cmd-cFmpSauS',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\browserslist.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.browserslist.ps1-Jj5EQdcj',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\cssesc': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.cssesc-N0qgG2PU',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\cssesc': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.cssesc-Z4b1uh1S',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\cssesc.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.cssesc.cmd-ySuxlufg',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\cssesc.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.cssesc.ps1-6EqnZYwP',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eslint': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.eslint-Ii9ghSc1',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\eslint': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.eslint-xwoxiifF',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\eslint.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.eslint.cmd-dcjsOQ7x',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\eslint.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.eslint.ps1-tevRh3by',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eslint-plugin-react\\node_modules\\resolve': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eslint-plugin-react\\node_modules\\.resolve-K9Td1PW2',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eslint-plugin-react\\node_modules\\.bin\\resolve': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eslint-plugin-react\\node_modules\\.bin\\.resolve-KPwVi21Y',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eslint-plugin-react\\node_modules\\.bin\\resolve.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eslint-plugin-react\\node_modules\\.bin\\.resolve.cmd-RMENTbvG',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eslint-plugin-react\\node_modules\\.bin\\resolve.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\eslint-plugin-react\\node_modules\\.bin\\.resolve.ps1-x2RKkqUw',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\esprima': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.esprima-XzpeTaXp',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\esparse': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.esparse-ArSKJxm0',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\esparse.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.esparse.cmd-MDzLsI9v',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\esparse.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.esparse.ps1-vsyphVFQ',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\esvalidate': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.esvalidate-p5dJ3y3W',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\esvalidate.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.esvalidate.cmd-wZy4me8J',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\esvalidate.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.esvalidate.ps1-ZLj8HrC8',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-bun-module\\node_modules\\semver': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-bun-module\\node_modules\\.semver-bkSJ9O1w',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-bun-module\\node_modules\\.bin\\semver': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-bun-module\\node_modules\\.bin\\.semver-OQPml3on',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-bun-module\\node_modules\\.bin\\semver.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-bun-module\\node_modules\\.bin\\.semver.cmd-w5qocMTG',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-bun-module\\node_modules\\.bin\\semver.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-bun-module\\node_modules\\.bin\\.semver.ps1-mhvFFh8P',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-docker': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.is-docker-f8tT7wOD',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\is-docker': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.is-docker-lHO3i64f',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\is-docker.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.is-docker.cmd-UX5ibGs9',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\is-docker.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.is-docker.ps1-sIQTdBMK',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\is-inside-container': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.is-inside-container-1bR7vErX',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\is-inside-container': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.is-inside-container-Tqwd4Qea',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\is-inside-container.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.is-inside-container.cmd-Zlbg2Rwe',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\is-inside-container.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.is-inside-container.ps1-7X1dv9qC',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\js-yaml': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.js-yaml-9pluD89a',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\js-yaml': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.js-yaml-KPs8uvUC',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\js-yaml.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.js-yaml.cmd-ZfylW2gE',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\js-yaml.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.js-yaml.ps1-3zluu57p',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\jsesc': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.jsesc-wrcIbuMc',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\jsesc': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.jsesc-WynY7aGR',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\jsesc.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.jsesc.cmd-w0jZD2Ct',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\jsesc.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.jsesc.ps1-LtxuVrCe',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\jiti': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.jiti-pgZBxyea',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\jiti': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.jiti-mYepJ46w',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\jiti.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.jiti.cmd-KfEtvDPh',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\jiti.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.jiti.ps1-BhrjrhIF',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\json5': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.json5-Qmieunt4',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\json5': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.json5-rYVKudh4',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\json5.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.json5.cmd-VGiRl5Ep',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\json5.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.json5.ps1-YuXeFs2H',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\loose-envify': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.loose-envify-EOLSuBu1',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\loose-envify': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.loose-envify-nvKf2Cdj',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\loose-envify.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.loose-envify.cmd-wLaQDUTG',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\loose-envify.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.loose-envify.ps1-k1QQZ76n',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\msw': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.msw-v7QgDnw2',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\msw': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.msw-67LL38XF',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\msw.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.msw.cmd-XEfHJG6Y',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\msw.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.msw.ps1-YYZp2PWM',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\nanoid': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.nanoid-WYf5XnvV',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nanoid': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nanoid-qY5FQoCE',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nanoid.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nanoid.cmd-W4EgkROc',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nanoid.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nanoid.ps1-MKEwsFyr',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\napi-postinstall': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.napi-postinstall-Ob7eJieV',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\napi-postinstall': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.napi-postinstall-qIJju2A4',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\napi-postinstall.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.napi-postinstall.cmd-sCbM0A4X',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\napi-postinstall.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.napi-postinstall.ps1-iAVaoyid',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\next': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.next-QI8aoyHe',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\next': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.next-LhHR5l3m',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\next.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.next.cmd-v9LCz3yD',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\next.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.next.ps1-tzKcfaxm',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\resolve': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.resolve-yhb4BeNV',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\resolve': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.resolve-Cp0vYxpd',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\resolve.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.resolve.cmd-Ug3DCM0R',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\resolve.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.resolve.ps1-wmMCz6aE',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\semver': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.semver-NafVtxKg',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\semver': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.semver-hRXStYaC',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\semver.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.semver.cmd-jCeWGPdL',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\semver.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.semver.ps1-5l3lK4rv',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\shadcn': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.shadcn-OLY4Xdl1',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\shadcn': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.shadcn-7uKplMbx',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\shadcn.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.shadcn.cmd-6RJ25kl8',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\shadcn.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.shadcn.ps1-Sr8JcIEn',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\sharp\\node_modules\\semver': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\sharp\\node_modules\\.semver-r6mr31T6',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\sharp\\node_modules\\.bin\\semver': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\sharp\\node_modules\\.bin\\.semver-1uX89D6n',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\sharp\\node_modules\\.bin\\semver.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\sharp\\node_modules\\.bin\\.semver.cmd-T8gUKsLK',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\sharp\\node_modules\\.bin\\semver.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\sharp\\node_modules\\.bin\\.semver.ps1-3fS18Osh',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\tldts': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.tldts-9bPM8YB0',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tldts': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.tldts-r37e4CC6',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tldts.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.tldts.cmd-jmqw6ysX',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tldts.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.tldts.ps1-Lcki1qQ0',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\tsconfig-paths\\node_modules\\json5': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\tsconfig-paths\\node_modules\\.json5-xFAUDwG7',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\tsconfig-paths\\node_modules\\.bin\\json5': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\tsconfig-paths\\node_modules\\.bin\\.json5-ImENz1df',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\tsconfig-paths\\node_modules\\.bin\\json5.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\tsconfig-paths\\node_modules\\.bin\\.json5.cmd-3vCLnNnJ',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\tsconfig-paths\\node_modules\\.bin\\json5.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\tsconfig-paths\\node_modules\\.bin\\.json5.ps1-DTwMzeZ6',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\typescript': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.typescript-H3P1oh0Z',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tsc': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.tsc-a5RF728e',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tsc.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.tsc.cmd-yA1IKJbY',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tsc.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.tsc.ps1-FWHkZWMW',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tsserver': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.tsserver-ACaTrdzs',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tsserver.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.tsserver.cmd-ka0B5Ui8',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\tsserver.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.tsserver.ps1-UsOhV93L',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\update-browserslist-db': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.update-browserslist-db-iM8Fp2ra',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\update-browserslist-db': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.update-browserslist-db-ZgTD6PsO',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\update-browserslist-db.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.update-browserslist-db.cmd-N5FpbEDS',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\update-browserslist-db.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.update-browserslist-db.ps1-u30qs1pK',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\which': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.which-5XiUdRqQ',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\node-which': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.node-which-0IVeYvc6',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\node-which.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.node-which.cmd-duXXePUh',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\node-which.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.node-which.ps1-2faIC9YZ',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@antfu\\ni': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@antfu\\.ni-8MGUehAS',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\ni': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.ni-KAzlxh1X',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\ni.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.ni.cmd-9Nr3CNNi',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\ni.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.ni.ps1-o2AQbBbY',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nci': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nci-iAORLZhS',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nci.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nci.cmd-ZUAvpC9U',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nci.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nci.ps1-nsuXeqbV',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nr': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nr-DQPz5Pus',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nr.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nr.cmd-LQb22C0r',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nr.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nr.ps1-4wZuJClD',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nup': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nup-pDDaAvsV',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nup.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nup.cmd-qoKD0ydS',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nup.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nup.ps1-BFmwFYdx',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nlx': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nlx-puntZTuy',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nlx.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nlx.cmd-9xXfVzLu',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nlx.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nlx.ps1-9zdg6GTb',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\na': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.na-VBlSddeO',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\na.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.na.cmd-TTAbu5pY',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\na.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.na.ps1-1sopzh6o',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nun': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nun-cnz7nwHo',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nun.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nun.cmd-eO6shS6v',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\nun.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.nun.ps1-LbrugMK9',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@babel\\parser': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@babel\\.parser-ZO3LIPdm',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\parser': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.parser-k8IxSMr7',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\parser.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.parser.cmd-ODA1bF6U',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\parser.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.parser.ps1-EuMxP1Ee',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@dotenvx\\dotenvx': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@dotenvx\\.dotenvx-HeqEoVIZ',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\dotenvx': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.dotenvx-8fkPS2op',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\dotenvx.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.dotenvx.cmd-nG6fwTTI',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\dotenvx.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\.bin\\.dotenvx.ps1-MtJgylmo',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@typescript-eslint\\typescript-estree\\node_modules\\semver': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@typescript-eslint\\typescript-estree\\node_modules\\.semver-BNIT3PZV',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@typescript-eslint\\typescript-estree\\node_modules\\.bin\\semver': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@typescript-eslint\\typescript-estree\\node_modules\\.bin\\.semver-D0LAtCGu',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@typescript-eslint\\typescript-estree\\node_modules\\.bin\\semver.cmd': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@typescript-eslint\\typescript-estree\\node_modules\\.bin\\.semver.cmd-Omv6eSiW',
+137 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@typescript-eslint\\typescript-estree\\node_modules\\.bin\\semver.ps1': 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@typescript-eslint\\typescript-estree\\node_modules\\.bin\\.semver.ps1-gYIBbjgj'
+137 silly reify }
+138 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@tailwindcss\oxide-wasm32-wasi
+139 silly reify mark deleted [
+139 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-wasm32-wasi'
+139 silly reify ]
+140 silly audit bulk request {
+140 silly audit   '@alloc/quick-lru': [ '5.2.0' ],
+140 silly audit   '@antfu/ni': [ '25.0.0' ],
+140 silly audit   '@babel/code-frame': [ '7.29.0' ],
+140 silly audit   '@babel/compat-data': [ '7.29.0' ],
+140 silly audit   '@babel/core': [ '7.29.0' ],
+140 silly audit   '@babel/generator': [ '7.29.1' ],
+140 silly audit   '@babel/helper-annotate-as-pure': [ '7.27.3' ],
+140 silly audit   '@babel/helper-compilation-targets': [ '7.28.6' ],
+140 silly audit   '@babel/helper-create-class-features-plugin': [ '7.28.6' ],
+140 silly audit   '@babel/helper-globals': [ '7.28.0' ],
+140 silly audit   '@babel/helper-member-expression-to-functions': [ '7.28.5' ],
+140 silly audit   '@babel/helper-module-imports': [ '7.28.6' ],
+140 silly audit   '@babel/helper-module-transforms': [ '7.28.6' ],
+140 silly audit   '@babel/helper-optimise-call-expression': [ '7.27.1' ],
+140 silly audit   '@babel/helper-plugin-utils': [ '7.28.6' ],
+140 silly audit   '@babel/helper-replace-supers': [ '7.28.6' ],
+140 silly audit   '@babel/helper-skip-transparent-expression-wrappers': [ '7.27.1' ],
+140 silly audit   '@babel/helper-string-parser': [ '7.27.1' ],
+140 silly audit   '@babel/helper-validator-identifier': [ '7.28.5' ],
+140 silly audit   '@babel/helper-validator-option': [ '7.27.1' ],
+140 silly audit   '@babel/helpers': [ '7.28.6' ],
+140 silly audit   '@babel/parser': [ '7.29.0' ],
+140 silly audit   '@babel/plugin-syntax-jsx': [ '7.28.6' ],
+140 silly audit   '@babel/plugin-syntax-typescript': [ '7.28.6' ],
+140 silly audit   '@babel/plugin-transform-modules-commonjs': [ '7.28.6' ],
+140 silly audit   '@babel/plugin-transform-typescript': [ '7.28.6' ],
+140 silly audit   '@babel/preset-typescript': [ '7.28.5' ],
+140 silly audit   '@babel/template': [ '7.28.6' ],
+140 silly audit   '@babel/traverse': [ '7.29.0' ],
+140 silly audit   '@babel/types': [ '7.29.0' ],
+140 silly audit   '@date-fns/tz': [ '1.4.1' ],
+140 silly audit   '@dotenvx/dotenvx': [ '1.54.1' ],
+140 silly audit   commander: [ '11.1.0', '14.0.3' ],
+140 silly audit   execa: [ '5.1.1', '9.6.1' ],
+140 silly audit   fdir: [ '6.5.0' ],
+140 silly audit   'get-stream': [ '6.0.1', '9.0.1' ],
+140 silly audit   'human-signals': [ '2.1.0', '8.0.1' ],
+140 silly audit   'is-stream': [ '2.0.1', '4.0.1' ],
+140 silly audit   isexe: [ '3.1.5', '2.0.0' ],
+140 silly audit   'npm-run-path': [ '4.0.1', '6.0.0' ],
+140 silly audit   onetime: [ '5.1.2', '7.0.0' ],
+140 silly audit   picomatch: [ '4.0.3', '2.3.1' ],
+140 silly audit   'signal-exit': [ '3.0.7', '4.1.0' ],
+140 silly audit   'strip-final-newline': [ '2.0.0', '4.0.0' ],
+140 silly audit   which: [ '4.0.0', '2.0.2' ],
+140 silly audit   '@ecies/ciphers': [ '0.2.5' ],
+140 silly audit   '@emnapi/core': [ '1.8.1' ],
+140 silly audit   '@emnapi/runtime': [ '1.8.1' ],
+140 silly audit   '@emnapi/wasi-threads': [ '1.1.0' ],
+140 silly audit   '@eslint-community/eslint-utils': [ '4.9.1' ],
+140 silly audit   'eslint-visitor-keys': [ '3.4.3', '5.0.1', '4.2.1' ],
+140 silly audit   '@eslint-community/regexpp': [ '4.12.2' ],
+140 silly audit   '@eslint/config-array': [ '0.21.2' ],
+140 silly audit   '@eslint/config-helpers': [ '0.4.2' ],
+140 silly audit   '@eslint/core': [ '0.17.0' ],
+140 silly audit   '@eslint/eslintrc': [ '3.3.5' ],
+140 silly audit   '@eslint/js': [ '9.39.4' ],
+140 silly audit   '@eslint/object-schema': [ '2.1.7' ],
+140 silly audit   '@eslint/plugin-kit': [ '0.4.1' ],
+140 silly audit   '@floating-ui/core': [ '1.7.5' ],
+140 silly audit   '@floating-ui/dom': [ '1.7.6' ],
+140 silly audit   '@floating-ui/react-dom': [ '2.1.8' ],
+140 silly audit   '@floating-ui/utils': [ '0.2.11' ],
+140 silly audit   '@hono/node-server': [ '1.19.11' ],
+140 silly audit   '@humanfs/core': [ '0.19.1' ],
+140 silly audit   '@humanfs/node': [ '0.16.7' ],
+140 silly audit   '@humanwhocodes/module-importer': [ '1.0.1' ],
+140 silly audit   '@humanwhocodes/retry': [ '0.4.3' ],
+140 silly audit   '@img/colour': [ '1.1.0' ],
+140 silly audit   '@img/sharp-darwin-arm64': [ '0.34.5' ],
+140 silly audit   '@img/sharp-darwin-x64': [ '0.34.5' ],
+140 silly audit   '@img/sharp-libvips-darwin-arm64': [ '1.2.4' ],
+140 silly audit   '@img/sharp-libvips-darwin-x64': [ '1.2.4' ],
+140 silly audit   '@img/sharp-libvips-linux-arm': [ '1.2.4' ],
+140 silly audit   '@img/sharp-libvips-linux-arm64': [ '1.2.4' ],
+140 silly audit   '@img/sharp-libvips-linux-ppc64': [ '1.2.4' ],
+140 silly audit   '@img/sharp-libvips-linux-riscv64': [ '1.2.4' ],
+140 silly audit   '@img/sharp-libvips-linux-s390x': [ '1.2.4' ],
+140 silly audit   '@img/sharp-libvips-linux-x64': [ '1.2.4' ],
+140 silly audit   '@img/sharp-libvips-linuxmusl-arm64': [ '1.2.4' ],
+140 silly audit   '@img/sharp-libvips-linuxmusl-x64': [ '1.2.4' ],
+140 silly audit   '@img/sharp-linux-arm': [ '0.34.5' ],
+140 silly audit   '@img/sharp-linux-arm64': [ '0.34.5' ],
+140 silly audit   '@img/sharp-linux-ppc64': [ '0.34.5' ],
+140 silly audit   '@img/sharp-linux-riscv64': [ '0.34.5' ],
+140 silly audit   '@img/sharp-linux-s390x': [ '0.34.5' ],
+140 silly audit   '@img/sharp-linux-x64': [ '0.34.5' ],
+140 silly audit   '@img/sharp-linuxmusl-arm64': [ '0.34.5' ],
+140 silly audit   '@img/sharp-linuxmusl-x64': [ '0.34.5' ],
+140 silly audit   '@img/sharp-wasm32': [ '0.34.5' ],
+140 silly audit   '@img/sharp-win32-arm64': [ '0.34.5' ],
+140 silly audit   '@img/sharp-win32-ia32': [ '0.34.5' ],
+140 silly audit   '@img/sharp-win32-x64': [ '0.34.5' ],
+140 silly audit   '@inquirer/ansi': [ '1.0.2' ],
+140 silly audit   '@inquirer/confirm': [ '5.1.21' ],
+140 silly audit   '@inquirer/core': [ '10.3.2' ],
+140 silly audit   '@inquirer/figures': [ '1.0.15' ],
+140 silly audit   '@inquirer/type': [ '3.0.10' ],
+140 silly audit   '@jridgewell/gen-mapping': [ '0.3.13' ],
+140 silly audit   '@jridgewell/remapping': [ '2.3.5' ],
+140 silly audit   '@jridgewell/resolve-uri': [ '3.1.2' ],
+140 silly audit   '@jridgewell/sourcemap-codec': [ '1.5.5' ],
+140 silly audit   '@jridgewell/trace-mapping': [ '0.3.31' ],
+140 silly audit   '@modelcontextprotocol/sdk': [ '1.27.1' ],
+140 silly audit   ajv: [ '8.18.0', '6.14.0' ],
+140 silly audit   'json-schema-traverse': [ '1.0.0', '0.4.1' ],
+140 silly audit   '@mswjs/interceptors': [ '0.41.3' ],
+140 silly audit   '@napi-rs/wasm-runtime': [ '0.2.12' ],
+140 silly audit   '@next/env': [ '16.1.6' ],
+140 silly audit   '@next/eslint-plugin-next': [ '16.1.6' ],
+140 silly audit   '@next/swc-darwin-arm64': [ '16.1.6' ],
+140 silly audit   '@next/swc-darwin-x64': [ '16.1.6' ],
+140 silly audit   '@next/swc-linux-arm64-gnu': [ '16.1.6' ],
+140 silly audit   '@next/swc-linux-arm64-musl': [ '16.1.6' ],
+140 silly audit   '@next/swc-linux-x64-gnu': [ '16.1.6' ],
+140 silly audit   '@next/swc-linux-x64-musl': [ '16.1.6' ],
+140 silly audit   '@next/swc-win32-arm64-msvc': [ '16.1.6' ],
+140 silly audit   '@next/swc-win32-x64-msvc': [ '16.1.6' ],
+140 silly audit   '@noble/ciphers': [ '1.3.0' ],
+140 silly audit   '@noble/curves': [ '1.9.7' ],
+140 silly audit   '@noble/hashes': [ '1.8.0' ],
+140 silly audit   '@nodelib/fs.scandir': [ '2.1.5' ],
+140 silly audit   '@nodelib/fs.stat': [ '2.0.5' ],
+140 silly audit   '@nodelib/fs.walk': [ '1.2.8' ],
+140 silly audit   '@nolyfill/is-core-module': [ '1.0.39' ],
+140 silly audit   '@open-draft/deferred-promise': [ '2.2.0' ],
+140 silly audit   '@open-draft/logger': [ '0.3.0' ],
+140 silly audit   '@open-draft/until': [ '2.1.0' ],
+140 silly audit   '@radix-ui/number': [ '1.1.1' ],
+140 silly audit   '@radix-ui/primitive': [ '1.1.3' ],
+140 silly audit   '@radix-ui/react-accessible-icon': [ '1.1.7' ],
+140 silly audit   '@radix-ui/react-accordion': [ '1.2.12' ],
+140 silly audit   '@radix-ui/react-alert-dialog': [ '1.1.15' ],
+140 silly audit   '@radix-ui/react-arrow': [ '1.1.7' ],
+140 silly audit   '@radix-ui/react-aspect-ratio': [ '1.1.7' ],
+140 silly audit   '@radix-ui/react-avatar': [ '1.1.10' ],
+140 silly audit   '@radix-ui/react-checkbox': [ '1.3.3' ],
+140 silly audit   '@radix-ui/react-collapsible': [ '1.1.12' ],
+140 silly audit   '@radix-ui/react-collection': [ '1.1.7' ],
+140 silly audit   '@radix-ui/react-compose-refs': [ '1.1.2' ],
+140 silly audit   '@radix-ui/react-context': [ '1.1.2' ],
+140 silly audit   '@radix-ui/react-context-menu': [ '2.2.16' ],
+140 silly audit   '@radix-ui/react-dialog': [ '1.1.15' ],
+140 silly audit   '@radix-ui/react-direction': [ '1.1.1' ],
+140 silly audit   '@radix-ui/react-dismissable-layer': [ '1.1.11' ],
+140 silly audit   '@radix-ui/react-dropdown-menu': [ '2.1.16' ],
+140 silly audit   '@radix-ui/react-focus-guards': [ '1.1.3' ],
+140 silly audit   '@radix-ui/react-focus-scope': [ '1.1.7' ],
+140 silly audit   '@radix-ui/react-form': [ '0.1.8' ],
+140 silly audit   '@radix-ui/react-hover-card': [ '1.1.15' ],
+140 silly audit   '@radix-ui/react-id': [ '1.1.1' ],
+140 silly audit   '@radix-ui/react-label': [ '2.1.7' ],
+140 silly audit   '@radix-ui/react-menu': [ '2.1.16' ],
+140 silly audit   '@radix-ui/react-menubar': [ '1.1.16' ],
+140 silly audit   '@radix-ui/react-navigation-menu': [ '1.2.14' ],
+140 silly audit   '@radix-ui/react-one-time-password-field': [ '0.1.8' ],
+140 silly audit   '@radix-ui/react-password-toggle-field': [ '0.1.3' ],
+140 silly audit   '@radix-ui/react-popover': [ '1.1.15' ],
+140 silly audit   '@radix-ui/react-popper': [ '1.2.8' ],
+140 silly audit   '@radix-ui/react-portal': [ '1.1.9' ],
+140 silly audit   '@radix-ui/react-presence': [ '1.1.5' ],
+140 silly audit   '@radix-ui/react-primitive': [ '2.1.3' ],
+140 silly audit   '@radix-ui/react-progress': [ '1.1.7' ],
+140 silly audit   '@radix-ui/react-radio-group': [ '1.3.8' ],
+140 silly audit   '@radix-ui/react-roving-focus': [ '1.1.11' ],
+140 silly audit   '@radix-ui/react-scroll-area': [ '1.2.10' ],
+140 silly audit   '@radix-ui/react-select': [ '2.2.6' ],
+140 silly audit   '@radix-ui/react-separator': [ '1.1.7' ],
+140 silly audit   '@radix-ui/react-slider': [ '1.3.6' ],
+140 silly audit   '@radix-ui/react-slot': [ '1.2.3' ],
+140 silly audit   '@radix-ui/react-switch': [ '1.2.6' ],
+140 silly audit   '@radix-ui/react-tabs': [ '1.1.13' ],
+140 silly audit   '@radix-ui/react-toast': [ '1.2.15' ],
+140 silly audit   '@radix-ui/react-toggle': [ '1.1.10' ],
+140 silly audit   '@radix-ui/react-toggle-group': [ '1.1.11' ],
+140 silly audit   '@radix-ui/react-toolbar': [ '1.1.11' ],
+140 silly audit   '@radix-ui/react-tooltip': [ '1.2.8' ],
+140 silly audit   '@radix-ui/react-use-callback-ref': [ '1.1.1' ],
+140 silly audit   '@radix-ui/react-use-controllable-state': [ '1.2.2' ],
+140 silly audit   '@radix-ui/react-use-effect-event': [ '0.0.2' ],
+140 silly audit   '@radix-ui/react-use-escape-keydown': [ '1.1.1' ],
+140 silly audit   '@radix-ui/react-use-is-hydrated': [ '0.1.0' ],
+140 silly audit   '@radix-ui/react-use-layout-effect': [ '1.1.1' ],
+140 silly audit   '@radix-ui/react-use-previous': [ '1.1.1' ],
+140 silly audit   '@radix-ui/react-use-rect': [ '1.1.1' ],
+140 silly audit   '@radix-ui/react-use-size': [ '1.1.1' ],
+140 silly audit   '@radix-ui/react-visually-hidden': [ '1.2.3' ],
+140 silly audit   '@radix-ui/rect': [ '1.1.1' ],
+140 silly audit   '@rtsao/scc': [ '1.1.0' ],
+140 silly audit   '@sec-ant/readable-stream': [ '0.4.1' ],
+140 silly audit   '@sindresorhus/merge-streams': [ '4.0.0' ],
+140 silly audit   '@swc/helpers': [ '0.5.15' ],
+140 silly audit   '@tabby_ai/hijri-converter': [ '1.0.5' ],
+140 silly audit   '@tailwindcss/node': [ '4.2.1' ],
+140 silly audit   '@tailwindcss/oxide': [ '4.2.1' ],
+140 silly audit   '@tailwindcss/oxide-android-arm64': [ '4.2.1' ],
+140 silly audit   '@tailwindcss/oxide-darwin-arm64': [ '4.2.1' ],
+140 silly audit   '@tailwindcss/oxide-darwin-x64': [ '4.2.1' ],
+140 silly audit   '@tailwindcss/oxide-freebsd-x64': [ '4.2.1' ],
+140 silly audit   '@tailwindcss/oxide-linux-arm-gnueabihf': [ '4.2.1' ],
+140 silly audit   '@tailwindcss/oxide-linux-arm64-gnu': [ '4.2.1' ],
+140 silly audit   '@tailwindcss/oxide-linux-arm64-musl': [ '4.2.1' ],
+140 silly audit   '@tailwindcss/oxide-linux-x64-gnu': [ '4.2.1' ],
+140 silly audit   '@tailwindcss/oxide-linux-x64-musl': [ '4.2.1' ],
+140 silly audit   '@tailwindcss/oxide-win32-arm64-msvc': [ '4.2.1' ],
+140 silly audit   '@tailwindcss/oxide-win32-x64-msvc': [ '4.2.1' ],
+140 silly audit   '@tailwindcss/postcss': [ '4.2.1' ],
+140 silly audit   '@ts-morph/common': [ '0.27.0' ],
+140 silly audit   'balanced-match': [ '4.0.4', '1.0.2' ],
+140 silly audit   'brace-expansion': [ '5.0.4', '1.1.12' ],
+140 silly audit   'fast-glob': [ '3.3.3', '3.3.1' ],
+140 silly audit   'glob-parent': [ '5.1.2', '6.0.2' ],
+140 silly audit   minimatch: [ '10.2.4', '3.1.5' ],
+140 silly audit   '@tybys/wasm-util': [ '0.10.1' ],
+140 silly audit   '@types/estree': [ '1.0.8' ],
+140 silly audit   '@types/json-schema': [ '7.0.15' ],
+140 silly audit   '@types/json5': [ '0.0.29' ],
+140 silly audit   '@types/node': [ '20.19.37' ],
+140 silly audit   '@types/react': [ '19.2.14' ],
+140 silly audit   '@types/react-dom': [ '19.2.3' ],
+140 silly audit   '@types/statuses': [ '2.0.6' ],
+140 silly audit   '@types/validate-npm-package-name': [ '4.0.2' ],
+140 silly audit   '@typescript-eslint/eslint-plugin': [ '8.56.1' ],
+140 silly audit   ignore: [ '7.0.5', '5.3.2' ],
+140 silly audit   '@typescript-eslint/parser': [ '8.56.1' ],
+140 silly audit   '@typescript-eslint/project-service': [ '8.56.1' ],
+140 silly audit   '@typescript-eslint/scope-manager': [ '8.56.1' ],
+140 silly audit   '@typescript-eslint/tsconfig-utils': [ '8.56.1' ],
+140 silly audit   '@typescript-eslint/type-utils': [ '8.56.1' ],
+140 silly audit   '@typescript-eslint/types': [ '8.56.1' ],
+140 silly audit   '@typescript-eslint/typescript-estree': [ '8.56.1' ],
+140 silly audit   semver: [ '7.7.4', '6.3.1' ],
+140 silly audit   '@typescript-eslint/utils': [ '8.56.1' ],
+140 silly audit   '@typescript-eslint/visitor-keys': [ '8.56.1' ],
+140 silly audit   '@unrs/resolver-binding-android-arm-eabi': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-android-arm64': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-darwin-arm64': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-darwin-x64': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-freebsd-x64': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-linux-arm-gnueabihf': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-linux-arm-musleabihf': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-linux-arm64-gnu': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-linux-arm64-musl': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-linux-ppc64-gnu': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-linux-riscv64-gnu': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-linux-riscv64-musl': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-linux-s390x-gnu': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-linux-x64-gnu': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-linux-x64-musl': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-wasm32-wasi': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-win32-arm64-msvc': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-win32-ia32-msvc': [ '1.11.1' ],
+140 silly audit   '@unrs/resolver-binding-win32-x64-msvc': [ '1.11.1' ],
+140 silly audit   accepts: [ '2.0.0' ],
+140 silly audit   acorn: [ '8.16.0' ],
+140 silly audit   'acorn-jsx': [ '5.3.2' ],
+140 silly audit   'agent-base': [ '7.1.4' ],
+140 silly audit   'ajv-formats': [ '3.0.1' ],
+140 silly audit   'ansi-regex': [ '6.2.2', '5.0.1' ],
+140 silly audit   'ansi-styles': [ '4.3.0' ],
+140 silly audit   ansis: [ '4.2.0' ],
+140 silly audit   argparse: [ '2.0.1' ],
+140 silly audit   'aria-hidden': [ '1.2.6' ],
+140 silly audit   'aria-query': [ '5.3.2' ],
+140 silly audit   'array-buffer-byte-length': [ '1.0.2' ],
+140 silly audit   'array-includes': [ '3.1.9' ],
+140 silly audit   'array.prototype.findlast': [ '1.2.5' ],
+140 silly audit   'array.prototype.findlastindex': [ '1.2.6' ],
+140 silly audit   'array.prototype.flat': [ '1.3.3' ],
+140 silly audit   'array.prototype.flatmap': [ '1.3.3' ],
+140 silly audit   'array.prototype.tosorted': [ '1.1.4' ],
+140 silly audit   'arraybuffer.prototype.slice': [ '1.0.4' ],
+140 silly audit   'ast-types': [ '0.16.1' ],
+140 silly audit   'ast-types-flow': [ '0.0.8' ],
+140 silly audit   'async-function': [ '1.0.0' ],
+140 silly audit   'available-typed-arrays': [ '1.0.7' ],
+140 silly audit   'axe-core': [ '4.11.1' ],
+140 silly audit   'axobject-query': [ '4.1.0' ],
+140 silly audit   'baseline-browser-mapping': [ '2.10.0' ],
+140 silly audit   'body-parser': [ '2.2.2' ],
+140 silly audit   braces: [ '3.0.3' ],
+140 silly audit   browserslist: [ '4.28.1' ],
+140 silly audit   'bundle-name': [ '4.1.0' ],
+140 silly audit   bytes: [ '3.1.2' ],
+140 silly audit   'call-bind': [ '1.0.8' ],
+140 silly audit   'call-bind-apply-helpers': [ '1.0.2' ],
+140 silly audit   'call-bound': [ '1.0.4' ],
+140 silly audit   callsites: [ '3.1.0' ],
+140 silly audit   'caniuse-lite': [ '1.0.30001777' ],
+140 silly audit   chalk: [ '4.1.2', '5.6.2' ],
+140 silly audit   'class-variance-authority': [ '0.7.1' ],
+140 silly audit   'cli-cursor': [ '5.0.0' ],
+140 silly audit   'cli-spinners': [ '2.9.2' ],
+140 silly audit   'cli-width': [ '4.1.0' ],
+140 silly audit   'client-only': [ '0.0.1' ],
+140 silly audit   cliui: [ '8.0.1' ],
+140 silly audit   'emoji-regex': [ '8.0.0', '9.2.2', '10.6.0' ],
+140 silly audit   'string-width': [ '4.2.3', '7.2.0' ],
+140 silly audit   'strip-ansi': [ '6.0.1', '7.2.0' ],
+140 silly audit   'wrap-ansi': [ '7.0.0', '6.2.0' ],
+140 silly audit   clsx: [ '2.1.1' ],
+140 silly audit   cmdk: [ '1.1.1' ],
+140 silly audit   'code-block-writer': [ '13.0.3' ],
+140 silly audit   'color-convert': [ '2.0.1' ],
+140 silly audit   'color-name': [ '1.1.4' ],
+140 silly audit   'concat-map': [ '0.0.1' ],
+140 silly audit   'content-disposition': [ '1.0.1' ],
+140 silly audit   'content-type': [ '1.0.5' ],
+140 silly audit   'convert-source-map': [ '2.0.0' ],
+140 silly audit   cookie: [ '0.7.2', '1.1.1' ],
+140 silly audit   'cookie-signature': [ '1.2.2' ],
+140 silly audit   cors: [ '2.8.6' ],
+140 silly audit   cosmiconfig: [ '9.0.1' ],
+140 silly audit   'cross-spawn': [ '7.0.6' ],
+140 silly audit   cssesc: [ '3.0.0' ],
+140 silly audit   csstype: [ '3.2.3' ],
+140 silly audit   'damerau-levenshtein': [ '1.0.8' ],
+140 silly audit   'data-uri-to-buffer': [ '4.0.1' ],
+140 silly audit   'data-view-buffer': [ '1.0.2' ],
+140 silly audit   'data-view-byte-length': [ '1.0.2' ],
+140 silly audit   'data-view-byte-offset': [ '1.0.1' ],
+140 silly audit   'date-fns': [ '4.1.0' ],
+140 silly audit   'date-fns-jalali': [ '4.1.0-0' ],
+140 silly audit   debug: [ '4.4.3', '3.2.7' ],
+140 silly audit   dedent: [ '1.7.2' ],
+140 silly audit   'deep-is': [ '0.1.4' ],
+140 silly audit   deepmerge: [ '4.3.1' ],
+140 silly audit   'default-browser': [ '5.5.0' ],
+140 silly audit   'default-browser-id': [ '5.0.1' ],
+140 silly audit   'define-data-property': [ '1.1.4' ],
+140 silly audit   'define-lazy-prop': [ '3.0.0' ],
+140 silly audit   'define-properties': [ '1.2.1' ],
+140 silly audit   depd: [ '2.0.0' ],
+140 silly audit   'detect-libc': [ '2.1.2' ],
+140 silly audit   'detect-node-es': [ '1.1.0' ],
+140 silly audit   diff: [ '8.0.3' ],
+140 silly audit   doctrine: [ '2.1.0' ],
+140 silly audit   dotenv: [ '17.3.1' ],
+140 silly audit   'dunder-proto': [ '1.0.1' ],
+140 silly audit   eciesjs: [ '0.4.18' ],
+140 silly audit   'ee-first': [ '1.1.1' ],
+140 silly audit   'electron-to-chromium': [ '1.5.307' ],
+140 silly audit   'embla-carousel': [ '8.6.0' ],
+140 silly audit   'embla-carousel-react': [ '8.6.0' ],
+140 silly audit   'embla-carousel-reactive-utils': [ '8.6.0' ],
+140 silly audit   encodeurl: [ '2.0.0' ],
+140 silly audit   'enhanced-resolve': [ '5.20.0' ],
+140 silly audit   'env-paths': [ '2.2.1' ],
+140 silly audit   'error-ex': [ '1.3.4' ],
+140 silly audit   'es-abstract': [ '1.24.1' ],
+140 silly audit   'es-define-property': [ '1.0.1' ],
+140 silly audit   'es-errors': [ '1.3.0' ],
+140 silly audit   'es-iterator-helpers': [ '1.2.2' ],
+140 silly audit   'es-object-atoms': [ '1.1.1' ],
+140 silly audit   'es-set-tostringtag': [ '2.1.0' ],
+140 silly audit   'es-shim-unscopables': [ '1.1.0' ],
+140 silly audit   'es-to-primitive': [ '1.3.0' ],
+140 silly audit   escalade: [ '3.2.0' ],
+140 silly audit   'escape-html': [ '1.0.3' ],
+140 silly audit   'escape-string-regexp': [ '4.0.0' ],
+140 silly audit   eslint: [ '9.39.4' ],
+140 silly audit   'eslint-config-next': [ '16.1.6' ],
+140 silly audit   globals: [ '16.4.0', '14.0.0' ],
+140 silly audit   'eslint-import-resolver-node': [ '0.3.9' ],
+140 silly audit   'eslint-import-resolver-typescript': [ '3.10.1' ],
+140 silly audit   'eslint-module-utils': [ '2.12.1' ],
+140 silly audit   'eslint-plugin-import': [ '2.32.0' ],
+140 silly audit   'eslint-plugin-jsx-a11y': [ '6.10.2' ],
+140 silly audit   'eslint-plugin-react': [ '7.37.5' ],
+140 silly audit   'eslint-plugin-react-hooks': [ '7.0.1' ],
+140 silly audit   resolve: [ '2.0.0-next.6', '1.22.11' ],
+140 silly audit   'eslint-scope': [ '8.4.0' ],
+140 silly audit   espree: [ '10.4.0' ],
+140 silly audit   esprima: [ '4.0.1' ],
+140 silly audit   esquery: [ '1.7.0' ],
+140 silly audit   esrecurse: [ '4.3.0' ],
+140 silly audit   estraverse: [ '5.3.0' ],
+140 silly audit   esutils: [ '2.0.3' ],
+140 silly audit   etag: [ '1.8.1' ],
+140 silly audit   eventsource: [ '3.0.7' ],
+140 silly audit   'eventsource-parser': [ '3.0.6' ],
+140 silly audit   express: [ '5.2.1' ],
+140 silly audit   'express-rate-limit': [ '8.3.0' ],
+140 silly audit   'fast-deep-equal': [ '3.1.3' ],
+140 silly audit   'fast-json-stable-stringify': [ '2.1.0' ],
+140 silly audit   'fast-levenshtein': [ '2.0.6' ],
+140 silly audit   'fast-uri': [ '3.1.0' ],
+140 silly audit   fastq: [ '1.20.1' ],
+140 silly audit   'fetch-blob': [ '3.2.0' ],
+140 silly audit   figures: [ '6.1.0' ],
+140 silly audit   'file-entry-cache': [ '8.0.0' ],
+140 silly audit   'fill-range': [ '7.1.1' ],
+140 silly audit   finalhandler: [ '2.1.1' ],
+140 silly audit   'find-up': [ '5.0.0' ],
+140 silly audit   'flat-cache': [ '4.0.1' ],
+140 silly audit   flatted: [ '3.4.1' ],
+140 silly audit   'for-each': [ '0.3.5' ],
+140 silly audit   'formdata-polyfill': [ '4.0.10' ],
+140 silly audit   forwarded: [ '0.2.0' ],
+140 silly audit   'framer-motion': [ '12.35.2' ],
+140 silly audit   fresh: [ '2.0.0' ],
+140 silly audit   'fs-extra': [ '11.3.4' ],
+140 silly audit   'function-bind': [ '1.1.2' ],
+140 silly audit   'function.prototype.name': [ '1.1.8' ],
+140 silly audit   'functions-have-names': [ '1.2.3' ],
+140 silly audit   fuzzysort: [ '3.1.0' ],
+140 silly audit   fzf: [ '0.5.2' ],
+140 silly audit   'generator-function': [ '2.0.1' ],
+140 silly audit   gensync: [ '1.0.0-beta.2' ],
+140 silly audit   'get-caller-file': [ '2.0.5' ],
+140 silly audit   'get-east-asian-width': [ '1.5.0' ],
+140 silly audit   'get-intrinsic': [ '1.3.0' ],
+140 silly audit   'get-nonce': [ '1.0.1' ],
+140 silly audit   'get-own-enumerable-keys': [ '1.0.0' ],
+140 silly audit   'get-proto': [ '1.0.1' ],
+140 silly audit   'get-symbol-description': [ '1.1.0' ],
+140 silly audit   'get-tsconfig': [ '4.13.6' ],
+140 silly audit   globalthis: [ '1.0.4' ],
+140 silly audit   gopd: [ '1.2.0' ],
+140 silly audit   'graceful-fs': [ '4.2.11' ],
+140 silly audit   graphql: [ '16.13.1' ],
+140 silly audit   'has-bigints': [ '1.1.0' ],
+140 silly audit   'has-flag': [ '4.0.0' ],
+140 silly audit   'has-property-descriptors': [ '1.0.2' ],
+140 silly audit   'has-proto': [ '1.2.0' ],
+140 silly audit   'has-symbols': [ '1.1.0' ],
+140 silly audit   'has-tostringtag': [ '1.0.2' ],
+140 silly audit   hasown: [ '2.0.2' ],
+140 silly audit   'headers-polyfill': [ '4.0.3' ],
+140 silly audit   'hermes-estree': [ '0.25.1' ],
+140 silly audit   'hermes-parser': [ '0.25.1' ],
+140 silly audit   hono: [ '4.12.5' ],
+140 silly audit   'http-errors': [ '2.0.1' ],
+140 silly audit   'https-proxy-agent': [ '7.0.6' ],
+140 silly audit   'iconv-lite': [ '0.7.2' ],
+140 silly audit   'import-fresh': [ '3.3.1' ],
+140 silly audit   imurmurhash: [ '0.1.4' ],
+140 silly audit   inherits: [ '2.0.4' ],
+140 silly audit   'input-otp': [ '1.4.2' ],
+140 silly audit   'internal-slot': [ '1.1.0' ],
+140 silly audit   'ip-address': [ '10.1.0' ],
+140 silly audit   'ipaddr.js': [ '1.9.1' ],
+140 silly audit   'is-array-buffer': [ '3.0.5' ],
+140 silly audit   'is-arrayish': [ '0.2.1' ],
+140 silly audit   'is-async-function': [ '2.1.1' ],
+140 silly audit   'is-bigint': [ '1.1.0' ],
+140 silly audit   'is-boolean-object': [ '1.2.2' ],
+140 silly audit   'is-bun-module': [ '2.0.0' ],
+140 silly audit   'is-callable': [ '1.2.7' ],
+140 silly audit   'is-core-module': [ '2.16.1' ],
+140 silly audit   'is-data-view': [ '1.0.2' ],
+140 silly audit   'is-date-object': [ '1.1.0' ],
+140 silly audit   'is-docker': [ '3.0.0' ],
+140 silly audit   'is-extglob': [ '2.1.1' ],
+140 silly audit   'is-finalizationregistry': [ '1.1.1' ],
+140 silly audit   'is-fullwidth-code-point': [ '3.0.0' ],
+140 silly audit   'is-generator-function': [ '1.1.2' ],
+140 silly audit   'is-glob': [ '4.0.3' ],
+140 silly audit   'is-in-ssh': [ '1.0.0' ],
+140 silly audit   'is-inside-container': [ '1.0.0' ],
+140 silly audit   'is-interactive': [ '2.0.0' ],
+140 silly audit   'is-map': [ '2.0.3' ],
+140 silly audit   'is-negative-zero': [ '2.0.3' ],
+140 silly audit   'is-node-process': [ '1.2.0' ],
+140 silly audit   'is-number': [ '7.0.0' ],
+140 silly audit   'is-number-object': [ '1.1.1' ],
+140 silly audit   'is-obj': [ '3.0.0' ],
+140 silly audit   'is-plain-obj': [ '4.1.0' ],
+140 silly audit   'is-promise': [ '4.0.0' ],
+140 silly audit   'is-regex': [ '1.2.1' ],
+140 silly audit   'is-regexp': [ '3.1.0' ],
+140 silly audit   'is-set': [ '2.0.3' ],
+140 silly audit   'is-shared-array-buffer': [ '1.0.4' ],
+140 silly audit   'is-string': [ '1.1.1' ],
+140 silly audit   'is-symbol': [ '1.1.1' ],
+140 silly audit   'is-typed-array': [ '1.1.15' ],
+140 silly audit   'is-unicode-supported': [ '2.1.0', '1.3.0' ],
+140 silly audit   'is-weakmap': [ '2.0.2' ],
+140 silly audit   'is-weakref': [ '1.1.1' ],
+140 silly audit   'is-weakset': [ '2.0.4' ],
+140 silly audit   'is-wsl': [ '3.1.1' ],
+140 silly audit   isarray: [ '2.0.5' ],
+140 silly audit   'iterator.prototype': [ '1.1.5' ],
+140 silly audit   jiti: [ '2.6.1' ],
+140 silly audit   jose: [ '6.2.1' ],
+140 silly audit   'js-tokens': [ '4.0.0' ],
+140 silly audit   'js-yaml': [ '4.1.1' ],
+140 silly audit   jsesc: [ '3.1.0' ],
+140 silly audit   'json-buffer': [ '3.0.1' ],
+140 silly audit   'json-parse-even-better-errors': [ '2.3.1' ],
+140 silly audit   'json-schema-typed': [ '8.0.2' ],
+140 silly audit   'json-stable-stringify-without-jsonify': [ '1.0.1' ],
+140 silly audit   json5: [ '2.2.3', '1.0.2' ],
+140 silly audit   jsonfile: [ '6.2.0' ],
+140 silly audit   'jsx-ast-utils': [ '3.3.5' ],
+140 silly audit   keyv: [ '4.5.4' ],
+140 silly audit   kleur: [ '4.1.5', '3.0.3' ],
+140 silly audit   'language-subtag-registry': [ '0.3.23' ],
+140 silly audit   'language-tags': [ '1.0.9' ],
+140 silly audit   levn: [ '0.4.1' ],
+140 silly audit   lightningcss: [ '1.31.1' ],
+140 silly audit   'lightningcss-android-arm64': [ '1.31.1' ],
+140 silly audit   'lightningcss-darwin-arm64': [ '1.31.1' ],
+140 silly audit   'lightningcss-darwin-x64': [ '1.31.1' ],
+140 silly audit   'lightningcss-freebsd-x64': [ '1.31.1' ],
+140 silly audit   'lightningcss-linux-arm-gnueabihf': [ '1.31.1' ],
+140 silly audit   'lightningcss-linux-arm64-gnu': [ '1.31.1' ],
+140 silly audit   'lightningcss-linux-arm64-musl': [ '1.31.1' ],
+140 silly audit   'lightningcss-linux-x64-gnu': [ '1.31.1' ],
+140 silly audit   'lightningcss-linux-x64-musl': [ '1.31.1' ],
+140 silly audit   'lightningcss-win32-arm64-msvc': [ '1.31.1' ],
+140 silly audit   'lightningcss-win32-x64-msvc': [ '1.31.1' ],
+140 silly audit   'lines-and-columns': [ '1.2.4' ],
+140 silly audit   'locate-path': [ '6.0.0' ],
+140 silly audit   'lodash.merge': [ '4.6.2' ],
+140 silly audit   'log-symbols': [ '6.0.0' ],
+140 silly audit   'loose-envify': [ '1.4.0' ],
+140 silly audit   'lru-cache': [ '5.1.1' ],
+140 silly audit   'lucide-react': [ '0.577.0' ],
+140 silly audit   'magic-string': [ '0.30.21' ],
+140 silly audit   'math-intrinsics': [ '1.1.0' ],
+140 silly audit   'media-typer': [ '1.1.0' ],
+140 silly audit   'merge-descriptors': [ '2.0.0' ],
+140 silly audit   'merge-stream': [ '2.0.0' ],
+140 silly audit   merge2: [ '1.4.1' ],
+140 silly audit   micromatch: [ '4.0.8' ],
+140 silly audit   'mime-db': [ '1.54.0' ],
+140 silly audit   'mime-types': [ '3.0.2' ],
+140 silly audit   'mimic-fn': [ '2.1.0' ],
+140 silly audit   'mimic-function': [ '5.0.1' ],
+140 silly audit   minimist: [ '1.2.8' ],
+140 silly audit   'motion-dom': [ '12.35.2' ],
+140 silly audit   'motion-utils': [ '12.29.2' ],
+140 silly audit   ms: [ '2.1.3' ],
+140 silly audit   msw: [ '2.12.10' ],
+140 silly audit   'mute-stream': [ '2.0.0' ],
+140 silly audit   nanoid: [ '3.3.11' ],
+140 silly audit   'napi-postinstall': [ '0.3.4' ],
+140 silly audit   'natural-compare': [ '1.4.0' ],
+140 silly audit   negotiator: [ '1.0.0' ],
+140 silly audit   next: [ '16.1.6' ],
+140 silly audit   'next-themes': [ '0.4.6' ],
+140 silly audit   postcss: [ '8.4.31', '8.5.8' ],
+140 silly audit   'node-domexception': [ '1.0.0' ],
+140 silly audit   'node-exports-info': [ '1.6.0' ],
+140 silly audit   'node-fetch': [ '3.3.2' ],
+140 silly audit   'node-releases': [ '2.0.36' ],
+140 silly audit   'path-key': [ '4.0.0', '3.1.1' ],
+140 silly audit   'object-assign': [ '4.1.1' ],
+140 silly audit   'object-inspect': [ '1.13.4' ],
+140 silly audit   'object-keys': [ '1.1.1' ],
+140 silly audit   'object-treeify': [ '1.1.33' ],
+140 silly audit   'object.assign': [ '4.1.7' ],
+140 silly audit   'object.entries': [ '1.1.9' ],
+140 silly audit   'object.fromentries': [ '2.0.8' ],
+140 silly audit   'object.groupby': [ '1.0.3' ],
+140 silly audit   'object.values': [ '1.2.1' ],
+140 silly audit   'on-finished': [ '2.4.1' ],
+140 silly audit   once: [ '1.4.0' ],
+140 silly audit   open: [ '11.0.0' ],
+140 silly audit   optionator: [ '0.9.4' ],
+140 silly audit   ora: [ '8.2.0' ],
+140 silly audit   outvariant: [ '1.4.3' ],
+140 silly audit   'own-keys': [ '1.0.1' ],
+140 silly audit   'p-limit': [ '3.1.0' ],
+140 silly audit   'p-locate': [ '5.0.0' ],
+140 silly audit   'package-manager-detector': [ '1.6.0' ],
+140 silly audit   'parent-module': [ '1.0.1' ],
+140 silly audit   'parse-json': [ '5.2.0' ],
+140 silly audit   'parse-ms': [ '4.0.0' ],
+140 silly audit   parseurl: [ '1.3.3' ],
+140 silly audit   'path-browserify': [ '1.0.1' ],
+140 silly audit   'path-exists': [ '4.0.0' ],
+140 silly audit   'path-parse': [ '1.0.7' ],
+140 silly audit   'path-to-regexp': [ '6.3.0', '8.3.0' ],
+140 silly audit   picocolors: [ '1.1.1' ],
+140 silly audit   'pkce-challenge': [ '5.0.1' ],
+140 silly audit   'possible-typed-array-names': [ '1.1.0' ],
+140 silly audit   'postcss-selector-parser': [ '7.1.1' ],
+140 silly audit   'powershell-utils': [ '0.1.0' ],
+140 silly audit   'prelude-ls': [ '1.2.1' ],
+140 silly audit   'pretty-ms': [ '9.3.0' ],
+140 silly audit   prompts: [ '2.4.2' ],
+140 silly audit   'prop-types': [ '15.8.1' ],
+140 silly audit   'proxy-addr': [ '2.0.7' ],
+140 silly audit   punycode: [ '2.3.1' ],
+140 silly audit   qs: [ '6.15.0' ],
+140 silly audit   'queue-microtask': [ '1.2.3' ],
+140 silly audit   'radix-ui': [ '1.4.3' ],
+140 silly audit   'range-parser': [ '1.2.1' ],
+140 silly audit   'raw-body': [ '3.0.2' ],
+140 silly audit   react: [ '19.2.3' ],
+140 silly audit   'react-day-picker': [ '9.14.0' ],
+140 silly audit   'react-dom': [ '19.2.3' ],
+140 silly audit   'react-is': [ '16.13.1' ],
+140 silly audit   'react-remove-scroll': [ '2.7.2' ],
+140 silly audit   'react-remove-scroll-bar': [ '2.3.8' ],
+140 silly audit   'react-resizable-panels': [ '4.7.2' ],
+140 silly audit   'react-style-singleton': [ '2.2.3' ],
+140 silly audit   recast: [ '0.23.11' ],
+140 silly audit   'reflect.getprototypeof': [ '1.0.10' ],
+140 silly audit   'regexp.prototype.flags': [ '1.5.4' ],
+140 silly audit   'require-directory': [ '2.1.1' ],
+140 silly audit   'require-from-string': [ '2.0.2' ],
+140 silly audit   'resolve-from': [ '4.0.0' ],
+140 silly audit   'resolve-pkg-maps': [ '1.0.0' ],
+140 silly audit   'restore-cursor': [ '5.1.0' ],
+140 silly audit   rettime: [ '0.10.1' ],
+140 silly audit   reusify: [ '1.1.0' ],
+140 silly audit   router: [ '2.2.0' ],
+140 silly audit   'run-applescript': [ '7.1.0' ],
+140 silly audit   'run-parallel': [ '1.2.0' ],
+140 silly audit   'safe-array-concat': [ '1.1.3' ],
+140 silly audit   'safe-push-apply': [ '1.0.0' ],
+140 silly audit   'safe-regex-test': [ '1.1.0' ],
+140 silly audit   'safer-buffer': [ '2.1.2' ],
+140 silly audit   scheduler: [ '0.27.0' ],
+140 silly audit   send: [ '1.2.1' ],
+140 silly audit   'serve-static': [ '2.2.1' ],
+140 silly audit   'set-function-length': [ '1.2.2' ],
+140 silly audit   'set-function-name': [ '2.0.2' ],
+140 silly audit   'set-proto': [ '1.0.0' ],
+140 silly audit   setprototypeof: [ '1.2.0' ],
+140 silly audit   shadcn: [ '4.0.2' ],
+140 silly audit   'tsconfig-paths': [ '4.2.0', '3.15.0' ],
+140 silly audit   zod: [ '3.25.76', '4.3.6' ],
+140 silly audit   sharp: [ '0.34.5' ],
+140 silly audit   'shebang-command': [ '2.0.0' ],
+140 silly audit   'shebang-regex': [ '3.0.0' ],
+140 silly audit   'side-channel': [ '1.1.0' ],
+140 silly audit   'side-channel-list': [ '1.0.0' ],
+140 silly audit   'side-channel-map': [ '1.0.1' ],
+140 silly audit   'side-channel-weakmap': [ '1.0.2' ],
+140 silly audit   sisteransi: [ '1.0.5' ],
+140 silly audit   sonner: [ '2.0.7' ],
+140 silly audit   'source-map': [ '0.6.1' ],
+140 silly audit   'source-map-js': [ '1.2.1' ],
+140 silly audit   'stable-hash': [ '0.0.5' ],
+140 silly audit   statuses: [ '2.0.2' ],
+140 silly audit   'stdin-discarder': [ '0.2.2' ],
+140 silly audit   'stop-iteration-iterator': [ '1.1.0' ],
+140 silly audit   'strict-event-emitter': [ '0.5.1' ],
+140 silly audit   'string.prototype.includes': [ '2.0.1' ],
+140 silly audit   'string.prototype.matchall': [ '4.0.12' ],
+140 silly audit   'string.prototype.repeat': [ '1.0.0' ],
+140 silly audit   'string.prototype.trim': [ '1.2.10' ],
+140 silly audit   'string.prototype.trimend': [ '1.0.9' ],
+140 silly audit   'string.prototype.trimstart': [ '1.0.8' ],
+140 silly audit   'stringify-object': [ '5.0.0' ],
+140 silly audit   'strip-bom': [ '3.0.0' ],
+140 silly audit   'strip-json-comments': [ '3.1.1' ],
+140 silly audit   'styled-jsx': [ '5.1.6' ],
+140 silly audit   'supports-color': [ '7.2.0' ],
+140 silly audit   'supports-preserve-symlinks-flag': [ '1.0.0' ],
+140 silly audit   'tagged-tag': [ '1.0.0' ],
+140 silly audit   'tailwind-merge': [ '3.5.0' ],
+140 silly audit   tailwindcss: [ '4.2.1' ],
+140 silly audit   tapable: [ '2.3.0' ],
+140 silly audit   'tiny-invariant': [ '1.3.3' ],
+140 silly audit   tinyexec: [ '1.0.2' ],
+140 silly audit   tinyglobby: [ '0.2.15' ],
+140 silly audit   tldts: [ '7.0.25' ],
+140 silly audit   'tldts-core': [ '7.0.25' ],
+140 silly audit   'to-regex-range': [ '5.0.1' ],
+140 silly audit   toidentifier: [ '1.0.1' ],
+140 silly audit   'tough-cookie': [ '6.0.0' ],
+140 silly audit   'ts-api-utils': [ '2.4.0' ],
+140 silly audit   'ts-morph': [ '26.0.0' ],
+140 silly audit   tslib: [ '2.8.1' ],
+140 silly audit   'tw-animate-css': [ '1.4.0' ],
+140 silly audit   'type-check': [ '0.4.0' ],
+140 silly audit   'type-fest': [ '5.4.4' ],
+140 silly audit   'type-is': [ '2.0.1' ],
+140 silly audit   'typed-array-buffer': [ '1.0.3' ],
+140 silly audit   'typed-array-byte-length': [ '1.0.3' ],
+140 silly audit   'typed-array-byte-offset': [ '1.0.4' ],
+140 silly audit   'typed-array-length': [ '1.0.7' ],
+140 silly audit   typescript: [ '5.9.3' ],
+140 silly audit   'typescript-eslint': [ '8.56.1' ],
+140 silly audit   'unbox-primitive': [ '1.1.0' ],
+140 silly audit   'undici-types': [ '6.21.0' ],
+140 silly audit   'unicorn-magic': [ '0.3.0' ],
+140 silly audit   universalify: [ '2.0.1' ],
+140 silly audit   unpipe: [ '1.0.0' ],
+140 silly audit   'unrs-resolver': [ '1.11.1' ],
+140 silly audit   'until-async': [ '3.0.2' ],
+140 silly audit   'update-browserslist-db': [ '1.2.3' ],
+140 silly audit   'uri-js': [ '4.4.1' ],
+140 silly audit   'use-callback-ref': [ '1.3.3' ],
+140 silly audit   'use-sidecar': [ '1.1.3' ],
+140 silly audit   'use-sync-external-store': [ '1.6.0' ],
+140 silly audit   'util-deprecate': [ '1.0.2' ],
+140 silly audit   'validate-npm-package-name': [ '7.0.2' ],
+140 silly audit   vary: [ '1.1.2' ],
+140 silly audit   vaul: [ '1.1.2' ],
+140 silly audit   'web-streams-polyfill': [ '3.3.3' ],
+140 silly audit   'which-boxed-primitive': [ '1.1.1' ],
+140 silly audit   'which-builtin-type': [ '1.2.1' ],
+140 silly audit   'which-collection': [ '1.0.2' ],
+140 silly audit   'which-typed-array': [ '1.1.20' ],
+140 silly audit   'word-wrap': [ '1.2.5' ],
+140 silly audit   wrappy: [ '1.0.2' ],
+140 silly audit   'wsl-utils': [ '0.3.1' ],
+140 silly audit   y18n: [ '5.0.8' ],
+140 silly audit   yallist: [ '3.1.1' ],
+140 silly audit   yargs: [ '17.7.2' ],
+140 silly audit   'yargs-parser': [ '21.1.1' ],
+140 silly audit   'yocto-queue': [ '0.1.0' ],
+140 silly audit   yoctocolors: [ '2.1.2' ],
+140 silly audit   'yoctocolors-cjs': [ '2.1.3' ],
+140 silly audit   'zod-to-json-schema': [ '3.25.1' ],
+140 silly audit   'zod-validation-error': [ '4.0.2' ],
+140 silly audit   '@tailwindcss/oxide-wasm32-wasi': [ '4.2.1' ]
+140 silly audit }
+141 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-win32-ia32-msvc
+142 silly reify mark deleted [
+142 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-win32-ia32-msvc'
+142 silly reify ]
+143 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-win32-arm64-msvc
+144 silly reify mark deleted [
+144 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-win32-arm64-msvc'
+144 silly reify ]
+145 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-wasm32-wasi
+146 silly reify mark deleted [
+146 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-wasm32-wasi'
+146 silly reify ]
+147 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-linux-x64-gnu
+148 silly reify mark deleted [
+148 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-x64-gnu'
+148 silly reify ]
+149 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-linux-x64-musl
+150 silly reify mark deleted [
+150 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-x64-musl'
+150 silly reify ]
+151 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-linux-s390x-gnu
+152 silly reify mark deleted [
+152 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-s390x-gnu'
+152 silly reify ]
+153 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-linux-riscv64-musl
+154 silly reify mark deleted [
+154 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-riscv64-musl'
+154 silly reify ]
+155 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-linux-riscv64-gnu
+156 silly reify mark deleted [
+156 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-riscv64-gnu'
+156 silly reify ]
+157 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-linux-ppc64-gnu
+158 silly reify mark deleted [
+158 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-ppc64-gnu'
+158 silly reify ]
+159 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-linux-arm64-musl
+160 silly reify mark deleted [
+160 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-arm64-musl'
+160 silly reify ]
+161 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-linux-arm64-gnu
+162 silly reify mark deleted [
+162 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-arm64-gnu'
+162 silly reify ]
+163 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-linux-arm-musleabihf
+164 silly reify mark deleted [
+164 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-arm-musleabihf'
+164 silly reify ]
+165 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-linux-arm-gnueabihf
+166 silly reify mark deleted [
+166 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-linux-arm-gnueabihf'
+166 silly reify ]
+167 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-freebsd-x64
+168 silly reify mark deleted [
+168 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-freebsd-x64'
+168 silly reify ]
+169 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-darwin-x64
+170 silly reify mark deleted [
+170 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-darwin-x64'
+170 silly reify ]
+171 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-darwin-arm64
+172 silly reify mark deleted [
+172 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-darwin-arm64'
+172 silly reify ]
+173 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-android-arm64
+174 silly reify mark deleted [
+174 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-android-arm64'
+174 silly reify ]
+175 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@unrs\resolver-binding-android-arm-eabi
+176 silly reify mark deleted [
+176 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@unrs\\resolver-binding-android-arm-eabi'
+176 silly reify ]
+177 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@tailwindcss\oxide-win32-arm64-msvc
+178 silly reify mark deleted [
+178 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-win32-arm64-msvc'
+178 silly reify ]
+179 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@tailwindcss\oxide-linux-x64-musl
+180 silly reify mark deleted [
+180 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-linux-x64-musl'
+180 silly reify ]
+181 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@tailwindcss\oxide-linux-x64-gnu
+182 silly reify mark deleted [
+182 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-linux-x64-gnu'
+182 silly reify ]
+183 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@tailwindcss\oxide-linux-arm64-musl
+184 silly reify mark deleted [
+184 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-linux-arm64-musl'
+184 silly reify ]
+185 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@tailwindcss\oxide-linux-arm64-gnu
+186 silly reify mark deleted [
+186 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-linux-arm64-gnu'
+186 silly reify ]
+187 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@tailwindcss\oxide-linux-arm-gnueabihf
+188 silly reify mark deleted [
+188 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-linux-arm-gnueabihf'
+188 silly reify ]
+189 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@tailwindcss\oxide-freebsd-x64
+190 silly reify mark deleted [
+190 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-freebsd-x64'
+190 silly reify ]
+191 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@tailwindcss\oxide-darwin-x64
+192 silly reify mark deleted [
+192 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-darwin-x64'
+192 silly reify ]
+193 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@tailwindcss\oxide-darwin-arm64
+194 silly reify mark deleted [
+194 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-darwin-arm64'
+194 silly reify ]
+195 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@tailwindcss\oxide-android-arm64
+196 silly reify mark deleted [
+196 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@tailwindcss\\oxide-android-arm64'
+196 silly reify ]
+197 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@next\swc-win32-arm64-msvc
+198 silly reify mark deleted [
+198 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-win32-arm64-msvc'
+198 silly reify ]
+199 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@next\swc-linux-x64-musl
+200 silly reify mark deleted [
+200 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-linux-x64-musl'
+200 silly reify ]
+201 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@next\swc-linux-x64-gnu
+202 silly reify mark deleted [
+202 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-linux-x64-gnu'
+202 silly reify ]
+203 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@next\swc-linux-arm64-musl
+204 silly reify mark deleted [
+204 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-linux-arm64-musl'
+204 silly reify ]
+205 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@next\swc-linux-arm64-gnu
+206 silly reify mark deleted [
+206 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-linux-arm64-gnu'
+206 silly reify ]
+207 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@next\swc-darwin-x64
+208 silly reify mark deleted [
+208 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-darwin-x64'
+208 silly reify ]
+209 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@next\swc-darwin-arm64
+210 silly reify mark deleted [
+210 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@next\\swc-darwin-arm64'
+210 silly reify ]
+211 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-win32-ia32
+212 silly reify mark deleted [
+212 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-win32-ia32'
+212 silly reify ]
+213 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-win32-arm64
+214 silly reify mark deleted [
+214 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-win32-arm64'
+214 silly reify ]
+215 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-wasm32
+216 silly reify mark deleted [ 'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-wasm32' ]
+217 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-linuxmusl-x64
+218 silly reify mark deleted [
+218 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linuxmusl-x64'
+218 silly reify ]
+219 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-linuxmusl-arm64
+220 silly reify mark deleted [
+220 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linuxmusl-arm64'
+220 silly reify ]
+221 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-linux-x64
+222 silly reify mark deleted [
+222 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-x64'
+222 silly reify ]
+223 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-linux-s390x
+224 silly reify mark deleted [
+224 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-s390x'
+224 silly reify ]
+225 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-linux-riscv64
+226 silly reify mark deleted [
+226 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-riscv64'
+226 silly reify ]
+227 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-linux-ppc64
+228 silly reify mark deleted [
+228 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-ppc64'
+228 silly reify ]
+229 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-linux-arm64
+230 silly reify mark deleted [
+230 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-arm64'
+230 silly reify ]
+231 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-linux-arm
+232 silly reify mark deleted [
+232 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-linux-arm'
+232 silly reify ]
+233 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-libvips-linuxmusl-x64
+234 silly reify mark deleted [
+234 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linuxmusl-x64'
+234 silly reify ]
+235 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-libvips-linuxmusl-arm64
+236 silly reify mark deleted [
+236 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linuxmusl-arm64'
+236 silly reify ]
+237 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-libvips-linux-x64
+238 silly reify mark deleted [
+238 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-x64'
+238 silly reify ]
+239 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-libvips-linux-riscv64
+240 silly reify mark deleted [
+240 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-riscv64'
+240 silly reify ]
+241 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-libvips-linux-s390x
+242 silly reify mark deleted [
+242 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-s390x'
+242 silly reify ]
+243 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-libvips-linux-ppc64
+244 silly reify mark deleted [
+244 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-ppc64'
+244 silly reify ]
+245 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-libvips-linux-arm64
+246 silly reify mark deleted [
+246 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-arm64'
+246 silly reify ]
+247 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-libvips-linux-arm
+248 silly reify mark deleted [
+248 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-linux-arm'
+248 silly reify ]
+249 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-libvips-darwin-x64
+250 silly reify mark deleted [
+250 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-darwin-x64'
+250 silly reify ]
+251 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-libvips-darwin-arm64
+252 silly reify mark deleted [
+252 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-libvips-darwin-arm64'
+252 silly reify ]
+253 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-darwin-x64
+254 silly reify mark deleted [
+254 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-darwin-x64'
+254 silly reify ]
+255 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\@img\sharp-darwin-arm64
+256 silly reify mark deleted [
+256 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\@img\\sharp-darwin-arm64'
+256 silly reify ]
+257 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\lightningcss-win32-arm64-msvc
+258 silly reify mark deleted [
+258 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-win32-arm64-msvc'
+258 silly reify ]
+259 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\lightningcss-linux-x64-musl
+260 silly reify mark deleted [
+260 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-linux-x64-musl'
+260 silly reify ]
+261 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\lightningcss-linux-x64-gnu
+262 silly reify mark deleted [
+262 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-linux-x64-gnu'
+262 silly reify ]
+263 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\lightningcss-darwin-arm64
+264 silly reify mark deleted [
+264 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-darwin-arm64'
+264 silly reify ]
+265 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\lightningcss-linux-arm64-musl
+266 silly reify mark deleted [
+266 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-linux-arm64-musl'
+266 silly reify ]
+267 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\lightningcss-linux-arm64-gnu
+268 silly reify mark deleted [
+268 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-linux-arm64-gnu'
+268 silly reify ]
+269 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\lightningcss-linux-arm-gnueabihf
+270 silly reify mark deleted [
+270 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-linux-arm-gnueabihf'
+270 silly reify ]
+271 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\lightningcss-freebsd-x64
+272 silly reify mark deleted [
+272 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-freebsd-x64'
+272 silly reify ]
+273 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\lightningcss-darwin-x64
+274 silly reify mark deleted [
+274 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-darwin-x64'
+274 silly reify ]
+275 verbose reify failed optional dependency D:\BookBuyBd Front\bookbuybd\node_modules\lightningcss-android-arm64
+276 silly reify mark deleted [
+276 silly reify   'D:\\BookBuyBd Front\\bookbuybd\\node_modules\\lightningcss-android-arm64'
+276 silly reify ]
+277 http cache @babel/parser@https://registry.npmjs.org/@babel/parser/-/parser-7.29.0.tgz 0ms (cache hit)
+278 http cache @antfu/ni@https://registry.npmjs.org/@antfu/ni/-/ni-25.0.0.tgz 0ms (cache hit)
+279 http cache @dotenvx/dotenvx@https://registry.npmjs.org/@dotenvx/dotenvx/-/dotenvx-1.54.1.tgz 0ms (cache hit)
+280 http cache which@https://registry.npmjs.org/which/-/which-2.0.2.tgz 0ms (cache hit)
+281 http cache typescript@https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz 0ms (cache hit)
+282 http cache update-browserslist-db@https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.2.3.tgz 0ms (cache hit)
+283 http cache shadcn@https://registry.npmjs.org/shadcn/-/shadcn-4.0.2.tgz 0ms (cache hit)
+284 http cache semver@https://registry.npmjs.org/semver/-/semver-6.3.1.tgz 0ms (cache hit)
+285 http cache tldts@https://registry.npmjs.org/tldts/-/tldts-7.0.25.tgz 0ms (cache hit)
+286 http cache resolve@https://registry.npmjs.org/resolve/-/resolve-1.22.11.tgz 0ms (cache hit)
+287 http cache next@https://registry.npmjs.org/next/-/next-16.1.6.tgz 0ms (cache hit)
+288 http cache napi-postinstall@https://registry.npmjs.org/napi-postinstall/-/napi-postinstall-0.3.4.tgz 0ms (cache hit)
+289 http cache msw@https://registry.npmjs.org/msw/-/msw-2.12.10.tgz 0ms (cache hit)
+290 http cache nanoid@https://registry.npmjs.org/nanoid/-/nanoid-3.3.11.tgz 0ms (cache hit)
+291 http cache loose-envify@https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz 0ms (cache hit)
+292 http cache jiti@https://registry.npmjs.org/jiti/-/jiti-2.6.1.tgz 0ms (cache hit)
+293 http cache jsesc@https://registry.npmjs.org/jsesc/-/jsesc-3.1.0.tgz 0ms (cache hit)
+294 http cache js-yaml@https://registry.npmjs.org/js-yaml/-/js-yaml-4.1.1.tgz 0ms (cache hit)
+295 http cache json5@https://registry.npmjs.org/json5/-/json5-2.2.3.tgz 0ms (cache hit)
+296 http cache is-inside-container@https://registry.npmjs.org/is-inside-container/-/is-inside-container-1.0.0.tgz 0ms (cache hit)
+297 http cache esprima@https://registry.npmjs.org/esprima/-/esprima-4.0.1.tgz 0ms (cache hit)
+298 http cache is-docker@https://registry.npmjs.org/is-docker/-/is-docker-3.0.0.tgz 0ms (cache hit)
+299 http cache eslint@https://registry.npmjs.org/eslint/-/eslint-9.39.4.tgz 0ms (cache hit)
+300 http cache cssesc@https://registry.npmjs.org/cssesc/-/cssesc-3.0.0.tgz 0ms (cache hit)
+301 http cache baseline-browser-mapping@https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.10.0.tgz 0ms (cache hit)
+302 http cache acorn@https://registry.npmjs.org/acorn/-/acorn-8.16.0.tgz 0ms (cache hit)
+303 http cache @tabby_ai/hijri-converter@https://registry.npmjs.org/@tabby_ai/hijri-converter/-/hijri-converter-1.0.5.tgz 0ms (cache hit)
+304 http cache browserslist@https://registry.npmjs.org/browserslist/-/browserslist-4.28.1.tgz 0ms (cache hit)
+305 http cache @radix-ui/react-toolbar@https://registry.npmjs.org/@radix-ui/react-toolbar/-/react-toolbar-1.1.11.tgz 0ms (cache hit)
+306 http cache @radix-ui/react-separator@https://registry.npmjs.org/@radix-ui/react-separator/-/react-separator-1.1.7.tgz 0ms (cache hit)
+307 http cache @radix-ui/react-toast@https://registry.npmjs.org/@radix-ui/react-toast/-/react-toast-1.2.15.tgz 0ms (cache hit)
+308 http cache @radix-ui/react-progress@https://registry.npmjs.org/@radix-ui/react-progress/-/react-progress-1.1.7.tgz 0ms (cache hit)
+309 http cache @radix-ui/react-password-toggle-field@https://registry.npmjs.org/@radix-ui/react-password-toggle-field/-/react-password-toggle-field-0.1.3.tgz 0ms (cache hit)
+310 http cache @radix-ui/react-one-time-password-field@https://registry.npmjs.org/@radix-ui/react-one-time-password-field/-/react-one-time-password-field-0.1.8.tgz 0ms (cache hit)
+311 http cache @radix-ui/react-label@https://registry.npmjs.org/@radix-ui/react-label/-/react-label-2.1.7.tgz 0ms (cache hit)
+312 http cache react-resizable-panels@https://registry.npmjs.org/react-resizable-panels/-/react-resizable-panels-4.7.2.tgz 0ms (cache hit)
+313 http cache @radix-ui/react-form@https://registry.npmjs.org/@radix-ui/react-form/-/react-form-0.1.8.tgz 0ms (cache hit)
+314 http cache @radix-ui/react-aspect-ratio@https://registry.npmjs.org/@radix-ui/react-aspect-ratio/-/react-aspect-ratio-1.1.7.tgz 0ms (cache hit)
+315 http cache @radix-ui/react-avatar@https://registry.npmjs.org/@radix-ui/react-avatar/-/react-avatar-1.1.10.tgz 0ms (cache hit)
+316 http cache @radix-ui/react-accessible-icon@https://registry.npmjs.org/@radix-ui/react-accessible-icon/-/react-accessible-icon-1.1.7.tgz 0ms (cache hit)
+317 http cache radix-ui@https://registry.npmjs.org/radix-ui/-/radix-ui-1.4.3.tgz 0ms (cache hit)
+318 http cache react-day-picker@https://registry.npmjs.org/react-day-picker/-/react-day-picker-9.14.0.tgz 0ms (cache hit)
+319 http cache motion-utils@https://registry.npmjs.org/motion-utils/-/motion-utils-12.29.2.tgz 0ms (cache hit)
+320 http cache motion-dom@https://registry.npmjs.org/motion-dom/-/motion-dom-12.35.2.tgz 0ms (cache hit)
+321 http cache jose@https://registry.npmjs.org/jose/-/jose-6.2.1.tgz 0ms (cache hit)
+322 http cache semver@https://registry.npmjs.org/semver/-/semver-7.7.4.tgz 0ms (cache hit)
+323 http cache framer-motion@https://registry.npmjs.org/framer-motion/-/framer-motion-12.35.2.tgz 0ms (cache hit)
+324 http cache eciesjs@https://registry.npmjs.org/eciesjs/-/eciesjs-0.4.18.tgz 0ms (cache hit)
+325 http cache flatted@https://registry.npmjs.org/flatted/-/flatted-3.4.1.tgz 0ms (cache hit)
+326 http cache json5@https://registry.npmjs.org/json5/-/json5-1.0.2.tgz 0ms (cache hit)
+327 http cache semver@https://registry.npmjs.org/semver/-/semver-7.7.4.tgz 0ms (cache hit)
+328 http cache which@https://registry.npmjs.org/which/-/which-4.0.0.tgz 0ms (cache hit)
+329 http cache semver@https://registry.npmjs.org/semver/-/semver-7.7.4.tgz 0ms (cache hit)
+330 silly tarball no local data for @babel/parser@https://registry.npmjs.org/@babel/parser/-/parser-7.29.0.tgz. Extracting by manifest.
+331 silly tarball no local data for @antfu/ni@https://registry.npmjs.org/@antfu/ni/-/ni-25.0.0.tgz. Extracting by manifest.
+332 silly tarball no local data for @dotenvx/dotenvx@https://registry.npmjs.org/@dotenvx/dotenvx/-/dotenvx-1.54.1.tgz. Extracting by manifest.
+333 http cache resolve@https://registry.npmjs.org/resolve/-/resolve-2.0.0-next.6.tgz 0ms (cache hit)
+334 silly tarball no local data for which@https://registry.npmjs.org/which/-/which-2.0.2.tgz. Extracting by manifest.
+335 silly tarball no local data for typescript@https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz. Extracting by manifest.
+336 silly tarball no local data for update-browserslist-db@https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.2.3.tgz. Extracting by manifest.
+337 silly tarball no local data for shadcn@https://registry.npmjs.org/shadcn/-/shadcn-4.0.2.tgz. Extracting by manifest.
+338 silly tarball no local data for semver@https://registry.npmjs.org/semver/-/semver-6.3.1.tgz. Extracting by manifest.
+339 silly tarball no local data for tldts@https://registry.npmjs.org/tldts/-/tldts-7.0.25.tgz. Extracting by manifest.
+340 silly tarball no local data for resolve@https://registry.npmjs.org/resolve/-/resolve-1.22.11.tgz. Extracting by manifest.
+341 silly tarball no local data for next@https://registry.npmjs.org/next/-/next-16.1.6.tgz. Extracting by manifest.
+342 silly tarball no local data for napi-postinstall@https://registry.npmjs.org/napi-postinstall/-/napi-postinstall-0.3.4.tgz. Extracting by manifest.
+343 silly tarball no local data for msw@https://registry.npmjs.org/msw/-/msw-2.12.10.tgz. Extracting by manifest.
+344 silly tarball no local data for nanoid@https://registry.npmjs.org/nanoid/-/nanoid-3.3.11.tgz. Extracting by manifest.
+345 silly tarball no local data for loose-envify@https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz. Extracting by manifest.
+346 silly tarball no local data for jiti@https://registry.npmjs.org/jiti/-/jiti-2.6.1.tgz. Extracting by manifest.
+347 silly tarball no local data for jsesc@https://registry.npmjs.org/jsesc/-/jsesc-3.1.0.tgz. Extracting by manifest.
+348 silly tarball no local data for js-yaml@https://registry.npmjs.org/js-yaml/-/js-yaml-4.1.1.tgz. Extracting by manifest.
+349 silly tarball no local data for json5@https://registry.npmjs.org/json5/-/json5-2.2.3.tgz. Extracting by manifest.
+350 silly tarball no local data for is-inside-container@https://registry.npmjs.org/is-inside-container/-/is-inside-container-1.0.0.tgz. Extracting by manifest.
+351 silly tarball no local data for esprima@https://registry.npmjs.org/esprima/-/esprima-4.0.1.tgz. Extracting by manifest.
+352 silly tarball no local data for is-docker@https://registry.npmjs.org/is-docker/-/is-docker-3.0.0.tgz. Extracting by manifest.
+353 silly tarball no local data for eslint@https://registry.npmjs.org/eslint/-/eslint-9.39.4.tgz. Extracting by manifest.
+354 silly tarball no local data for cssesc@https://registry.npmjs.org/cssesc/-/cssesc-3.0.0.tgz. Extracting by manifest.
+355 silly tarball no local data for baseline-browser-mapping@https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.10.0.tgz. Extracting by manifest.
+356 silly tarball no local data for acorn@https://registry.npmjs.org/acorn/-/acorn-8.16.0.tgz. Extracting by manifest.
+357 silly tarball no local data for @tabby_ai/hijri-converter@https://registry.npmjs.org/@tabby_ai/hijri-converter/-/hijri-converter-1.0.5.tgz. Extracting by manifest.
+358 silly tarball no local data for browserslist@https://registry.npmjs.org/browserslist/-/browserslist-4.28.1.tgz. Extracting by manifest.
+359 silly tarball no local data for @radix-ui/react-toolbar@https://registry.npmjs.org/@radix-ui/react-toolbar/-/react-toolbar-1.1.11.tgz. Extracting by manifest.
+360 silly tarball no local data for @radix-ui/react-separator@https://registry.npmjs.org/@radix-ui/react-separator/-/react-separator-1.1.7.tgz. Extracting by manifest.
+361 silly tarball no local data for @radix-ui/react-toast@https://registry.npmjs.org/@radix-ui/react-toast/-/react-toast-1.2.15.tgz. Extracting by manifest.
+362 silly tarball no local data for @radix-ui/react-progress@https://registry.npmjs.org/@radix-ui/react-progress/-/react-progress-1.1.7.tgz. Extracting by manifest.
+363 silly tarball no local data for @radix-ui/react-password-toggle-field@https://registry.npmjs.org/@radix-ui/react-password-toggle-field/-/react-password-toggle-field-0.1.3.tgz. Extracting by manifest.
+364 silly tarball no local data for @radix-ui/react-one-time-password-field@https://registry.npmjs.org/@radix-ui/react-one-time-password-field/-/react-one-time-password-field-0.1.8.tgz. Extracting by manifest.
+365 silly tarball no local data for @radix-ui/react-label@https://registry.npmjs.org/@radix-ui/react-label/-/react-label-2.1.7.tgz. Extracting by manifest.
+366 silly tarball no local data for react-resizable-panels@https://registry.npmjs.org/react-resizable-panels/-/react-resizable-panels-4.7.2.tgz. Extracting by manifest.
+367 silly tarball no local data for @radix-ui/react-form@https://registry.npmjs.org/@radix-ui/react-form/-/react-form-0.1.8.tgz. Extracting by manifest.
+368 silly tarball no local data for @radix-ui/react-aspect-ratio@https://registry.npmjs.org/@radix-ui/react-aspect-ratio/-/react-aspect-ratio-1.1.7.tgz. Extracting by manifest.
+369 silly tarball no local data for @radix-ui/react-avatar@https://registry.npmjs.org/@radix-ui/react-avatar/-/react-avatar-1.1.10.tgz. Extracting by manifest.
+370 silly tarball no local data for @radix-ui/react-accessible-icon@https://registry.npmjs.org/@radix-ui/react-accessible-icon/-/react-accessible-icon-1.1.7.tgz. Extracting by manifest.
+371 silly tarball no local data for radix-ui@https://registry.npmjs.org/radix-ui/-/radix-ui-1.4.3.tgz. Extracting by manifest.
+372 silly tarball no local data for react-day-picker@https://registry.npmjs.org/react-day-picker/-/react-day-picker-9.14.0.tgz. Extracting by manifest.
+373 silly tarball no local data for motion-utils@https://registry.npmjs.org/motion-utils/-/motion-utils-12.29.2.tgz. Extracting by manifest.
+374 silly tarball no local data for motion-dom@https://registry.npmjs.org/motion-dom/-/motion-dom-12.35.2.tgz. Extracting by manifest.
+375 silly tarball no local data for jose@https://registry.npmjs.org/jose/-/jose-6.2.1.tgz. Extracting by manifest.
+376 silly tarball no local data for semver@https://registry.npmjs.org/semver/-/semver-7.7.4.tgz. Extracting by manifest.
+377 silly tarball no local data for framer-motion@https://registry.npmjs.org/framer-motion/-/framer-motion-12.35.2.tgz. Extracting by manifest.
+378 silly tarball no local data for eciesjs@https://registry.npmjs.org/eciesjs/-/eciesjs-0.4.18.tgz. Extracting by manifest.
+379 silly tarball no local data for flatted@https://registry.npmjs.org/flatted/-/flatted-3.4.1.tgz. Extracting by manifest.
+380 silly tarball no local data for json5@https://registry.npmjs.org/json5/-/json5-1.0.2.tgz. Extracting by manifest.
+381 silly tarball no local data for semver@https://registry.npmjs.org/semver/-/semver-7.7.4.tgz. Extracting by manifest.
+382 silly tarball no local data for which@https://registry.npmjs.org/which/-/which-4.0.0.tgz. Extracting by manifest.
+383 silly tarball no local data for semver@https://registry.npmjs.org/semver/-/semver-7.7.4.tgz. Extracting by manifest.
+384 silly tarball no local data for resolve@https://registry.npmjs.org/resolve/-/resolve-2.0.0-next.6.tgz. Extracting by manifest.
+385 silly audit bulk request failed undefined
+386 http fetch GET https://registry.npmjs.org/@babel/parser/-/parser-7.29.0.tgz attempt 1 failed with EACCES
+387 http fetch GET https://registry.npmjs.org/@antfu/ni/-/ni-25.0.0.tgz attempt 1 failed with EACCES
+388 http fetch GET https://registry.npmjs.org/@dotenvx/dotenvx/-/dotenvx-1.54.1.tgz attempt 1 failed with EACCES
+389 http fetch GET https://registry.npmjs.org/which/-/which-2.0.2.tgz attempt 1 failed with EACCES
+390 http fetch GET https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz attempt 1 failed with EACCES
+391 http fetch GET https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.2.3.tgz attempt 1 failed with EACCES
+392 http fetch GET https://registry.npmjs.org/shadcn/-/shadcn-4.0.2.tgz attempt 1 failed with EACCES
+393 http fetch GET https://registry.npmjs.org/semver/-/semver-6.3.1.tgz attempt 1 failed with EACCES
+394 http fetch GET https://registry.npmjs.org/tldts/-/tldts-7.0.25.tgz attempt 1 failed with EACCES
+395 http fetch GET https://registry.npmjs.org/resolve/-/resolve-1.22.11.tgz attempt 1 failed with EACCES
+396 http fetch GET https://registry.npmjs.org/next/-/next-16.1.6.tgz attempt 1 failed with EACCES
+397 http fetch GET https://registry.npmjs.org/napi-postinstall/-/napi-postinstall-0.3.4.tgz attempt 1 failed with EACCES
+398 http fetch GET https://registry.npmjs.org/msw/-/msw-2.12.10.tgz attempt 1 failed with EACCES
+399 http fetch GET https://registry.npmjs.org/nanoid/-/nanoid-3.3.11.tgz attempt 1 failed with EACCES
+400 verbose audit error FetchError: request to https://registry.npmjs.org/-/npm/v1/security/audits/quick failed, reason: 
+400 verbose audit error     at ClientRequest.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\minipass-fetch\lib\index.js:130:14)
+400 verbose audit error     at ClientRequest.emit (node:events:518:28)
+400 verbose audit error     at emitErrorEvent (node:_http_client:104:11)
+400 verbose audit error     at _destroy (node:_http_client:898:9)
+400 verbose audit error     at onSocketNT (node:_http_client:918:5)
+400 verbose audit error     at process.processTicksAndRejections (node:internal/process/task_queues:91:21) {
+400 verbose audit error   code: 'EACCES',
+400 verbose audit error   errno: 'EACCES',
+400 verbose audit error   type: 'system'
+400 verbose audit error }
+401 silly audit error undefined
+402 silly audit report null
+403 http fetch GET https://registry.npmjs.org/npm attempt 2 failed with EACCES
+404 http fetch GET https://registry.npmjs.org/@babel/parser/-/parser-7.29.0.tgz attempt 2 failed with EACCES
+405 http fetch GET https://registry.npmjs.org/@antfu/ni/-/ni-25.0.0.tgz attempt 2 failed with EACCES
+406 http fetch GET https://registry.npmjs.org/@dotenvx/dotenvx/-/dotenvx-1.54.1.tgz attempt 2 failed with EACCES
+407 http fetch GET https://registry.npmjs.org/which/-/which-2.0.2.tgz attempt 2 failed with EACCES
+408 http fetch GET https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz attempt 2 failed with EACCES
+409 http fetch GET https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.2.3.tgz attempt 2 failed with EACCES
+410 http fetch GET https://registry.npmjs.org/shadcn/-/shadcn-4.0.2.tgz attempt 2 failed with EACCES
+411 http fetch GET https://registry.npmjs.org/semver/-/semver-6.3.1.tgz attempt 2 failed with EACCES
+412 http fetch GET https://registry.npmjs.org/tldts/-/tldts-7.0.25.tgz attempt 2 failed with EACCES
+413 http fetch GET https://registry.npmjs.org/resolve/-/resolve-1.22.11.tgz attempt 2 failed with EACCES
+414 http fetch GET https://registry.npmjs.org/next/-/next-16.1.6.tgz attempt 2 failed with EACCES
+415 http fetch GET https://registry.npmjs.org/napi-postinstall/-/napi-postinstall-0.3.4.tgz attempt 2 failed with EACCES
+416 http fetch GET https://registry.npmjs.org/msw/-/msw-2.12.10.tgz attempt 2 failed with EACCES
+417 http fetch GET https://registry.npmjs.org/nanoid/-/nanoid-3.3.11.tgz attempt 2 failed with EACCES
+418 http fetch GET https://registry.npmjs.org/npm attempt 3 failed with EACCES
+419 http fetch GET https://registry.npmjs.org/@babel/parser/-/parser-7.29.0.tgz attempt 3 failed with EACCES
+420 http fetch GET https://registry.npmjs.org/@antfu/ni/-/ni-25.0.0.tgz attempt 3 failed with EACCES
+421 http fetch GET https://registry.npmjs.org/@dotenvx/dotenvx/-/dotenvx-1.54.1.tgz attempt 3 failed with EACCES
+422 http fetch GET https://registry.npmjs.org/which/-/which-2.0.2.tgz attempt 3 failed with EACCES
+423 http fetch GET https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz attempt 3 failed with EACCES
+424 http fetch GET https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.2.3.tgz attempt 3 failed with EACCES
+425 http fetch GET https://registry.npmjs.org/shadcn/-/shadcn-4.0.2.tgz attempt 3 failed with EACCES
+426 http fetch GET https://registry.npmjs.org/semver/-/semver-6.3.1.tgz attempt 3 failed with EACCES
+427 http fetch GET https://registry.npmjs.org/tldts/-/tldts-7.0.25.tgz attempt 3 failed with EACCES
+428 http fetch GET https://registry.npmjs.org/resolve/-/resolve-1.22.11.tgz attempt 3 failed with EACCES
+429 http fetch GET https://registry.npmjs.org/next/-/next-16.1.6.tgz attempt 3 failed with EACCES
+430 http fetch GET https://registry.npmjs.org/napi-postinstall/-/napi-postinstall-0.3.4.tgz attempt 3 failed with EACCES
+431 http fetch GET https://registry.npmjs.org/msw/-/msw-2.12.10.tgz attempt 3 failed with EACCES
+432 http fetch GET https://registry.npmjs.org/nanoid/-/nanoid-3.3.11.tgz attempt 3 failed with EACCES
+433 verbose cwd D:\BookBuyBd Front\bookbuybd
+434 verbose os Windows_NT 10.0.26200
+435 verbose node v22.18.0
+436 verbose npm  v10.9.3
+437 error Exit handler never called!
+438 error This is an error with npm itself. Please report this error at:
+439 error   <https://github.com/npm/cli/issues>
+440 verbose exit 1
+441 verbose code 1
+442 error A complete log of this run can be found in: D:\BookBuyBd Front\bookbuybd\.npm-cache\_logs\2026-03-09T21_43_55_477Z-debug-0.log

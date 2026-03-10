@@ -30,8 +30,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="font-sans">
-      <body>
+    <html lang="en" className="font-sans" suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <Navbar />
         {children}
         <Footer />

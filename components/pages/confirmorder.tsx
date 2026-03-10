@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useId } from 'react';
 import { CartItem, CheckoutForm, DELIVERY_CHARGE, FREE_DELIVERY_THRESHOLD } from './cartStore';
 
 function Img({ src, alt = '', className = '', fallback = '#e2e8f0' }: { src: string; alt?: string; className?: string; fallback?: string }) {
@@ -11,14 +11,33 @@ function Img({ src, alt = '', className = '', fallback = '#e2e8f0' }: { src: str
 /* ── confetti particle ── */
 interface Particle { id: number; x: number; size: number; color: string; delay: number; duration: number; }
 const CONFETTI_COLORS = ['#3A9AFF','#60A5FA','#f59e0b','#3b82f6','#ec4899','#8b5cf6','#f97316'];
-function makeParticles(n = 60): Particle[] {
+
+function hashSeed(value: string): number {
+  let hash = 2166136261;
+  for (let i = 0; i < value.length; i += 1) {
+    hash ^= value.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0 || 1;
+}
+
+function createRng(seed: number): () => number {
+  let state = seed >>> 0 || 1;
+  return () => {
+    state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+    return state / 4294967296;
+  };
+}
+
+function makeParticles(n = 60, seed = 1): Particle[] {
+  const rand = createRng(seed);
   return Array.from({ length: n }, (_, i) => ({
     id: i,
-    x: Math.random() * 100,
-    size: 6 + Math.random() * 8,
-    color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
-    delay: Math.random() * 1.2,
-    duration: 2 + Math.random() * 1.5,
+    x: rand() * 100,
+    size: 6 + rand() * 8,
+    color: CONFETTI_COLORS[Math.floor(rand() * CONFETTI_COLORS.length)],
+    delay: rand() * 1.2,
+    duration: 2 + rand() * 1.5,
   }));
 }
 
@@ -31,12 +50,17 @@ interface ConfirmOrderProps {
 type Phase = 'animating' | 'done';
 
 export default function ConfirmOrder({ items, form, onContinueShopping }: ConfirmOrderProps) {
+  const uid = useId();
+  const seed = useMemo(() => hashSeed(uid), [uid]);
+  const orderId = useMemo(
+    () => `ANP-${seed.toString(36).toUpperCase().slice(-6).padStart(6, '0')}`,
+    [seed],
+  );
+  const particles = useMemo(() => makeParticles(70, seed), [seed]);
+
   const [phase,       setPhase]       = useState<Phase>('animating');
-  const [checkDone,   setCheckDone]   = useState(false);
   const [textVisible, setTextVisible] = useState(false);
   const [detailsVis,  setDetailsVis]  = useState(false);
-  const [particles]                   = useState<Particle[]>(makeParticles(70));
-  const orderRef = useRef(`ANP-${Date.now().toString(36).toUpperCase().slice(-6)}`);
 
   const subtotal = items.reduce((s, it) => s + it.price * it.qty, 0);
   const delivery = subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_CHARGE;
@@ -44,11 +68,10 @@ export default function ConfirmOrder({ items, form, onContinueShopping }: Confir
 
   useEffect(() => {
     // sequence: ring draws → check pops → text fades in → details slide up
-    const t1 = setTimeout(() => setCheckDone(true),  700);
-    const t2 = setTimeout(() => setTextVisible(true), 1100);
-    const t3 = setTimeout(() => setDetailsVis(true),  1600);
-    const t4 = setTimeout(() => setPhase('done'),     2000);
-    return () => { [t1,t2,t3,t4].forEach(clearTimeout); };
+    const t1 = setTimeout(() => setTextVisible(true), 1100);
+    const t2 = setTimeout(() => setDetailsVis(true),  1600);
+    const t3 = setTimeout(() => setPhase('done'),     2000);
+    return () => { [t1, t2, t3].forEach(clearTimeout); };
   }, []);
 
   return (
@@ -162,7 +185,7 @@ export default function ConfirmOrder({ items, form, onContinueShopping }: Confir
                 <div className="flex items-center justify-center gap-2 mt-3">
                   <span style={{ fontSize: 12, color: '#94a3b8' }}>Order ID</span>
                   <span style={{ fontSize: 13, fontWeight: 800, color: '#0f172a', background: '#f1f5f9', borderRadius: 8, padding: '3px 10px', letterSpacing: '0.05em' }}>
-                    {orderRef.current}
+                    {orderId}
                   </span>
                 </div>
               </div>
@@ -293,7 +316,7 @@ export default function ConfirmOrder({ items, form, onContinueShopping }: Confir
                       <div style={{ height: 1, background: '#e8f0e9', margin: '14px 0' }} />
                       <h3 style={{ fontSize: 12, fontWeight: 700, color: '#64748b', marginBottom: 6 }}>YOUR NOTE</h3>
                       <p style={{ fontSize: 12, color: '#475569', lineHeight: 1.6, background: '#f8fafc', borderRadius: 10, padding: '8px 10px', border: '1px solid #e2e8f0', fontStyle: 'italic' }}>
-                        "{form.note}"
+                        &ldquo;{form.note}&rdquo;
                       </p>
                     </>
                   )}
@@ -312,7 +335,7 @@ export default function ConfirmOrder({ items, form, onContinueShopping }: Confir
 
               {/* Support note */}
               <p style={{ fontSize: 12, color: '#94a3b8', textAlign: 'center', marginTop: 4 }}>
-                Need help? Contact us at <strong style={{ color: '#3A9AFF' }}>support@anyaprokash.com</strong> · Order ID: {orderRef.current}
+                Need help? Contact us at <strong style={{ color: '#3A9AFF' }}>support@anyaprokash.com</strong> · Order ID: {orderId}
               </p>
             </div>
           )}
