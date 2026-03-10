@@ -54,6 +54,12 @@ export function createContactMessage(payload: ContactMessagePayload): ContactMes
   return { messageId, status, submittedAt };
 }
 
+export function listContactMessages(): StoredContactMessage[] {
+  return Array.from(messageStore.values()).sort((a, b) => (
+    new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
+  ));
+}
+
 export function getContactMessageStatus(messageId: string): ContactMessageStatus | null {
   const record = messageStore.get(messageId);
   if (!record) return null;

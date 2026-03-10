@@ -1,44 +1,573 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, type ReactNode } from 'react';
+import { apiClient, endpoints } from '@/lib/api';
 
 /* ═══════════════════════════════ DATA ═══════════════════════════════ */
-const D = {
-    total_revenue: 1800.00, total_orders: 2, pending_orders: 1,
-    confirmed_orders: 1, rejected_orders: 0, pending_deliveries: 2,
+interface DashboardOverview {
+    total_revenue: number;
+    total_orders: number;
+    pending_orders: number;
+    confirmed_orders: number;
+    rejected_orders: number;
+    pending_deliveries: number;
+    processing_deliveries: number;
+    shipped_deliveries: number;
+    delivered_deliveries: number;
+    cancelled_deliveries: number;
+    total_books: number;
+    active_books: number;
+    in_stock_books: number;
+    out_of_stock_books: number;
+    low_stock_books: number;
+}
+
+interface DashboardOverviewApiResponse extends Omit<DashboardOverview, 'total_revenue'> {
+    total_revenue: string | number;
+}
+
+interface AuthUser {
+    id: number;
+    username: string;
+    email: string;
+    is_staff: boolean;
+}
+
+interface LoginResponse {
+    token: string;
+    user: AuthUser;
+}
+
+interface DashboardRevenuePoint {
+    label: string;
+    value: number;
+}
+
+interface DashboardRetentionPoint {
+    label: string;
+    smes: number;
+    startups: number;
+    enterprises: number;
+}
+
+interface DashboardLeads {
+    open: number;
+    in_progress: number;
+    lost: number;
+    won: number;
+    total_leads: number;
+    conversion_rate: number;
+    customer_ltv_days: number;
+    leads_delta: number;
+    leads_delta_pct: number;
+    conversion_delta_pct: number;
+    ltv_delta_pct: number;
+    spark_leads: number[];
+    spark_conversion: number[];
+    spark_ltv: number[];
+}
+
+interface DashboardOrder {
+    id: string;
+    customer: string;
+    book: string;
+    amount: number;
+    status: string;
+    delivery: string;
+}
+
+interface DashboardOrderDetail extends DashboardOrder {
+    items: number;
+    email: string;
+    phone: string;
+    address: string;
+    createdAt: string;
+    notes: string;
+}
+
+interface DashboardBook {
+    id: string | number;
+    title: string;
+    author: string;
+    genre: string;
+    image: string;
+    thumbnail: string;
+    stock: number;
+    price: number;
+    status: string;
+    orders: number;
+}
+
+interface NewDashboardBookInput {
+    category: number;
+    title: string;
+    slug: string;
+    author: number;
+    description: string;
+    price: string;
+    stock_quantity: number;
+    is_coming_soon: boolean;
+    is_active: boolean;
+    imageFile?: File | null;
+}
+
+interface DashboardBookManageDetail extends NewDashboardBookInput {
+    id: string;
+    slug: string;
+    categoryName: string;
+    authorName: string;
+}
+
+interface DashboardCategory {
+    id: number;
+    name: string;
+    slug: string;
+    is_active: boolean;
+}
+
+interface NewDashboardCategoryInput {
+    name: string;
+    slug: string;
+    is_active: boolean;
+}
+
+interface UpdateDashboardCategoryInput {
+    name: string;
+    is_active: boolean;
+}
+
+interface NamedOption {
+    id: number;
+    name: string;
+}
+
+interface DashboardNotification {
+    id: string | number;
+    type: string;
+    msg: string;
+    time: string;
+    read: boolean;
+}
+
+interface DashboardCalendarDay {
+    l: string;
+    d: number;
+}
+
+interface DashboardCalendarEvent {
+    id: string | number;
+    title: string;
+    time: string;
+    color: 'blue' | 'violet';
+    attendees: string[];
+    duration?: string;
+}
+
+interface DashboardFavorite {
+    id: string | number;
+    label: string;
+    color: string;
+}
+
+interface DashboardInboxMessage {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    subject: string;
+    message: string;
+    status: string;
+    submittedAt: string;
+    updatedAt: string;
+}
+
+const DASHBOARD_OVERVIEW_EMPTY: DashboardOverview = {
+    total_revenue: 0, total_orders: 0, pending_orders: 0,
+    confirmed_orders: 0, rejected_orders: 0, pending_deliveries: 0,
     processing_deliveries: 0, shipped_deliveries: 0,
     delivered_deliveries: 0, cancelled_deliveries: 0,
-    total_books: 3, active_books: 3, in_stock_books: 3,
-    out_of_stock_books: 0, low_stock_books: 1,
+    total_books: 0, active_books: 0, in_stock_books: 0,
+    out_of_stock_books: 0, low_stock_books: 0,
 };
-const REVENUE_MONTHLY = [820, 940, 1100, 870, 1340, 1560, 1200, 1680, 1450, 1720, 1590, 1800];
+
+const DASHBOARD_LEADS_EMPTY: DashboardLeads = {
+    open: 0,
+    in_progress: 0,
+    lost: 0,
+    won: 0,
+    total_leads: 0,
+    conversion_rate: 0,
+    customer_ltv_days: 0,
+    leads_delta: 0,
+    leads_delta_pct: 0,
+    conversion_delta_pct: 0,
+    ltv_delta_pct: 0,
+    spark_leads: [],
+    spark_conversion: [],
+    spark_ltv: [],
+};
+
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const RETENTION = {
-    smes: [55, 60, 45, 70, 65, 80, 55, 75, 85, 90, 78, 88],
-    startups: [70, 80, 60, 85, 75, 90, 70, 85, 95, 88, 92, 96],
-    enterprises: [80, 90, 70, 95, 85, 100, 80, 92, 100, 95, 98, 100],
-};
-const LOCATIONS = [
-    { country: 'Australia', flag: '🇦🇺', pct: 48 },
-    { country: 'Malaysia', flag: '🇲🇾', pct: 33 },
-    { country: 'Indonesia', flag: '🇮🇩', pct: 25 },
-    { country: 'Singapore', flag: '🇸🇬', pct: 17 },
-    { country: 'Philippines', flag: '🇵🇭', pct: 10 },
-];
-const BOOKS_DATA = [
-    { id: 1, title: 'The Lean Startup', author: 'Eric Ries', genre: 'Business', stock: 12, price: 29.99, status: 'active', orders: 18 },
-    { id: 2, title: 'Zero to One', author: 'Peter Thiel', genre: 'Business', stock: 3, price: 24.99, status: 'active', orders: 14 },
-    { id: 3, title: 'Atomic Habits', author: 'James Clear', genre: 'Self-Help', stock: 8, price: 19.99, status: 'active', orders: 22 },
-];
-const ORDERS_DATA = [
-    { id: '#ORD-001', customer: 'Amir Hassan', book: 'The Lean Startup', date: 'Mar 6, 2025', amount: 29.99, status: 'confirmed', delivery: 'pending' },
-    { id: '#ORD-002', customer: 'Sarah Kim', book: 'Atomic Habits', date: 'Mar 5, 2025', amount: 19.99, status: 'pending', delivery: 'pending' },
-];
-const NOTIFICATIONS_INIT = [
-    { id: 1, type: 'order', msg: 'New order #ORD-002 received', time: '2m ago', read: false },
-    { id: 2, type: 'stock', msg: 'Atomic Habits stock running low', time: '1h ago', read: false },
-    { id: 3, type: 'system', msg: 'Dashboard data refreshed', time: '3h ago', read: true },
-    { id: 4, type: 'order', msg: 'Order #ORD-001 confirmed', time: '5h ago', read: true },
-];
+
+function resolveEndpoint<T = string>(resolver: () => T | undefined, fallback: T): T {
+    try {
+        return resolver() ?? fallback;
+    } catch {
+        return fallback;
+    }
+}
+
+function parseNumeric(value: unknown, fallback = 0): number {
+    const normalized = typeof value === 'number' ? value : Number(value);
+    return Number.isFinite(normalized) ? normalized : fallback;
+}
+
+function parseText(value: unknown, fallback = ''): string {
+    if (typeof value === 'string' && value.trim()) return value;
+    if (typeof value === 'number') return String(value);
+    return fallback;
+}
+
+function parseBoolean(value: unknown, fallback = false): boolean {
+    if (typeof value === 'boolean') return value;
+    if (typeof value === 'string') {
+        const normalized = value.trim().toLowerCase();
+        if (['true', '1', 'yes', 'active'].includes(normalized)) return true;
+        if (['false', '0', 'no', 'inactive'].includes(normalized)) return false;
+    }
+    if (typeof value === 'number') {
+        if (value === 1) return true;
+        if (value === 0) return false;
+    }
+    return fallback;
+}
+
+function slugify(value: string): string {
+    return value
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
+function appendResourceId(collectionUrl: string, id: string | number): string {
+    const normalized = collectionUrl.endsWith('/') ? collectionUrl : `${collectionUrl}/`;
+    return `${normalized}${encodeURIComponent(String(id))}/`;
+}
+
+const API_MEDIA_ORIGIN = (() => {
+    const raw = (process.env.NEXT_PUBLIC_API_BASE_URL || '').trim();
+    if (!raw) return '';
+    return raw.replace(/\/api\/?$/i, '').replace(/\/$/, '');
+})();
+
+function toAssetUrl(value: unknown): string {
+    const text = parseText(value);
+    if (!text) return '';
+    if (/^https?:\/\//i.test(text) || text.startsWith('data:') || text.startsWith('blob:')) {
+        return text;
+    }
+    if (!API_MEDIA_ORIGIN) return text;
+    return text.startsWith('/') ? `${API_MEDIA_ORIGIN}${text}` : `${API_MEDIA_ORIGIN}/${text}`;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return Boolean(value && typeof value === 'object' && !Array.isArray(value));
+}
+
+function readArrayPayload(payload: unknown): unknown[] {
+    if (Array.isArray(payload)) return payload;
+    if (isRecord(payload)) {
+        if (Array.isArray(payload.results)) return payload.results as unknown[];
+        if (Array.isArray(payload.items)) return payload.items as unknown[];
+        if (Array.isArray(payload.data)) return payload.data as unknown[];
+    }
+    return [];
+}
+
+function normalizeDashboardOverview(response: DashboardOverviewApiResponse | null | undefined): DashboardOverview {
+    if (!response || typeof response !== 'object') return DASHBOARD_OVERVIEW_EMPTY;
+
+    return {
+        total_revenue: parseNumeric(response.total_revenue, DASHBOARD_OVERVIEW_EMPTY.total_revenue),
+        total_orders: parseNumeric(response.total_orders, DASHBOARD_OVERVIEW_EMPTY.total_orders),
+        pending_orders: parseNumeric(response.pending_orders, DASHBOARD_OVERVIEW_EMPTY.pending_orders),
+        confirmed_orders: parseNumeric(response.confirmed_orders, DASHBOARD_OVERVIEW_EMPTY.confirmed_orders),
+        rejected_orders: parseNumeric(response.rejected_orders, DASHBOARD_OVERVIEW_EMPTY.rejected_orders),
+        pending_deliveries: parseNumeric(response.pending_deliveries, DASHBOARD_OVERVIEW_EMPTY.pending_deliveries),
+        processing_deliveries: parseNumeric(response.processing_deliveries, DASHBOARD_OVERVIEW_EMPTY.processing_deliveries),
+        shipped_deliveries: parseNumeric(response.shipped_deliveries, DASHBOARD_OVERVIEW_EMPTY.shipped_deliveries),
+        delivered_deliveries: parseNumeric(response.delivered_deliveries, DASHBOARD_OVERVIEW_EMPTY.delivered_deliveries),
+        cancelled_deliveries: parseNumeric(response.cancelled_deliveries, DASHBOARD_OVERVIEW_EMPTY.cancelled_deliveries),
+        total_books: parseNumeric(response.total_books, DASHBOARD_OVERVIEW_EMPTY.total_books),
+        active_books: parseNumeric(response.active_books, DASHBOARD_OVERVIEW_EMPTY.active_books),
+        in_stock_books: parseNumeric(response.in_stock_books, DASHBOARD_OVERVIEW_EMPTY.in_stock_books),
+        out_of_stock_books: parseNumeric(response.out_of_stock_books, DASHBOARD_OVERVIEW_EMPTY.out_of_stock_books),
+        low_stock_books: parseNumeric(response.low_stock_books, DASHBOARD_OVERVIEW_EMPTY.low_stock_books),
+    };
+}
+
+function normalizeRevenue(payload: unknown): DashboardRevenuePoint[] {
+    return readArrayPayload(payload).map((row, idx) => {
+        const rec = isRecord(row) ? row : {};
+        return {
+            label: parseText(rec.label ?? rec.month ?? rec.period, MONTHS[idx % MONTHS.length]),
+            value: parseNumeric(rec.value ?? rec.revenue ?? rec.amount),
+        };
+    });
+}
+
+function normalizeRetention(payload: unknown): DashboardRetentionPoint[] {
+    return readArrayPayload(payload).map((row, idx) => {
+        const rec = isRecord(row) ? row : {};
+        return {
+            label: parseText(rec.label ?? rec.month ?? rec.period, MONTHS[idx % MONTHS.length]),
+            smes: parseNumeric(rec.smes),
+            startups: parseNumeric(rec.startups),
+            enterprises: parseNumeric(rec.enterprises),
+        };
+    });
+}
+
+function normalizeLeads(payload: unknown): DashboardLeads {
+    if (!isRecord(payload)) return DASHBOARD_LEADS_EMPTY;
+    return {
+        open: parseNumeric(payload.open),
+        in_progress: parseNumeric(payload.in_progress ?? payload.inProgress),
+        lost: parseNumeric(payload.lost),
+        won: parseNumeric(payload.won),
+        total_leads: parseNumeric(payload.total_leads ?? payload.totalLeads),
+        conversion_rate: parseNumeric(payload.conversion_rate ?? payload.conversionRate),
+        customer_ltv_days: parseNumeric(payload.customer_ltv_days ?? payload.customerLtvDays),
+        leads_delta: parseNumeric(payload.leads_delta ?? payload.leadsDelta),
+        leads_delta_pct: parseNumeric(payload.leads_delta_pct ?? payload.leadsDeltaPct),
+        conversion_delta_pct: parseNumeric(payload.conversion_delta_pct ?? payload.conversionDeltaPct),
+        ltv_delta_pct: parseNumeric(payload.ltv_delta_pct ?? payload.ltvDeltaPct),
+        spark_leads: readArrayPayload(payload.spark_leads ?? payload.sparkLeads).map((v) => parseNumeric(v)),
+        spark_conversion: readArrayPayload(payload.spark_conversion ?? payload.sparkConversion).map((v) => parseNumeric(v)),
+        spark_ltv: readArrayPayload(payload.spark_ltv ?? payload.sparkLtv).map((v) => parseNumeric(v)),
+    };
+}
+
+function normalizeOrders(payload: unknown): DashboardOrder[] {
+    return readArrayPayload(payload).map((row, idx) => {
+        const rec = isRecord(row) ? row : {};
+        return {
+            id: parseText(rec.id ?? rec.order_id ?? rec.orderId, `ORD-${idx + 1}`),
+            customer: parseText(rec.customer_name ?? rec.customer ?? rec.customerName, 'Unknown'),
+            book: `${parseNumeric(rec.total_items ?? rec.items_count ?? rec.item_count, 0)} item(s)`,
+            amount: parseNumeric(rec.total_amount ?? rec.amount ?? rec.total),
+            status: parseText(rec.order_status ?? rec.status, 'pending'),
+            delivery: parseText(rec.delivery_status ?? rec.delivery ?? rec.deliveryStatus, 'pending'),
+        };
+    });
+}
+
+function normalizeOrderDetail(payload: unknown): DashboardOrderDetail | null {
+    if (!isRecord(payload)) return null;
+
+    const customerObj = isRecord(payload.customer) ? payload.customer : {};
+    const itemsPayload = readArrayPayload(payload.items ?? payload.order_items);
+
+    const id = parseText(payload.id ?? payload.order_id ?? payload.orderId);
+    if (!id) return null;
+
+    const customer = parseText(
+        payload.customer_name ?? payload.customer ?? customerObj.name ?? customerObj.full_name,
+        'Unknown',
+    );
+    const amount = parseNumeric(payload.total_amount ?? payload.amount ?? payload.total);
+    const status = parseText(payload.order_status ?? payload.status, 'pending');
+    const delivery = parseText(payload.delivery_status ?? payload.delivery ?? payload.deliveryStatus, 'pending');
+
+    return {
+        id,
+        customer,
+        book: `${parseNumeric(payload.total_items ?? payload.items_count ?? payload.item_count, itemsPayload.length)} item(s)`,
+        amount,
+        status,
+        delivery,
+        items: parseNumeric(payload.total_items ?? payload.items_count ?? payload.item_count, itemsPayload.length),
+        email: parseText(payload.customer_email ?? payload.email ?? customerObj.email),
+        phone: parseText(payload.customer_phone ?? payload.phone ?? customerObj.phone),
+        address: parseText(payload.shipping_address ?? payload.address ?? customerObj.address),
+        createdAt: parseText(payload.created_at ?? payload.createdAt ?? payload.date),
+        notes: parseText(payload.notes ?? payload.note ?? payload.customer_note),
+    };
+}
+
+function normalizeBooks(payload: unknown): DashboardBook[] {
+    return readArrayPayload(payload).map((row, idx) => {
+        const rec = isRecord(row) ? row : {};
+        const author = parseText(rec.author_name ?? rec.author, 'Unknown');
+        const genre = parseText(rec.category_name ?? rec.genre, 'General');
+        const inStock = Boolean(rec.is_in_stock ?? false);
+        const isComingSoon = Boolean(rec.is_coming_soon ?? false);
+        const isActive = rec.is_active !== false;
+        const status = isComingSoon ? 'coming soon' : (inStock ? 'active' : (isActive ? 'out of stock' : 'inactive'));
+        return {
+            id: parseText(rec.id, String(idx + 1)),
+            title: parseText(rec.title, 'Untitled'),
+            author,
+            genre,
+            image: toAssetUrl(rec.image),
+            thumbnail: toAssetUrl(rec.thumbnail),
+            stock: parseNumeric(rec.stock_quantity ?? rec.stock),
+            price: parseNumeric(rec.price),
+            status,
+            orders: parseNumeric(rec.orders ?? rec.total_orders ?? rec.totalOrders),
+        };
+    });
+}
+
+function normalizeBookManageDetail(payload: unknown): DashboardBookManageDetail | null {
+    if (!isRecord(payload)) return null;
+
+    const categoryObj = isRecord(payload.category) ? payload.category : {};
+    const authorObj = isRecord(payload.author) ? payload.author : {};
+
+    const id = parseText(payload.id);
+    if (!id) return null;
+
+    const category = parseNumeric(
+        payload.category_id
+        ?? (typeof payload.category === 'number' ? payload.category : undefined)
+        ?? categoryObj.id,
+    );
+    const author = parseNumeric(
+        payload.author_id
+        ?? (typeof payload.author === 'number' ? payload.author : undefined)
+        ?? authorObj.id,
+    );
+
+    if (!Number.isInteger(category) || category <= 0 || !Number.isInteger(author) || author <= 0) {
+        return null;
+    }
+
+    return {
+        id,
+        slug: parseText(payload.slug),
+        category,
+        title: parseText(payload.title),
+        author,
+        description: parseText(payload.description),
+        price: parseNumeric(payload.price).toFixed(2),
+        stock_quantity: Math.max(0, Math.trunc(parseNumeric(payload.stock_quantity ?? payload.stock))),
+        is_coming_soon: parseBoolean(payload.is_coming_soon, false),
+        is_active: parseBoolean(payload.is_active, true),
+        categoryName: parseText(categoryObj.name ?? payload.category_name),
+        authorName: parseText(authorObj.name ?? authorObj.full_name ?? payload.author_name),
+    };
+}
+
+function normalizeNotifications(payload: unknown): DashboardNotification[] {
+    return readArrayPayload(payload).map((row, idx) => {
+        const rec = isRecord(row) ? row : {};
+        return {
+            id: parseText(rec.id, String(idx + 1)),
+            type: parseText(rec.type, 'system'),
+            msg: parseText(rec.msg ?? rec.message, ''),
+            time: parseText(rec.time, ''),
+            read: Boolean(rec.read),
+        };
+    });
+}
+
+function normalizeCalendar(payload: unknown): { days: DashboardCalendarDay[]; events: DashboardCalendarEvent[] } {
+    if (!isRecord(payload)) return { days: [], events: [] };
+
+    const days = readArrayPayload(payload.days).map((row, idx) => {
+        const rec = isRecord(row) ? row : {};
+        return {
+            l: parseText(rec.l ?? rec.label ?? rec.day, MONTHS[idx % 7].slice(0, 3)),
+            d: parseNumeric(rec.d ?? rec.date),
+        };
+    });
+
+    const events: DashboardCalendarEvent[] = readArrayPayload(payload.events).map((row, idx) => {
+        const rec = isRecord(row) ? row : {};
+        return {
+            id: parseText(rec.id, String(idx + 1)),
+            title: parseText(rec.title, 'Event'),
+            time: parseText(rec.time, ''),
+            color: (parseText(rec.color, 'blue') === 'violet' ? 'violet' : 'blue'),
+            attendees: readArrayPayload(rec.attendees).map((a) => parseText(a)).filter(Boolean),
+            duration: parseText(rec.duration, ''),
+        };
+    });
+
+    return { days, events };
+}
+
+function normalizeFavorites(payload: unknown): DashboardFavorite[] {
+    return readArrayPayload(payload).map((row, idx) => {
+        const rec = isRecord(row) ? row : {};
+        return {
+            id: parseText(rec.id, String(idx + 1)),
+            label: parseText(rec.label, ''),
+            color: parseText(rec.color, 'bg-gray-400'),
+        };
+    });
+}
+
+function normalizeInboxMessages(payload: unknown): DashboardInboxMessage[] {
+    return readArrayPayload(payload).map((row, idx) => {
+        const rec = isRecord(row) ? row : {};
+        return {
+            id: parseText(rec.messageId ?? rec.id, `msg-${idx + 1}`),
+            name: parseText(rec.name, 'Unknown'),
+            email: parseText(rec.email, ''),
+            phone: parseText(rec.phone, ''),
+            subject: parseText(rec.subject, 'No subject'),
+            message: parseText(rec.message, ''),
+            status: parseText(rec.status, 'received'),
+            submittedAt: parseText(rec.submittedAt ?? rec.submitted_at ?? rec.updatedAt, ''),
+            updatedAt: parseText(rec.updatedAt ?? rec.updated_at ?? rec.submittedAt, ''),
+        };
+    });
+}
+
+function dedupeNamedOptions(options: NamedOption[]): NamedOption[] {
+    const seen = new Set<number>();
+    return options.filter((option) => {
+        if (seen.has(option.id)) return false;
+        seen.add(option.id);
+        return true;
+    });
+}
+
+function normalizeDashboardCategories(payload: unknown): DashboardCategory[] {
+    const seen = new Set<number>();
+
+    return readArrayPayload(payload).map((row) => {
+        const rec = isRecord(row) ? row : {};
+        const id = parseNumeric(rec.id ?? rec.category_id);
+        const name = parseText(rec.name ?? rec.category_name ?? rec.title);
+
+        if (!Number.isFinite(id) || id <= 0 || !name || seen.has(id)) {
+            return null;
+        }
+
+        seen.add(id);
+        return {
+            id,
+            name,
+            slug: parseText(rec.slug, slugify(name)),
+            is_active: parseBoolean(rec.is_active ?? rec.isActive, true),
+        };
+    }).filter((category): category is DashboardCategory => category !== null);
+}
+
+function normalizeAuthorOptionsFromBooks(payload: unknown): NamedOption[] {
+    const options = readArrayPayload(payload).map((row) => {
+        const rec = isRecord(row) ? row : {};
+        const authorObj = isRecord(rec.author) ? rec.author : null;
+        const id = parseNumeric(rec.author_id ?? (typeof rec.author === 'number' ? rec.author : undefined) ?? authorObj?.id);
+        const name = parseText(rec.author_name ?? (typeof rec.author === 'string' ? rec.author : undefined) ?? authorObj?.name ?? authorObj?.full_name);
+        return Number.isFinite(id) && id > 0 && name ? { id, name } : null;
+    }).filter((option): option is NamedOption => option !== null);
+
+    return dedupeNamedOptions(options);
+}
 
 /* ═══════════════════════════════ ICONS ═══════════════════════════════ */
 const Sv = (d: string, sw = 1.8) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} className="w-4 h-4"><path d={d} /></svg>;
@@ -94,13 +623,14 @@ function AnimCount({ to, prefix = '', suffix = '', dec = 0, dur = 1200 }: { to: 
             setV(e * to); if (p < 1) requestAnimationFrame(tick);
         };
         requestAnimationFrame(tick);
-    }, [to]);
+    }, [to, dur]);
     return <>{prefix}{v.toFixed(dec)}{suffix}</>;
 }
 
 function Sparkline({ data, color = '#3b82f6', h = 28 }: { data: number[]; color?: string; h?: number }) {
-    const w = 80, mx = Math.max(...data), mn = Math.min(...data);
-    const pts = data.map((v, i) => [i / (data.length - 1) * w, h - ((v - mn) / (mx - mn || 1)) * (h - 4) - 2]);
+    const safeData = data.length >= 2 ? data : [0, data[0] ?? 0];
+    const w = 80, mx = Math.max(...safeData), mn = Math.min(...safeData);
+    const pts = safeData.map((v, i) => [i / (safeData.length - 1) * w, h - ((v - mn) / (mx - mn || 1)) * (h - 4) - 2]);
     const path = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x},${y}`).join(' ');
     const area = path + ` L${w},${h} L0,${h} Z`;
     const id = `sg${color.replace(/[^a-z0-9]/gi, '')}`;
@@ -137,20 +667,42 @@ function Toggle({ v, onChange }: { v: boolean; onChange: (b: boolean) => void })
 }
 
 /* ═══════════════════════════════ REVENUE CHART ═══════════════════════════════ */
-function RevenueChart({ dark }: { dark: boolean }) {
+function RevenueChart({ dark, overview, series }: { dark: boolean; overview: DashboardOverview; series: DashboardRevenuePoint[] }) {
     const [range, setRange] = useState('1Y');
     const [anim, setAnim] = useState(false);
     const [hover, setHover] = useState<number | null>(null);
     useEffect(() => { setTimeout(() => setAnim(true), 400); }, []);
-    const slices: Record<string, number[]> = { '1M': REVENUE_MONTHLY.slice(-1), '3M': REVENUE_MONTHLY.slice(-3), '6M': REVENUE_MONTHLY.slice(-6), '1Y': REVENUE_MONTHLY, 'ALL': [...REVENUE_MONTHLY, 1820, 1900] };
-    const data = slices[range] || REVENUE_MONTHLY;
-    const W = 560, H = 110, pad = 10;
-    const max = Math.max(...data), min = Math.min(...data) * 0.9;
-    const px = (i: number) => data.length > 1 ? pad + (i / (data.length - 1)) * (W - pad * 2) : W / 2;
-    const py = (v: number) => max !== min ? H - pad - (v - min) / (max - min) * (H - pad * 2) : H / 2;
-    const pts = data.map((v, i) => [px(i), py(v)] as [number, number]);
+    const chartSeries = series.length > 0 ? series : [{ label: 'No data', value: 0 }];
+    const slices: Record<string, DashboardRevenuePoint[]> = {
+        '1M': chartSeries.slice(-1),
+        '3M': chartSeries.slice(-3),
+        '6M': chartSeries.slice(-6),
+        '1Y': chartSeries.slice(-12),
+        'ALL': chartSeries,
+    };
+    const data = slices[range] || chartSeries;
+    const values = data.map((point) => point.value);
+    const labels = data.map((point) => point.label);
+    const hasData = series.length > 0;
+    const W = 700, H = 220, leftPad = 44, rightPad = 16, topPad = 14, bottomPad = 48;
+    const plotW = W - leftPad - rightPad;
+    const plotH = H - topPad - bottomPad;
+    const rawMax = Math.max(...values, 1);
+    const rawMin = Math.min(...values, 0);
+    const margin = Math.max((rawMax - rawMin) * 0.12, 1);
+    const max = rawMax + margin;
+    const min = Math.max(0, rawMin - margin);
+    const ySpan = max - min || 1;
+    const px = (i: number) => data.length > 1 ? leftPad + (i / (data.length - 1)) * plotW : leftPad + plotW / 2;
+    const py = (v: number) => topPad + (1 - (v - min) / ySpan) * plotH;
+    const pts = values.map((v, i) => [px(i), py(v)] as [number, number]);
     const path = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
-    const area = path + ` L${px(data.length - 1)},${H} L${px(0)},${H} Z`;
+    const yTicks = Array.from({ length: 6 }, (_, i) => max - (i * ySpan) / 5);
+    const formatTick = (v: number) => {
+        if (Math.abs(v) >= 1000000) return `${(v / 1000000).toFixed(1)}M`;
+        if (Math.abs(v) >= 1000) return `${(v / 1000).toFixed(1)}K`;
+        return v.toFixed(0);
+    };
     const card = dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100';
     return (
         <div className={`rounded-xl border p-4 ${card} transition-colors duration-300`}>
@@ -161,7 +713,7 @@ function RevenueChart({ dark }: { dark: boolean }) {
                         <span className="text-[10px] bg-emerald-50 text-emerald-600 font-bold px-2 py-0.5 rounded-full">↑ 22%</span>
                     </div>
                     <span className={`text-2xl font-black font-mono ${dark ? 'text-white' : 'text-gray-900'}`}>
-                        TK <AnimCount to={D.total_revenue} dec={2} />
+                        TK <AnimCount to={overview.total_revenue} dec={2} />
                     </span>
                 </div>
                 <div className="flex gap-0.5">
@@ -172,56 +724,92 @@ function RevenueChart({ dark }: { dark: boolean }) {
                 </div>
             </div>
             <div className="relative" onMouseLeave={() => setHover(null)}>
-                <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-28" preserveAspectRatio="none">
-                    <defs><linearGradient id="revGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#3b82f6" stopOpacity="0.2" /><stop offset="100%" stopColor="#3b82f6" stopOpacity="0" /></linearGradient></defs>
-                    <path d={area} fill="url(#revGrad)" style={{ opacity: anim ? 1 : 0, transition: 'opacity 0.8s' }} />
-                    <path d={path} fill="none" stroke="#3b82f6" strokeWidth="2.5"
+                <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-52 rounded-lg" preserveAspectRatio="none">
+                    <rect x={0} y={0} width={W} height={H} fill={dark ? '#111827' : '#f3f4f6'} rx={10} />
+                    {yTicks.map((tick, i) => (
+                        <g key={i}>
+                            <line x1={leftPad} x2={W - rightPad} y1={py(tick)} y2={py(tick)} stroke={dark ? '#374151' : '#d1d5db'} strokeWidth="1" />
+                            <text x={leftPad - 6} y={py(tick) + 3} textAnchor="end" className={dark ? 'fill-gray-400' : 'fill-gray-500'} fontSize="9">{formatTick(tick)}</text>
+                        </g>
+                    ))}
+                    <line x1={leftPad} x2={leftPad} y1={topPad} y2={H - bottomPad} stroke={dark ? '#6b7280' : '#9ca3af'} strokeWidth="1.2" />
+                    <line x1={leftPad} x2={W - rightPad} y1={H - bottomPad} y2={H - bottomPad} stroke={dark ? '#6b7280' : '#9ca3af'} strokeWidth="1.2" />
+                    <path d={path} fill="none" stroke="#fb923c" strokeWidth="2.3"
                         style={{ strokeDasharray: 2200, strokeDashoffset: anim ? 0 : 2200, transition: 'stroke-dashoffset 1.6s cubic-bezier(0.4,0,0.2,1)' }} />
-                    {hover !== null && <line x1={pts[hover][0]} x2={pts[hover][0]} y1={0} y2={H} stroke="#3b82f6" strokeWidth="1" strokeDasharray="3" opacity="0.5" />}
-                    {hover !== null && <circle cx={pts[hover][0]} cy={pts[hover][1]} r={4} fill="#3b82f6" />}
-                    {pts.map(([x], i) => <rect key={i} x={x - 20} y={0} width={40} height={H} fill="transparent" onMouseEnter={() => setHover(i)} style={{ cursor: 'crosshair' }} />)}
+                    {hover !== null && <line x1={pts[hover][0]} x2={pts[hover][0]} y1={topPad} y2={H - bottomPad} stroke="#fb923c" strokeWidth="1" strokeDasharray="3" opacity="0.6" />}
+                    {hover !== null && <circle cx={pts[hover][0]} cy={pts[hover][1]} r={4} fill="#fb923c" stroke="#fff" strokeWidth="1.2" />}
+                    {labels.map((label, i) => {
+                        const x = px(i);
+                        return (
+                            <text
+                                key={`${label}-${i}`}
+                                x={x}
+                                y={H - bottomPad + 12}
+                                textAnchor="end"
+                                transform={`rotate(-65 ${x} ${H - bottomPad + 12})`}
+                                className={dark ? 'fill-gray-400' : 'fill-gray-500'}
+                                fontSize="8"
+                            >
+                                {label}
+                            </text>
+                        );
+                    })}
+                    {pts.map(([x], i) => (
+                        <rect
+                            key={i}
+                            x={x - Math.max(plotW / Math.max(data.length * 2, 1), 12)}
+                            y={topPad}
+                            width={Math.max((plotW / Math.max(data.length, 1)), 18)}
+                            height={plotH}
+                            fill="transparent"
+                            onMouseEnter={() => setHover(i)}
+                            style={{ cursor: 'crosshair' }}
+                        />
+                    ))}
                 </svg>
                 {hover !== null && (
                     <div className="absolute top-0 pointer-events-none bg-gray-900 text-white text-[10px] font-bold px-2.5 py-1.5 rounded-lg shadow-xl z-10"
-                        style={{ left: `${(hover / (data.length - 1)) * 100}%`, transform: 'translateX(-50%)' }}>
-                        <div className="text-gray-300">{MONTHS[MONTHS.length - data.length + hover]}</div>
-                        <div className="text-blue-300">TK {data[hover].toLocaleString()}</div>
+                        style={{ left: `${data.length > 1 ? (hover / (data.length - 1)) * 100 : 50}%`, transform: 'translateX(-50%)' }}>
+                        <div className="text-gray-300">{labels[hover]}</div>
+                        <div className="text-orange-300">TK {values[hover].toLocaleString()}</div>
                     </div>
                 )}
             </div>
-            <div className="flex justify-between mt-1">
-                {data.map((_, i) => <span key={i} className="text-[8px] text-gray-400">{MONTHS[MONTHS.length - data.length + i]}</span>)}
-            </div>
+            {!hasData && <p className="mt-2 text-[10px] text-gray-400">No revenue data available.</p>}
         </div>
     );
 }
 
 /* ═══════════════════════════════ RETENTION CHART ═══════════════════════════════ */
-function RetentionChart({ dark }: { dark: boolean }) {
+function RetentionChart({ dark, series }: { dark: boolean; series: DashboardRetentionPoint[] }) {
     const [anim, setAnim] = useState(false);
     useEffect(() => { setTimeout(() => setAnim(true), 600); }, []);
-    const months = MONTHS.slice(-9);
+    const data = series.slice(-9);
+    const latest = data[data.length - 1];
+    const previous = data[data.length - 2];
+    const latestRate = latest ? latest.enterprises : 0;
+    const delta = latest && previous ? latest.enterprises - previous.enterprises : 0;
     const card = dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100';
     return (
         <div className={`rounded-xl border p-4 ${card} transition-colors duration-300`}>
             <div className="flex items-center justify-between mb-2">
                 <div>
-                    <span className={`text-sm font-bold ${dark ? 'text-gray-100' : 'text-gray-800'}`}>Retention Rate</span>
+                    <span className={`text-sm font-bold ${dark ? 'text-gray-100' : 'text-gray-800'}`}>Delivery Momentum</span>
                     <div className="flex items-baseline gap-2 mt-0.5">
-                        <span className={`text-xl font-black font-mono ${dark ? 'text-white' : 'text-gray-900'}`}>95%</span>
-                        <span className="text-xs text-emerald-500 font-bold">+12% vs last month</span>
+                        <span className={`text-xl font-black font-mono ${dark ? 'text-white' : 'text-gray-900'}`}>{latestRate.toFixed(0)}%</span>
+                        <span className={`text-xs font-bold ${delta >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>{delta >= 0 ? '+' : ''}{delta.toFixed(0)}% vs last month</span>
                     </div>
                 </div>
                 <div className="flex items-center gap-3 text-[10px] text-gray-400">
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-sky-300 inline-block" />SMEs</span>
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />Startups</span>
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-800 inline-block" />Enterprise</span>
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-sky-300 inline-block" />Pending</span>
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />Confirmed</span>
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-800 inline-block" />Delivered</span>
                 </div>
             </div>
             <div className="flex items-end gap-1 h-16 mt-2">
-                {months.map((_, i) => (
-                    <div key={i} className="flex-1 flex items-end gap-0.5">
-                        {[{ v: RETENTION.smes[i], c: 'bg-sky-300' }, { v: RETENTION.startups[i], c: 'bg-blue-500' }, { v: RETENTION.enterprises[i], c: 'bg-blue-800' }].map(({ v, c }, j) => (
+                {data.map((point, i) => (
+                    <div key={point.label || i} className="flex-1 flex items-end gap-0.5">
+                        {[{ v: point.smes, c: 'bg-sky-300' }, { v: point.startups, c: 'bg-blue-500' }, { v: point.enterprises, c: 'bg-blue-800' }].map(({ v, c }, j) => (
                             <div key={j} className={`flex-1 rounded-sm ${c}`}
                                 style={{ height: anim ? `${v}%` : '0%', transition: `height 0.7s cubic-bezier(0.4,0,0.2,1) ${(i * 3 + j) * 0.04}s` }} />
                         ))}
@@ -229,15 +817,16 @@ function RetentionChart({ dark }: { dark: boolean }) {
                 ))}
             </div>
             <div className="flex justify-between mt-1">
-                {months.map(m => <span key={m} className="text-[8px] text-gray-400">{m}</span>)}
+                {data.map((point, idx) => <span key={`${point.label}-${idx}`} className="text-[8px] text-gray-400">{point.label}</span>)}
             </div>
+            {data.length === 0 && <p className="mt-2 text-[10px] text-gray-400">No retention data available.</p>}
         </div>
     );
 }
 
 /* ═══════════════════════════════ KPI CARD ═══════════════════════════════ */
 function KpiCard({ title, value, sub, delta, up, icon, color, sparkData, dark, delay = 0 }:
-    { title: string; value: any; sub: string; delta: string; up: boolean; icon: any; color: string; sparkData: number[]; dark: boolean; delay?: number }) {
+    { title: string; value: ReactNode; sub: string; delta: string; up: boolean; icon: ReactNode; color: string; sparkData: number[]; dark: boolean; delay?: number }) {
     const [vis, setVis] = useState(false);
     useEffect(() => { setTimeout(() => setVis(true), delay); }, [delay]);
     const card = dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100';
@@ -261,26 +850,18 @@ function KpiCard({ title, value, sub, delta, up, icon, color, sparkData, dark, d
 }
 
 /* ═══════════════════════════════ LEADS PANEL ═══════════════════════════════ */
-function LeadsPanel({ dark }: { dark: boolean }) {
-    const [tab, setTab] = useState('Status');
-    const leads = { open: 114, inProgress: 62, lost: 47, won: 38 };
-    const total = Object.values(leads).reduce((a, b) => a + b, 0);
+function LeadsPanel({ dark, leads }: { dark: boolean; leads: DashboardLeads }) {
+    const total = [leads.open, leads.in_progress, leads.lost, leads.won].reduce((a, b) => a + b, 0);
     const items = [
-        { label: 'Open', val: leads.open, pct: Math.round(leads.open / total * 100), color: '#60a5fa' },
-        { label: 'In Progress', val: leads.inProgress, pct: Math.round(leads.inProgress / total * 100), color: '#3b82f6' },
-        { label: 'Lost', val: leads.lost, pct: Math.round(leads.lost / total * 100), color: '#1d4ed8' },
-        { label: 'Won', val: leads.won, pct: Math.round(leads.won / total * 100), color: '#1e3a8a' },
+        { label: 'Pending', val: leads.open, pct: total > 0 ? Math.round((leads.open / total) * 100) : 0, color: '#60a5fa' },
+        { label: 'Confirmed', val: leads.in_progress, pct: total > 0 ? Math.round((leads.in_progress / total) * 100) : 0, color: '#3b82f6' },
+        { label: 'Rejected', val: leads.lost, pct: total > 0 ? Math.round((leads.lost / total) * 100) : 0, color: '#1d4ed8' },
+        { label: 'Delivered', val: leads.won, pct: total > 0 ? Math.round((leads.won / total) * 100) : 0, color: '#1e3a8a' },
     ];
     const card = dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100';
     return (
         <div className={`rounded-xl border p-4 ${card} transition-colors duration-300`}>
-            <h3 className={`text-sm font-bold mb-3 ${dark ? 'text-gray-100' : 'text-gray-800'}`}>Leads Management</h3>
-            <div className="flex gap-0.5 mb-3 bg-gray-100 rounded-lg p-0.5">
-                {['Status', 'Sources', 'Qualification'].map(t => (
-                    <button key={t} onClick={() => setTab(t)}
-                        className={`flex-1 text-[10px] font-semibold py-1 rounded-md transition-all ${tab === t ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500'}`}>{t}</button>
-                ))}
-            </div>
+            <h3 className={`text-sm font-bold mb-3 ${dark ? 'text-gray-100' : 'text-gray-800'}`}>Order Status Mix</h3>
             <div className="flex rounded-full overflow-hidden h-1.5 mb-4 gap-px">
                 {items.map(it => <div key={it.label} className="transition-all duration-1000 rounded-sm" style={{ width: `${it.pct}%`, background: it.color }} />)}
             </div>
@@ -298,19 +879,20 @@ function LeadsPanel({ dark }: { dark: boolean }) {
                     </div>
                 ))}
             </div>
+            {total === 0 && <p className="mt-2 text-[10px] text-gray-400">No leads data available.</p>}
         </div>
     );
 }
 
 /* ═══════════════════════════════ DELIVERY PIPELINE ═══════════════════════════════ */
-function DeliveryPipeline({ dark }: { dark: boolean }) {
+function DeliveryPipeline({ dark, overview }: { dark: boolean; overview: DashboardOverview }) {
     const card = dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100';
     const stages = [
-        { label: 'Pending', val: D.pending_deliveries, color: '#f59e0b', icon: Ico.clock },
-        { label: 'Processing', val: D.processing_deliveries, color: '#3b82f6', icon: Ico.refresh },
-        { label: 'Shipped', val: D.shipped_deliveries, color: '#8b5cf6', icon: Ico.truck },
-        { label: 'Delivered', val: D.delivered_deliveries, color: '#10b981', icon: Ico.check },
-        { label: 'Cancelled', val: D.cancelled_deliveries, color: '#ef4444', icon: Ico.x },
+        { label: 'Pending', val: overview.pending_deliveries, color: '#f59e0b', icon: Ico.clock },
+        { label: 'Processing', val: overview.processing_deliveries, color: '#3b82f6', icon: Ico.refresh },
+        { label: 'Shipped', val: overview.shipped_deliveries, color: '#8b5cf6', icon: Ico.truck },
+        { label: 'Delivered', val: overview.delivered_deliveries, color: '#10b981', icon: Ico.check },
+        { label: 'Cancelled', val: overview.cancelled_deliveries, color: '#ef4444', icon: Ico.x },
     ];
     return (
         <div className={`rounded-xl border p-4 ${card} transition-colors duration-300`}>
@@ -333,9 +915,9 @@ function DeliveryPipeline({ dark }: { dark: boolean }) {
 }
 
 /* ═══════════════════════════════ ORDERS TABLE ═══════════════════════════════ */
-function OrdersTable({ dark }: { dark: boolean }) {
+function OrdersTable({ dark, orders, onManageOrder }: { dark: boolean; orders: DashboardOrder[]; onManageOrder: (orderId: string) => void }) {
     const [filter, setFilter] = useState('All');
-    const filtered = filter === 'All' ? ORDERS_DATA : ORDERS_DATA.filter(o => o.status === filter.toLowerCase());
+    const filtered = filter === 'All' ? orders : orders.filter((o) => o.status === filter.toLowerCase());
     const sColors: Record<string, string> = { confirmed: 'bg-emerald-100 text-emerald-700', pending: 'bg-amber-100 text-amber-700', rejected: 'bg-red-100 text-red-600' };
     const card = dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100';
     const rowH = dark ? 'hover:bg-gray-800 border-gray-800' : 'hover:bg-gray-50 border-gray-50';
@@ -355,7 +937,7 @@ function OrdersTable({ dark }: { dark: boolean }) {
                 <table className="w-full">
                     <thead>
                         <tr className={`border-t text-[10px] font-semibold uppercase tracking-wide ${th}`}>
-                            {['Order', 'Customer', 'Book', 'Amount', 'Status', 'Delivery'].map(h => (
+                            {['Order', 'Customer', 'Book', 'Amount', 'Status', 'Delivery', 'Action'].map(h => (
                                 <th key={h} className="px-4 py-2 text-left">{h}</th>
                             ))}
                         </tr>
@@ -369,17 +951,35 @@ function OrdersTable({ dark }: { dark: boolean }) {
                                 <td className={`px-4 py-2.5 text-[11px] font-bold font-mono ${dark ? 'text-gray-200' : 'text-gray-800'}`}>TK {o.amount}</td>
                                 <td className="px-4 py-2.5"><span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${sColors[o.status]}`}>{o.status}</span></td>
                                 <td className="px-4 py-2.5"><span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-100 text-violet-700">{o.delivery}</span></td>
+                                <td className="px-4 py-2.5">
+                                    <button onClick={() => onManageOrder(o.id)} className="text-[10px] font-semibold bg-blue-600 text-white px-2.5 py-1 rounded-full hover:bg-blue-700 transition">
+                                        Manage Order
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+            {filtered.length === 0 && <p className="px-4 py-3 text-[11px] text-gray-400">No orders found.</p>}
         </div>
     );
 }
 
 /* ═══════════════════════════════ BOOKS TABLE ═══════════════════════════════ */
-function BooksTable({ dark }: { dark: boolean }) {
+function BooksTable({
+    dark,
+    overview,
+    books,
+    onAddBook,
+    onManageBook,
+}: {
+    dark: boolean;
+    overview: DashboardOverview;
+    books: DashboardBook[];
+    onAddBook: () => void;
+    onManageBook: (bookId: string) => void;
+}) {
     const card = dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100';
     const th = dark ? 'text-gray-500 border-gray-800' : 'text-gray-400 border-gray-100';
     const rowH = dark ? 'hover:bg-gray-800 border-gray-800' : 'hover:bg-gray-50 border-gray-50';
@@ -388,20 +988,33 @@ function BooksTable({ dark }: { dark: boolean }) {
             <div className="flex items-center justify-between p-4 pb-3">
                 <h3 className={`text-sm font-bold ${dark ? 'text-gray-100' : 'text-gray-800'}`}>Book Inventory</h3>
                 <div className="flex gap-2">
-                    <span className="text-[10px] text-amber-600 bg-amber-50 font-bold px-2 py-1 rounded-full flex items-center gap-1">{Ico.warn}{D.low_stock_books} Low Stock</span>
-                    <button className="text-[10px] font-semibold bg-blue-600 text-white px-3 py-1 rounded-full hover:bg-blue-700 transition">+ Add Book</button>
+                    <span className="text-[10px] text-amber-600 bg-amber-50 font-bold px-2 py-1 rounded-full flex items-center gap-1">{Ico.warn}{overview.low_stock_books} Low Stock</span>
+                    <button onClick={onAddBook} className="text-[10px] font-semibold bg-blue-600 text-white px-3 py-1 rounded-full hover:bg-blue-700 transition">+ Add Book</button>
                 </div>
             </div>
             <div className="overflow-x-auto">
                 <table className="w-full">
                     <thead>
                         <tr className={`border-t text-[10px] font-semibold uppercase tracking-wide ${th}`}>
-                            {['Title', 'Author', 'Genre', 'Stock', 'Price', 'Orders', 'Status'].map(h => <th key={h} className="px-4 py-2 text-left">{h}</th>)}
+                            {['Image', 'Title', 'Author', 'Genre', 'Stock', 'Price', 'Orders', 'Status', 'Action'].map(h => <th key={h} className="px-4 py-2 text-left">{h}</th>)}
                         </tr>
                     </thead>
                     <tbody>
-                        {BOOKS_DATA.map(b => (
+                        {books.map(b => (
                             <tr key={b.id} className={`border-t transition-colors cursor-pointer ${rowH}`}>
+                                <td className="px-4 py-3">
+                                    {(b.thumbnail || b.image) ? (
+                                        <img
+                                            src={b.thumbnail || b.image}
+                                            alt={b.title}
+                                            className="w-9 h-12 rounded object-cover border border-gray-200"
+                                        />
+                                    ) : (
+                                        <div className={`w-9 h-12 rounded border flex items-center justify-center text-[9px] font-bold ${dark ? 'border-gray-700 text-gray-500 bg-gray-800' : 'border-gray-200 text-gray-400 bg-gray-50'}`}>
+                                            N/A
+                                        </div>
+                                    )}
+                                </td>
                                 <td className={`px-4 py-3 text-[11px] font-semibold ${dark ? 'text-gray-200' : 'text-gray-800'}`}>{b.title}</td>
                                 <td className={`px-4 py-3 text-[11px] ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{b.author}</td>
                                 <td className="px-4 py-3"><span className="text-[10px] bg-blue-50 text-blue-600 font-bold px-2 py-0.5 rounded-full">{b.genre}</span></td>
@@ -415,21 +1028,179 @@ function BooksTable({ dark }: { dark: boolean }) {
                                 </td>
                                 <td className={`px-4 py-3 text-[11px] font-mono font-bold ${dark ? 'text-gray-300' : 'text-gray-700'}`}>TK {b.price}</td>
                                 <td className="px-4 py-3 text-[11px] font-bold text-blue-500">{b.orders}</td>
-                                <td className="px-4 py-3"><span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full">{b.status}</span></td>
+                                <td className="px-4 py-3"><span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${b.status === 'coming soon' ? 'bg-blue-100 text-blue-700' : b.status === 'out of stock' ? 'bg-amber-100 text-amber-700' : b.status === 'inactive' ? 'bg-gray-200 text-gray-700' : 'bg-emerald-100 text-emerald-700'}`}>{b.status}</span></td>
+                                <td className="px-4 py-3">
+                                    <button onClick={() => onManageBook(String(b.id))} className="text-[10px] font-semibold bg-blue-600 text-white px-2.5 py-1 rounded-full hover:bg-blue-700 transition">
+                                        Manage Book
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+            </div>
+            {books.length === 0 && <p className="px-4 py-3 text-[11px] text-gray-400">No books found.</p>}
+        </div>
+    );
+}
+
+/* ═══════════════════════════════ CATEGORIES ═══════════════════════════════ */
+function CategoriesSection({
+    dark,
+    categories,
+    onCreateCategory,
+    onManageCategory,
+}: {
+    dark: boolean;
+    categories: DashboardCategory[];
+    onCreateCategory: (payload: NewDashboardCategoryInput) => Promise<void>;
+    onManageCategory: (categoryId: number) => void;
+}) {
+    const [form, setForm] = useState({
+        name: '',
+        slug: '',
+        is_active: true,
+    });
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const card = dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100';
+    const sec = dark ? 'border-gray-800' : 'border-gray-100';
+    const tp = dark ? 'text-gray-100' : 'text-gray-800';
+    const ts = dark ? 'text-gray-400' : 'text-gray-500';
+    const inp = dark ? 'bg-gray-800 border-gray-700 text-gray-200 placeholder-gray-500' : 'bg-gray-50 border-gray-200 text-gray-700 placeholder-gray-400';
+
+    const submit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (submitting) return;
+
+        const name = form.name.trim();
+        const slug = form.slug.trim();
+
+        if (!name) {
+            setError('Category name is required.');
+            return;
+        }
+
+        setError('');
+        setSuccess('');
+        setSubmitting(true);
+
+        try {
+            await onCreateCategory({
+                name,
+                slug,
+                is_active: form.is_active,
+            });
+            setForm({
+                name: '',
+                slug: '',
+                is_active: true,
+            });
+            setSuccess(`Category "${name}" created.`);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to create category.');
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    return (
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+            <form onSubmit={submit} className={`rounded-xl border p-4 lg:col-span-2 space-y-3 ${card}`}>
+                <div>
+                    <h3 className={`text-sm font-bold ${tp}`}>Create Category</h3>
+                </div>
+
+                <div>
+                    <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Name</label>
+                    <input
+                        value={form.name}
+                        onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
+                        placeholder="Science Fiction"
+                        className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp}`}
+                    />
+                </div>
+
+                <div>
+                    <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Slug (optional)</label>
+                    <input
+                        value={form.slug}
+                        onChange={(e) => setForm((prev) => ({ ...prev, slug: e.target.value }))}
+                        placeholder="science-fiction"
+                        className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp}`}
+                    />
+                </div>
+
+                <label className={`flex items-center gap-2 text-xs font-semibold ${tp}`}>
+                    <input
+                        type="checkbox"
+                        checked={form.is_active}
+                        onChange={(e) => setForm((prev) => ({ ...prev, is_active: e.target.checked }))}
+                    />
+                    is_active
+                </label>
+
+                {error && <p className="text-[11px] font-semibold text-red-500">{error}</p>}
+                {success && <p className="text-[11px] font-semibold text-emerald-500">{success}</p>}
+
+                <button
+                    type="submit"
+                    disabled={submitting}
+                    className={`text-xs font-bold text-white bg-blue-600 px-5 py-2.5 rounded-xl hover:bg-blue-700 transition ${submitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                >
+                    {submitting ? 'Creating...' : 'Create Category'}
+                </button>
+            </form>
+
+            <div className={`rounded-xl border lg:col-span-3 ${card}`}>
+                <div className={`flex items-center justify-between px-4 py-3 border-b ${sec}`}>
+                    <h3 className={`text-sm font-bold ${tp}`}>Categories</h3>
+                    <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-blue-100 text-blue-700">
+                        {categories.length} total
+                    </span>
+                </div>
+
+                <div className="max-h-[290px] overflow-y-auto">
+                    {categories.map((category) => (
+                        <div key={category.id} className={`px-4 py-3 border-b ${sec}`}>
+                            <div className="flex items-center justify-between gap-3">
+                                <div className="min-w-0">
+                                    <p className={`text-xs font-bold ${tp}`}>{category.name}</p>
+                                    <p className={`text-[11px] ${ts}`}>{category.slug || '-'}</p>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${category.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-700'}`}>
+                                        {category.is_active ? 'active' : 'inactive'}
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={() => onManageCategory(category.id)}
+                                        className="text-[10px] font-semibold bg-blue-600 text-white px-2.5 py-1 rounded-full hover:bg-blue-700 transition"
+                                    >
+                                        Manage
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {categories.length === 0 && (
+                    <p className="px-4 py-6 text-[11px] text-gray-400 text-center">No categories found.</p>
+                )}
             </div>
         </div>
     );
 }
 
 /* ═══════════════════════════════ CALENDAR ═══════════════════════════════ */
-function CalendarWidget({ dark }: { dark: boolean }) {
-    const [activeDay, setActiveDay] = useState(6);
-    const days = [{ l: 'Sun', d: 5 }, { l: 'Mon', d: 6 }, { l: 'Tue', d: 7 }, { l: 'Wed', d: 8 }, { l: 'Thu', d: 9 }, { l: 'Fri', d: 10 }];
+function CalendarWidget({ dark, days, events }: { dark: boolean; days: DashboardCalendarDay[]; events: DashboardCalendarEvent[] }) {
+    const [activeDay, setActiveDay] = useState<number | null>(null);
+    const effectiveActiveDay = days.some((day) => day.d === activeDay) ? activeDay : (days[0]?.d ?? null);
     const card = dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100';
+    const primaryEvents = events.slice(0, 2);
     return (
         <div className={`rounded-xl border p-4 ${card} transition-colors duration-300`}>
             <div className="flex items-center justify-between mb-3">
@@ -439,70 +1210,41 @@ function CalendarWidget({ dark }: { dark: boolean }) {
             <div className="flex gap-1 mb-3">
                 {days.map(d => (
                     <button key={d.d} onClick={() => setActiveDay(d.d)}
-                        className={`flex-1 flex flex-col items-center py-2 rounded-xl text-xs transition-all duration-200 ${d.d === activeDay ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-gray-500 hover:bg-gray-50'}`}>
+                        className={`flex-1 flex flex-col items-center py-2 rounded-xl text-xs transition-all duration-200 ${effectiveActiveDay === d.d ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-gray-500 hover:bg-gray-50'}`}>
                         <span className="text-[9px] mb-0.5 opacity-70">{d.l}</span><span className="font-bold">{d.d}</span>
                     </button>
                 ))}
             </div>
             <div className="space-y-2">
-                <div className={`border rounded-xl px-3 py-2.5 ${dark ? 'bg-blue-950 border-blue-800' : 'bg-blue-50 border-blue-200'}`}>
-                    <div className="flex items-center justify-between">
-                        <span className={`text-[11px] font-bold ${dark ? 'text-blue-300' : 'text-blue-800'}`}>Mesh Weekly Meeting</span>
-                        <span className="text-[9px] text-blue-500">9:00–10:30</span>
-                    </div>
-                    <div className="flex items-center gap-2 mt-1">
-                        <div className="flex -space-x-1">
-                            {['J', 'S', 'K'].map((a, i) => <div key={i} className="w-4 h-4 rounded-full bg-blue-500 border border-white text-white text-[7px] font-bold flex items-center justify-center">{a}</div>)}
-                            <div className="w-4 h-4 rounded-full bg-gray-200 border border-white text-gray-500 text-[7px] font-bold flex items-center justify-center">+7</div>
+                {primaryEvents.map((event) => (
+                    <div key={event.id} className={`border rounded-xl px-3 py-2.5 ${event.color === 'violet' ? (dark ? 'bg-violet-950 border-violet-800' : 'bg-violet-50 border-violet-200') : (dark ? 'bg-blue-950 border-blue-800' : 'bg-blue-50 border-blue-200')}`}>
+                        <div className="flex items-center justify-between">
+                            <span className={`text-[11px] font-bold ${event.color === 'violet' ? (dark ? 'text-violet-300' : 'text-violet-800') : (dark ? 'text-blue-300' : 'text-blue-800')}`}>{event.title}</span>
+                            <span className={`text-[9px] ${event.color === 'violet' ? 'text-violet-500' : 'text-blue-500'}`}>{event.time}</span>
                         </div>
-                        <span className={`text-[9px] ${dark ? 'text-blue-400' : 'text-blue-600'} flex items-center gap-0.5`}>{Ico.clock} 90m</span>
+                        <div className="flex items-center gap-2 mt-1">
+                            <div className="flex -space-x-1">
+                                {event.attendees.slice(0, 3).map((attendee, i) => <div key={`${event.id}-${i}`} className={`w-4 h-4 rounded-full ${event.color === 'violet' ? 'bg-violet-500' : 'bg-blue-500'} border border-white text-white text-[7px] font-bold flex items-center justify-center`}>{attendee}</div>)}
+                                {event.attendees.length > 3 && <div className="w-4 h-4 rounded-full bg-gray-200 border border-white text-gray-500 text-[7px] font-bold flex items-center justify-center">+{event.attendees.length - 3}</div>}
+                            </div>
+                            {event.duration && <span className={`text-[9px] ${event.color === 'violet' ? (dark ? 'text-violet-400' : 'text-violet-600') : (dark ? 'text-blue-400' : 'text-blue-600')} flex items-center gap-0.5`}>{Ico.clock} {event.duration}</span>}
+                        </div>
                     </div>
-                </div>
-                <div className={`border rounded-xl px-3 py-2.5 ${dark ? 'bg-violet-950 border-violet-800' : 'bg-violet-50 border-violet-200'}`}>
-                    <div className="flex items-center justify-between">
-                        <span className={`text-[11px] font-bold ${dark ? 'text-violet-300' : 'text-violet-800'}`}>Patreon Demo</span>
-                        <span className="text-[9px] text-violet-500">10:45–12:45</span>
-                    </div>
-                </div>
+                ))}
+                {primaryEvents.length === 0 && <p className="text-[10px] text-gray-400">No upcoming calendar events.</p>}
             </div>
         </div>
     );
 }
 
-/* ═══════════════════════════════ WORLD MAP ═══════════════════════════════ */
-function WorldMap({ dark }: { dark: boolean }) {
-    const fill = dark ? '#1e40af' : '#bfdbfe';
-    return (
-        <div className={`relative w-full h-full rounded-xl overflow-hidden ${dark ? 'bg-gray-800' : 'bg-sky-50'}`}>
-            <svg viewBox="0 0 500 280" className="w-full h-full opacity-90">
-                <path d="M60,60 Q80,40 120,50 Q150,55 160,80 Q170,110 150,130 Q130,150 110,140 Q80,130 60,110 Q40,90 60,60Z" fill={fill} opacity="0.8" />
-                <path d="M110,145 Q130,135 145,150 Q160,170 155,200 Q150,230 130,240 Q110,245 100,225 Q90,200 95,175 Q100,155 110,145Z" fill={fill} opacity="0.8" />
-                <path d="M210,50 Q230,40 255,45 Q270,50 265,70 Q260,85 245,80 Q230,75 220,80 Q210,75 205,65 Q203,55 210,50Z" fill={dark ? '#3b82f6' : fill} opacity="0.9" />
-                <path d="M215,90 Q240,82 255,95 Q270,110 268,140 Q265,170 245,185 Q225,195 210,180 Q195,165 195,140 Q194,110 205,97Z" fill={fill} opacity="0.85" />
-                <path d="M270,40 Q320,30 370,40 Q400,50 410,75 Q415,100 395,110 Q370,120 340,110 Q310,100 290,110 Q270,115 260,100 Q250,80 255,60 Q260,45 270,40Z" fill={dark ? '#3b82f6' : fill} opacity="0.9" />
-                <path d="M360,150 Q390,140 410,155 Q425,170 415,195 Q400,210 375,205 Q355,195 352,175 Q350,160 360,150Z" fill={dark ? '#60a5fa' : '#3b82f6'} opacity="0.95" />
-            </svg>
-            {[{ t: '35%', l: '25%' }, { t: '50%', l: '67%' }, { t: '48%', l: '63%' }, { t: '45%', l: '68%' }, { t: '43%', l: '70%' }].map((pos, i) => (
-                <div key={i} className="absolute group" style={{ top: pos.t, left: pos.l }}>
-                    <div className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-ping opacity-50 absolute" />
-                    <div className="w-2.5 h-2.5 bg-blue-600 rounded-full relative z-10 border-2 border-white shadow" />
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[9px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-20">
-                        {LOCATIONS[i].flag} {LOCATIONS[i].country} {LOCATIONS[i].pct}%
-                    </div>
-                </div>
-            ))}
-        </div>
-    );
-}
-
 /* ═══════════════════════════════ QUICK STATS ═══════════════════════════════ */
-function QuickStats({ dark }: { dark: boolean }) {
+function QuickStats({ dark, overview }: { dark: boolean; overview: DashboardOverview }) {
     const card = dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100';
     const items = [
-        { label: 'Total Revenue', val: <>TK <AnimCount to={D.total_revenue} dec={2} /></>, color: '#3b82f6', pct: 100, icon: Ico.trend },
-        { label: 'Total Orders', val: <AnimCount to={D.total_orders} />, color: '#10b981', pct: 50, icon: Ico.deals },
-        { label: 'Total Books', val: <AnimCount to={D.total_books} />, color: '#8b5cf6', pct: 100, icon: Ico.book },
-        { label: 'Low Stock', val: <AnimCount to={D.low_stock_books} />, color: '#f59e0b', pct: 33, icon: Ico.warn },
+        { label: 'Total Revenue', val: <>TK <AnimCount to={overview.total_revenue} dec={2} /></>, color: '#3b82f6', pct: 100, icon: Ico.trend },
+        { label: 'Total Orders', val: <AnimCount to={overview.total_orders} />, color: '#10b981', pct: 50, icon: Ico.deals },
+        { label: 'Total Books', val: <AnimCount to={overview.total_books} />, color: '#8b5cf6', pct: 100, icon: Ico.book },
+        { label: 'Low Stock', val: <AnimCount to={overview.low_stock_books} />, color: '#f59e0b', pct: 33, icon: Ico.warn },
     ];
     return (
         <div className={`rounded-xl border p-4 ${card} transition-colors duration-300`}>
@@ -526,8 +1268,17 @@ function QuickStats({ dark }: { dark: boolean }) {
 }
 
 /* ═══════════════════════════════ PROFILE FORM ═══════════════════════════════ */
-function ProfileForm({ dark, onClose }: { dark: boolean; onClose: () => void }) {
-    const [form, setForm] = useState({ firstName: 'Admin', lastName: 'User', email: 'admin@bookbuybd.com', phone: '+880 1XXX XXXXXX', role: 'Admin', company: 'BookBuyBD', timezone: 'UTC+6', bio: 'Administrator at BookBuyBD. Managing inventory and customer orders.' });
+function ProfileForm({ dark, onClose, user }: { dark: boolean; onClose: () => void; user: AuthUser | null }) {
+    const [form, setForm] = useState({
+        firstName: user?.username || '',
+        lastName: '',
+        email: user?.email || '',
+        phone: '',
+        role: user?.is_staff ? 'Admin' : 'User',
+        company: '',
+        timezone: 'UTC+6',
+        bio: '',
+    });
     const [avatar, setAvatar] = useState<string | null>(null);
     const [saved, setSaved] = useState(false);
     const fileRef = useRef<HTMLInputElement>(null);
@@ -642,135 +1393,6 @@ function ProfileForm({ dark, onClose }: { dark: boolean; onClose: () => void }) 
     );
 }
 
-/* ═══════════════════════════════ BILLING PANEL ═══════════════════════════════ */
-function BillingPanel({ dark, onClose }: { dark: boolean; onClose: () => void }) {
-    const bg = dark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200';
-    const sec = dark ? 'border-gray-800' : 'border-gray-100';
-    const tp = dark ? 'text-gray-100' : 'text-gray-800';
-    const ts = dark ? 'text-gray-400' : 'text-gray-500';
-    const inp = dark ? 'bg-gray-800 border-gray-700 text-gray-200' : 'bg-gray-50 border-gray-200 text-gray-800';
-    const [plan, setPlan] = useState('pro');
-
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-            <div className={`relative w-[480px] max-h-[88vh] rounded-2xl border shadow-2xl overflow-hidden flex flex-col ${bg}`}
-                style={{ animation: 'fadeUp 0.3s ease' }}>
-                <div className={`flex items-center justify-between px-6 py-4 border-b ${sec}`}>
-                    <div className="flex items-center gap-2"><span className="text-blue-600">{Ico.credit}</span><span className={`font-bold text-base ${tp}`}>Billing & Plan</span></div>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition">{Ico.x}</button>
-                </div>
-                <div className="overflow-y-auto flex-1 px-6 py-5 space-y-5">
-                    <div>
-                        <p className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">Current Plan</p>
-                        <div className="grid grid-cols-3 gap-2">
-                            {[{ id: 'starter', label: 'Starter', price: 'TK 0', desc: 'Up to 3 books' }, { id: 'pro', label: 'Pro', price: 'TK 3500', desc: 'Up to 50 books' }, { id: 'enterprise', label: 'Enterprise', price: 'TK 12000', desc: 'Unlimited' }].map(p => (
-                                <button key={p.id} onClick={() => setPlan(p.id)}
-                                    className={`p-3 rounded-xl border text-left transition-all ${plan === p.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-200'}`}>
-                                    <p className={`text-xs font-bold ${plan === p.id ? 'text-blue-700' : 'text-gray-700'}`}>{p.label}</p>
-                                    <p className={`text-lg font-black font-mono ${plan === p.id ? 'text-blue-600' : 'text-gray-800'}`}>{p.price}<span className="text-[10px] font-normal">/mo</span></p>
-                                    <p className="text-[9px] text-gray-400 mt-0.5">{p.desc}</p>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                    <div>
-                        <p className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">Payment Method</p>
-                        <div className={`flex items-center justify-between p-3 rounded-xl border ${dark ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'}`}>
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-6 bg-blue-600 rounded flex items-center justify-center text-white text-[9px] font-black">VISA</div>
-                                <div><p className={`text-xs font-semibold ${tp}`}>•••• •••• •••• 4242</p><p className="text-[10px] text-gray-400">Expires 12/26</p></div>
-                            </div>
-                            <span className="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Active</span>
-                        </div>
-                        <button className="mt-2 text-xs font-semibold text-blue-500 hover:text-blue-600 transition">+ Add payment method</button>
-                    </div>
-                    <div>
-                        <p className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">Invoice History</p>
-                        {[{ date: 'Mar 1, 2025', amt: 'TK 3500.00', st: 'Paid' }, { date: 'Feb 1, 2025', amt: 'TK 3500.00', st: 'Paid' }, { date: 'Jan 1, 2025', amt: 'TK 3500.00', st: 'Paid' }].map((inv, i) => (
-                            <div key={i} className={`flex items-center justify-between py-2.5 border-b ${sec}`}>
-                                <span className={`text-xs ${ts}`}>{inv.date}</span>
-                                <span className={`text-xs font-bold font-mono ${tp}`}>{inv.amt}</span>
-                                <span className="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">{inv.st}</span>
-                                <button className="text-[10px] text-blue-500 hover:text-blue-600 font-semibold transition">Download</button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                <div className={`px-6 py-4 border-t ${sec} flex justify-between items-center`}>
-                    <button onClick={onClose} className={`text-xs font-semibold px-4 py-2.5 rounded-xl border transition ${dark ? 'border-gray-700 text-gray-400 hover:bg-gray-800' : 'border-gray-200 text-gray-500 hover:bg-gray-50'}`}>Close</button>
-                    <button className="text-xs font-bold bg-blue-600 text-white px-6 py-2.5 rounded-xl hover:bg-blue-700 transition shadow-sm shadow-blue-200">
-                        Upgrade Plan
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-/* ═══════════════════════════════ TEAM MEMBERS PANEL ═══════════════════════════════ */
-function TeamPanel({ dark, onClose }: { dark: boolean; onClose: () => void }) {
-    const [members, setMembers] = useState([
-        { id: 1, name: 'Janson Williams', email: 'williams@mesh.com', role: 'Admin', status: 'active', initials: 'JW', color: 'from-blue-500 to-indigo-600' },
-        { id: 2, name: 'Sarah Kim', email: 'sarah@mesh.com', role: 'Editor', status: 'active', initials: 'SK', color: 'from-rose-400 to-pink-600' },
-        { id: 3, name: 'Amir Hassan', email: 'amir@mesh.com', role: 'Viewer', status: 'active', initials: 'AH', color: 'from-emerald-400 to-teal-600' },
-        { id: 4, name: 'Tommy Adam', email: 'tommy@mesh.com', role: 'Manager', status: 'pending', initials: 'TA', color: 'from-amber-400 to-orange-500' },
-    ]);
-    const bg = dark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200';
-    const sec = dark ? 'border-gray-800' : 'border-gray-100';
-    const tp = dark ? 'text-gray-100' : 'text-gray-800';
-    const ts = dark ? 'text-gray-400' : 'text-gray-500';
-    const inp = dark ? 'bg-gray-800 border-gray-700 text-gray-200 placeholder-gray-500' : 'bg-gray-50 border-gray-200 text-gray-700 placeholder-gray-400';
-    const roleColors: Record<string, string> = { Admin: 'bg-blue-100 text-blue-700', Editor: 'bg-violet-100 text-violet-700', Viewer: 'bg-gray-100 text-gray-600', Manager: 'bg-emerald-100 text-emerald-700' };
-
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-            <div className={`relative w-[500px] max-h-[88vh] rounded-2xl border shadow-2xl overflow-hidden flex flex-col ${bg}`}
-                style={{ animation: 'fadeUp 0.3s ease' }}>
-                <div className={`flex items-center justify-between px-6 py-4 border-b ${sec}`}>
-                    <div className="flex items-center gap-2"><span className="text-blue-600">{Ico.team}</span><span className={`font-bold text-base ${tp}`}>Team Members</span></div>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition">{Ico.x}</button>
-                </div>
-                <div className="overflow-y-auto flex-1 px-6 py-5">
-                    {/* Invite */}
-                    <div className={`flex items-center gap-2 p-3 rounded-xl border mb-5 ${dark ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'}`}>
-                        <input placeholder="Invite by email address..." className={`flex-1 text-xs bg-transparent outline-none ${ts}`} />
-                        <select className={`text-xs border rounded-lg px-2 py-1 outline-none ${dark ? 'bg-gray-700 border-gray-600 text-gray-300' : 'bg-white border-gray-200 text-gray-600'}`}>
-                            {['Viewer', 'Editor', 'Manager', 'Admin'].map(r => <option key={r}>{r}</option>)}
-                        </select>
-                        <button className="text-xs font-bold bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 transition flex items-center gap-1 flex-shrink-0">
-                            {Ico.plus} Invite
-                        </button>
-                    </div>
-                    {/* Members list */}
-                    <p className={`text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3`}>{members.length} Members</p>
-                    <div className="space-y-2">
-                        {members.map(m => (
-                            <div key={m.id} className={`flex items-center gap-3 p-3 rounded-xl border transition ${dark ? 'border-gray-800 hover:bg-gray-800' : 'border-gray-100 hover:bg-gray-50'}`}>
-                                <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${m.color} flex items-center justify-center text-white text-[11px] font-black flex-shrink-0`}>{m.initials}</div>
-                                <div className="flex-1 min-w-0">
-                                    <p className={`text-xs font-semibold ${tp} truncate`}>{m.name}</p>
-                                    <p className={`text-[10px] ${ts} truncate`}>{m.email}</p>
-                                </div>
-                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${roleColors[m.role]}`}>{m.role}</span>
-                                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0 ${m.status === 'active' ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'}`}>{m.status}</span>
-                                <button onClick={() => setMembers(prev => prev.filter(x => x.id !== m.id))}
-                                    className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 transition ${dark ? 'text-gray-600 hover:bg-gray-700 hover:text-red-400' : 'text-gray-300 hover:bg-red-50 hover:text-red-500'}`}>
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3 h-3"><path d="M18 6L6 18M6 6l12 12" /></svg>
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                <div className={`px-6 py-4 border-t ${sec}`}>
-                    <button onClick={onClose} className="w-full text-xs font-bold bg-blue-600 text-white py-2.5 rounded-xl hover:bg-blue-700 transition">Done</button>
-                </div>
-            </div>
-        </div>
-    );
-}
-
 /* ═══════════════════════════════ SETTINGS PANEL ═══════════════════════════════ */
 function SettingsPanel({ dark, setDark, onClose }: { dark: boolean; setDark: (v: boolean) => void; onClose: () => void }) {
     const [notifs, setNotifs] = useState(true);
@@ -870,12 +1492,11 @@ function SettingsPanel({ dark, setDark, onClose }: { dark: boolean; setDark: (v:
 }
 
 /* ═══════════════════════════════ NOTIFICATION PANEL ═══════════════════════════════ */
-function NotifPanel({ dark, onClose }: { dark: boolean; onClose: () => void }) {
-    const [notifs, setNotifs] = useState(NOTIFICATIONS_INIT);
-    const markAll = () => setNotifs(n => n.map(x => ({ ...x, read: true })));
+function NotifPanel({ dark, onClose, notifications, onNotificationsChange }: { dark: boolean; onClose: () => void; notifications: DashboardNotification[]; onNotificationsChange: (next: DashboardNotification[]) => void }) {
+    const markAll = () => onNotificationsChange(notifications.map((x) => ({ ...x, read: true })));
     const bg = dark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200';
     const row = dark ? 'hover:bg-gray-800 border-gray-800' : 'hover:bg-gray-50 border-gray-100';
-    const icons: Record<string, any> = { order: Ico.deals, stock: Ico.warn, system: Ico.refresh };
+    const icons: Record<string, ReactNode> = { order: Ico.deals, stock: Ico.warn, system: Ico.refresh };
     const clrs: Record<string, string> = { order: 'text-blue-500', stock: 'text-amber-500', system: 'text-emerald-500' };
     return (
         <div className="fixed inset-0 z-50" onClick={onClose}>
@@ -885,10 +1506,10 @@ function NotifPanel({ dark, onClose }: { dark: boolean; onClose: () => void }) {
                     <button onClick={markAll} className="text-[10px] font-semibold text-blue-500 hover:text-blue-600 transition">Mark all read</button>
                 </div>
                 <div className="max-h-72 overflow-y-auto">
-                    {notifs.map(n => (
-                        <div key={n.id} onClick={() => setNotifs(p => p.map(x => x.id === n.id ? { ...x, read: true } : x))}
+                    {notifications.map(n => (
+                        <div key={n.id} onClick={() => onNotificationsChange(notifications.map((x) => x.id === n.id ? { ...x, read: true } : x))}
                             className={`flex gap-3 px-4 py-3 border-b transition cursor-pointer ${row} ${!n.read ? (dark ? 'bg-blue-950' : 'bg-blue-50/60') : ''}`}>
-                            <span className={`mt-0.5 flex-shrink-0 ${clrs[n.type]}`}>{icons[n.type]}</span>
+                            <span className={`mt-0.5 flex-shrink-0 ${clrs[n.type] || 'text-blue-500'}`}>{icons[n.type] ?? Ico.refresh}</span>
                             <div className="flex-1 min-w-0">
                                 <p className={`text-[11px] font-medium leading-snug ${dark ? 'text-gray-200' : 'text-gray-700'}`}>{n.msg}</p>
                                 <p className="text-[10px] text-gray-400 mt-0.5">{n.time}</p>
@@ -897,6 +1518,7 @@ function NotifPanel({ dark, onClose }: { dark: boolean; onClose: () => void }) {
                         </div>
                     ))}
                 </div>
+                {notifications.length === 0 && <p className="px-4 py-3 text-[11px] text-gray-400">No notifications available.</p>}
                 <button onClick={onClose} className={`w-full text-[11px] font-semibold text-blue-500 py-2.5 hover:bg-gray-50 ${dark ? 'hover:bg-gray-800' : ''} transition`}>View all →</button>
             </div>
         </div>
@@ -904,59 +1526,877 @@ function NotifPanel({ dark, onClose }: { dark: boolean; onClose: () => void }) {
 }
 
 /* ═══════════════════════════════ HELP CENTER ═══════════════════════════════ */
-function HelpPanel({ dark, onClose }: { dark: boolean; onClose: () => void }) {
+/* ═══════════════════════════════ FAVORITES/PROJECTS MODALS ═══════════════════════════════ */
+function ManageOrderModal({
+    dark,
+    onClose,
+    orderId,
+    token,
+    onSaved,
+}: {
+    dark: boolean;
+    onClose: () => void;
+    orderId: string;
+    token: string | null;
+    onSaved: (orderId: string, orderStatus: string, deliveryStatus: string) => Promise<void>;
+}) {
+    const [detail, setDetail] = useState<DashboardOrderDetail | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState('');
+    const [orderStatus, setOrderStatus] = useState('');
+    const [deliveryStatus, setDeliveryStatus] = useState('');
+
     const bg = dark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200';
     const sec = dark ? 'border-gray-800' : 'border-gray-100';
     const tp = dark ? 'text-gray-100' : 'text-gray-800';
     const ts = dark ? 'text-gray-400' : 'text-gray-500';
-    const articles = [
-        { title: 'Getting Started with Dashboard', cat: 'Basics', read: '3 min' },
-        { title: 'Managing Orders & Deliveries', cat: 'Orders', read: '5 min' },
-        { title: 'Book Inventory Best Practices', cat: 'Inventory', read: '4 min' },
-        { title: 'Exporting & Importing Data', cat: 'Data', read: '2 min' },
-        { title: 'Setting Up Integrations', cat: 'Advanced', read: '6 min' },
-    ];
+    const inp = dark ? 'bg-gray-800 border-gray-700 text-gray-200' : 'bg-gray-50 border-gray-200 text-gray-700';
+
+    useEffect(() => {
+        let active = true;
+
+        const fetchOrder = async () => {
+            if (!token) {
+                if (active) {
+                    setError('Missing admin token. Please sign in again.');
+                    setLoading(false);
+                }
+                return;
+            }
+
+            setLoading(true);
+            setError('');
+            try {
+                const detailUrl = `/orders/dashboard/${encodeURIComponent(orderId)}/`;
+                const response = await apiClient.get<unknown>(detailUrl, {
+                    cache: 'no-store',
+                    headers: { Authorization: `Token ${token}` },
+                });
+
+                if (!active) return;
+
+                const normalized = normalizeOrderDetail(response);
+                if (!normalized) {
+                    setError('Failed to read order details.');
+                    setLoading(false);
+                    return;
+                }
+
+                setDetail(normalized);
+                setOrderStatus(normalized.status);
+                setDeliveryStatus(normalized.delivery);
+            } catch (err) {
+                if (!active) return;
+                setError(err instanceof Error ? err.message : 'Failed to load order details.');
+            } finally {
+                if (active) setLoading(false);
+            }
+        };
+
+        void fetchOrder();
+        return () => { active = false; };
+    }, [orderId, token]);
+
+    const orderStatusOptions = Array.from(new Set(['pending', 'confirmed', 'rejected', orderStatus].filter(Boolean)));
+    const deliveryStatusOptions = Array.from(new Set(['pending', 'processing', 'shipped', 'delivered', 'cancelled', deliveryStatus].filter(Boolean)));
+
+    const save = async () => {
+        if (!detail) return;
+        if (!token) {
+            setError('Missing admin token. Please sign in again.');
+            return;
+        }
+
+        const payload: Record<string, string> = {};
+        if (orderStatus && orderStatus !== detail.status) payload.order_status = orderStatus;
+        if (deliveryStatus && deliveryStatus !== detail.delivery) payload.delivery_status = deliveryStatus;
+
+        if (!Object.keys(payload).length) {
+            onClose();
+            return;
+        }
+
+        setSaving(true);
+        setError('');
+        try {
+            const statusUrl = `/orders/dashboard/${encodeURIComponent(detail.id)}/status/`;
+            try {
+                await apiClient.patch<unknown, Record<string, string>>(statusUrl, payload, {
+                    cache: 'no-store',
+                    headers: { Authorization: `Token ${token}` },
+                });
+            } catch {
+                await apiClient.put<unknown, Record<string, string>>(statusUrl, payload, {
+                    cache: 'no-store',
+                    headers: { Authorization: `Token ${token}` },
+                });
+            }
+
+            await onSaved(detail.id, orderStatus || detail.status, deliveryStatus || detail.delivery);
+            onClose();
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to update order status.');
+        } finally {
+            setSaving(false);
+        }
+    };
+
     return (
-        <div className="fixed inset-0 z-50 flex">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-            <div className={`absolute right-0 top-0 h-full w-80 shadow-2xl border-l flex flex-col ${bg}`} style={{ animation: 'slideInRight 0.3s ease' }}>
-                <div className={`flex items-center justify-between p-5 border-b ${sec}`}>
-                    <div className="flex items-center gap-2"><span className="text-blue-600">{Ico.help}</span><span className={`font-bold ${tp}`}>Help Center</span></div>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600">{Ico.x}</button>
-                </div>
-                <div className="p-5 flex-1 overflow-y-auto">
-                    <div className="relative mb-4">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">{Ico.search}</span>
-                        <input placeholder="Search articles..." className={`w-full pl-9 pr-3 py-2 text-xs rounded-xl border outline-none ${dark ? 'bg-gray-800 border-gray-700 text-gray-200 placeholder-gray-500' : 'bg-gray-50 border-gray-200'}`} />
+            <div className={`relative w-full max-w-xl rounded-2xl border shadow-2xl overflow-hidden ${bg}`} style={{ animation: 'fadeUp 0.3s ease' }}>
+                <div className={`flex items-center justify-between px-5 py-4 border-b ${sec}`}>
+                    <div className="flex items-center gap-2">
+                        <span className="text-blue-500">{Ico.package}</span>
+                        <span className={`font-bold ${tp}`}>Manage Order</span>
                     </div>
-                    <p className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">Popular Articles</p>
-                    <div className="space-y-2">
-                        {articles.map((a, i) => (
-                            <div key={i} className={`p-3 rounded-xl cursor-pointer transition ${dark ? 'bg-gray-800 hover:bg-gray-750' : 'bg-gray-50 hover:bg-blue-50'}`}>
-                                <p className={`text-[11px] font-semibold ${tp}`}>{a.title}</p>
-                                <div className="flex gap-2 mt-1">
-                                    <span className="text-[9px] bg-blue-100 text-blue-600 font-bold px-1.5 py-0.5 rounded-full">{a.cat}</span>
-                                    <span className={`text-[9px] ${ts}`}>{a.read} read</span>
+                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition">{Ico.x}</button>
+                </div>
+
+                <div className="p-5 space-y-4">
+                    {loading && <p className={`text-xs ${ts}`}>Loading order details...</p>}
+                    {!loading && detail && (
+                        <>
+                            <div className="grid grid-cols-2 gap-3 text-xs">
+                                <div><p className={`${ts}`}>Order</p><p className={`font-semibold ${tp}`}>{detail.id}</p></div>
+                                <div><p className={`${ts}`}>Customer</p><p className={`font-semibold ${tp}`}>{detail.customer}</p></div>
+                                <div><p className={`${ts}`}>Amount</p><p className={`font-semibold ${tp}`}>TK {detail.amount}</p></div>
+                                <div><p className={`${ts}`}>Items</p><p className={`font-semibold ${tp}`}>{detail.items}</p></div>
+                                <div><p className={`${ts}`}>Email</p><p className={`font-semibold ${tp}`}>{detail.email || 'N/A'}</p></div>
+                                <div><p className={`${ts}`}>Phone</p><p className={`font-semibold ${tp}`}>{detail.phone || 'N/A'}</p></div>
+                                <div className="col-span-2"><p className={`${ts}`}>Address</p><p className={`font-semibold ${tp}`}>{detail.address || 'N/A'}</p></div>
+                            </div>
+
+                            <div className={`grid grid-cols-2 gap-3 pt-3 border-t ${sec}`}>
+                                <div>
+                                    <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Order Status</label>
+                                    <select value={orderStatus} onChange={(e) => setOrderStatus(e.target.value)} className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 transition ${inp}`}>
+                                        {orderStatusOptions.map((status) => <option key={`order-${status}`} value={status}>{status}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Delivery Status</label>
+                                    <select value={deliveryStatus} onChange={(e) => setDeliveryStatus(e.target.value)} className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 transition ${inp}`}>
+                                        {deliveryStatusOptions.map((status) => <option key={`delivery-${status}`} value={status}>{status}</option>)}
+                                    </select>
                                 </div>
                             </div>
-                        ))}
-                    </div>
+                        </>
+                    )}
+
+                    {error && <p className="text-[11px] font-semibold text-red-500">{error}</p>}
                 </div>
-                <div className="p-5 border-t" style={{ borderColor: dark ? '#1f2937' : '#f3f4f6' }}>
-                    <button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 rounded-xl transition">Contact Support →</button>
+
+                <div className={`px-5 py-4 border-t flex items-center justify-end gap-2 ${sec}`}>
+                    <button onClick={onClose} disabled={saving} className={`text-xs font-semibold px-4 py-2.5 rounded-xl border transition ${dark ? 'border-gray-700 text-gray-400 hover:bg-gray-800' : 'border-gray-200 text-gray-500 hover:bg-gray-50'} ${saving ? 'opacity-60 cursor-not-allowed' : ''}`}>Close</button>
+                    <button onClick={save} disabled={loading || saving || !detail} className={`text-xs font-bold text-white bg-blue-600 px-5 py-2.5 rounded-xl hover:bg-blue-700 transition ${(loading || saving || !detail) ? 'opacity-70 cursor-not-allowed' : ''}`}>
+                        {saving ? 'Updating...' : 'Update Status'}
+                    </button>
                 </div>
             </div>
         </div>
     );
 }
 
-/* ═══════════════════════════════ FAVORITES/PROJECTS MODALS ═══════════════════════════════ */
-function FavoritesModal({ dark, onClose }: { dark: boolean; onClose: () => void }) {
-    const [items, setItems] = useState([
-        { id: 1, label: 'Revenue Dashboard', 'color': 'bg-blue-500' },
-        { id: 2, label: 'Book Sales Report', 'color': 'bg-violet-500' },
-        { id: 3, label: 'Order Pipeline', 'color': 'bg-emerald-500' },
-    ]);
+function ManageCategoryModal({
+    dark,
+    onClose,
+    category,
+    onSubmit,
+}: {
+    dark: boolean;
+    onClose: () => void;
+    category: DashboardCategory;
+    onSubmit: (categoryId: number, payload: UpdateDashboardCategoryInput) => Promise<void>;
+}) {
+    const [name, setName] = useState(category.name);
+    const [isActive, setIsActive] = useState(category.is_active);
+    const [error, setError] = useState('');
+    const [submitting, setSubmitting] = useState(false);
+
+    const bg = dark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200';
+    const sec = dark ? 'border-gray-800' : 'border-gray-100';
+    const tp = dark ? 'text-gray-100' : 'text-gray-800';
+    const ts = dark ? 'text-gray-400' : 'text-gray-500';
+    const inp = dark ? 'bg-gray-800 border-gray-700 text-gray-200 placeholder-gray-500' : 'bg-gray-50 border-gray-200 text-gray-700 placeholder-gray-400';
+
+    useEffect(() => {
+        setName(category.name);
+        setIsActive(category.is_active);
+        setError('');
+    }, [category]);
+
+    const submit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (submitting) return;
+
+        const trimmedName = name.trim();
+        if (!trimmedName) {
+            setError('Category name is required.');
+            return;
+        }
+
+        setSubmitting(true);
+        setError('');
+        try {
+            await onSubmit(category.id, {
+                name: trimmedName,
+                is_active: isActive,
+            });
+            onClose();
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to update category.');
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+            <form onSubmit={submit} className={`relative w-full max-w-md rounded-2xl border shadow-2xl overflow-hidden ${bg}`} style={{ animation: 'fadeUp 0.3s ease' }}>
+                <div className={`flex items-center justify-between px-5 py-4 border-b ${sec}`}>
+                    <div className="flex items-center gap-2">
+                        <span className="text-blue-500">{Ico.edit}</span>
+                        <span className={`font-bold ${tp}`}>Manage Category</span>
+                    </div>
+                    <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-600 transition">{Ico.x}</button>
+                </div>
+
+                <div className="p-5 space-y-4">
+                    <div>
+                        <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Name</label>
+                        <input
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Sci-Fi"
+                            className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp}`}
+                        />
+                    </div>
+
+                    <div>
+                        <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Slug</label>
+                        <p className={`text-xs font-semibold ${tp}`}>{category.slug || '-'}</p>
+                    </div>
+
+                    <label className={`flex items-center gap-2 text-xs font-semibold ${tp}`}>
+                        <input
+                            type="checkbox"
+                            checked={isActive}
+                            onChange={(e) => setIsActive(e.target.checked)}
+                        />
+                        is_active
+                    </label>
+
+                    {error && <p className="text-[11px] font-semibold text-red-500">{error}</p>}
+                </div>
+
+                <div className={`px-5 py-4 border-t flex items-center justify-end gap-2 ${sec}`}>
+                    <button type="button" onClick={onClose} disabled={submitting} className={`text-xs font-semibold px-4 py-2.5 rounded-xl border transition ${dark ? 'border-gray-700 text-gray-400 hover:bg-gray-800' : 'border-gray-200 text-gray-500 hover:bg-gray-50'} ${submitting ? 'opacity-60 cursor-not-allowed' : ''}`}>
+                        Cancel
+                    </button>
+                    <button type="submit" disabled={submitting} className={`text-xs font-bold text-white bg-blue-600 px-5 py-2.5 rounded-xl hover:bg-blue-700 transition ${submitting ? 'opacity-70 cursor-not-allowed' : ''}`}>
+                        {submitting ? 'Updating...' : 'Update Category'}
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+}
+
+function ManageBookModal({
+    dark,
+    onClose,
+    bookId,
+    token,
+    categoryOptions,
+    authorOptions,
+    onSaved,
+}: {
+    dark: boolean;
+    onClose: () => void;
+    bookId: string;
+    token: string | null;
+    categoryOptions: NamedOption[];
+    authorOptions: NamedOption[];
+    onSaved: () => Promise<void>;
+}) {
+    const [detail, setDetail] = useState<DashboardBookManageDetail | null>(null);
+    const [initialDetail, setInitialDetail] = useState<DashboardBookManageDetail | null>(null);
+    const [form, setForm] = useState({
+        categoryId: '',
+        title: '',
+        authorId: '',
+        description: '',
+        price: '0.00',
+        stock_quantity: '0',
+        is_coming_soon: false,
+        is_active: true,
+        imageFile: null as File | null,
+    });
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [deactivating, setDeactivating] = useState(false);
+    const [error, setError] = useState('');
+
+    const bg = dark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200';
+    const sec = dark ? 'border-gray-800' : 'border-gray-100';
+    const tp = dark ? 'text-gray-100' : 'text-gray-800';
+    const ts = dark ? 'text-gray-400' : 'text-gray-500';
+    const inp = dark ? 'bg-gray-800 border-gray-700 text-gray-200 placeholder-gray-500' : 'bg-gray-50 border-gray-200 text-gray-700 placeholder-gray-400';
+
+    const applyDetail = useCallback((next: DashboardBookManageDetail) => {
+        setDetail(next);
+        setInitialDetail(next);
+        setForm({
+            categoryId: String(next.category),
+            title: next.title,
+            authorId: String(next.author),
+            description: next.description,
+            price: next.price,
+            stock_quantity: String(next.stock_quantity),
+            is_coming_soon: next.is_coming_soon,
+            is_active: next.is_active,
+            imageFile: null,
+        });
+    }, []);
+
+    useEffect(() => {
+        let active = true;
+
+        const fetchBook = async () => {
+            if (!token) {
+                if (active) {
+                    setError('Missing admin token. Please sign in again.');
+                    setLoading(false);
+                }
+                return;
+            }
+
+            setLoading(true);
+            setError('');
+            try {
+                const booksBaseUrl = resolveEndpoint(() => endpoints.books.dashboardList, '/books/dashboard/');
+                const detailUrl = appendResourceId(booksBaseUrl, bookId);
+                const response = await apiClient.get<unknown>(detailUrl, {
+                    cache: 'no-store',
+                    headers: { Authorization: `Token ${token}` },
+                });
+
+                if (!active) return;
+
+                const normalized = normalizeBookManageDetail(response);
+                if (!normalized) {
+                    setError('Failed to read book details.');
+                    setLoading(false);
+                    return;
+                }
+
+                applyDetail(normalized);
+            } catch (err) {
+                if (!active) return;
+                setError(err instanceof Error ? err.message : 'Failed to load book details.');
+            } finally {
+                if (active) setLoading(false);
+            }
+        };
+
+        void fetchBook();
+        return () => { active = false; };
+    }, [applyDetail, bookId, token]);
+
+    const effectiveCategoryOptions = detail && detail.categoryName && !categoryOptions.some((option) => option.id === detail.category)
+        ? dedupeNamedOptions([{ id: detail.category, name: detail.categoryName }, ...categoryOptions])
+        : categoryOptions;
+    const effectiveAuthorOptions = detail && detail.authorName && !authorOptions.some((option) => option.id === detail.author)
+        ? dedupeNamedOptions([{ id: detail.author, name: detail.authorName }, ...authorOptions])
+        : authorOptions;
+
+    const buildPayload = (): NewDashboardBookInput => {
+        const category = Number(form.categoryId);
+        const author = Number(form.authorId);
+        const title = form.title.trim();
+        const description = form.description.trim();
+        const price = Number(form.price);
+        const stockQuantity = Number(form.stock_quantity);
+
+        if (!Number.isInteger(category) || category <= 0) {
+            throw new Error('Select a valid category.');
+        }
+        if (!title) {
+            throw new Error('Title is required.');
+        }
+        if (!Number.isInteger(author) || author <= 0) {
+            throw new Error('Select a valid author.');
+        }
+        if (!description) {
+            throw new Error('Description is required.');
+        }
+        if (!Number.isFinite(price) || price <= 0) {
+            throw new Error('Price must be greater than 0.');
+        }
+        if (!Number.isInteger(stockQuantity) || stockQuantity < 0) {
+            throw new Error('Stock quantity must be 0 or greater.');
+        }
+
+        return {
+            category,
+            title,
+            slug: detail?.slug ?? '',
+            author,
+            description,
+            price: price.toFixed(2),
+            stock_quantity: stockQuantity,
+            is_coming_soon: form.is_coming_soon,
+            is_active: form.is_active,
+            imageFile: form.imageFile,
+        };
+    };
+
+    const withDetailUrl = (): string => {
+        const booksBaseUrl = resolveEndpoint(() => endpoints.books.dashboardList, '/books/dashboard/');
+        const currentId = detail?.id ?? bookId;
+        return appendResourceId(booksBaseUrl, currentId);
+    };
+
+    const save = async () => {
+        if (!token) {
+            setError('Missing admin token. Please sign in again.');
+            return;
+        }
+        if (!detail || !initialDetail) return;
+
+        try {
+            setError('');
+            const payload = buildPayload();
+            const patchPayload: Partial<NewDashboardBookInput> = {};
+            if (payload.category !== initialDetail.category) patchPayload.category = payload.category;
+            if (payload.title !== initialDetail.title) patchPayload.title = payload.title;
+            if (payload.slug !== initialDetail.slug) patchPayload.slug = payload.slug;
+            if (payload.author !== initialDetail.author) patchPayload.author = payload.author;
+            if (payload.description !== initialDetail.description) patchPayload.description = payload.description;
+            if (payload.price !== initialDetail.price) patchPayload.price = payload.price;
+            if (payload.stock_quantity !== initialDetail.stock_quantity) patchPayload.stock_quantity = payload.stock_quantity;
+            if (payload.is_coming_soon !== initialDetail.is_coming_soon) patchPayload.is_coming_soon = payload.is_coming_soon;
+            if (payload.is_active !== initialDetail.is_active) patchPayload.is_active = payload.is_active;
+
+            if (!Object.keys(patchPayload).length && !payload.imageFile) {
+                onClose();
+                return;
+            }
+
+            setSaving(true);
+
+            const doPatch = async () => {
+                if (payload.imageFile) {
+                    const formData = new FormData();
+                    Object.entries(patchPayload).forEach(([key, value]) => {
+                        if (value === undefined || value === null) return;
+                        formData.append(key, typeof value === 'boolean' ? String(value) : String(value));
+                    });
+                    formData.append('image', payload.imageFile);
+                    return apiClient.request<unknown>(
+                        withDetailUrl(),
+                        {
+                            method: 'PATCH',
+                            cache: 'no-store',
+                            headers: { Authorization: `Token ${token}` },
+                            body: formData,
+                        },
+                    );
+                }
+
+                return apiClient.patch<unknown, Partial<NewDashboardBookInput>>(
+                    withDetailUrl(),
+                    patchPayload,
+                    {
+                        cache: 'no-store',
+                        headers: { Authorization: `Token ${token}` },
+                    },
+                );
+            };
+
+            const doPut = async () => {
+                if (payload.imageFile) {
+                    const formData = new FormData();
+                    formData.append('category', String(payload.category));
+                    formData.append('title', payload.title);
+                    formData.append('slug', payload.slug);
+                    formData.append('author', String(payload.author));
+                    formData.append('description', payload.description);
+                    formData.append('price', payload.price);
+                    formData.append('stock_quantity', String(payload.stock_quantity));
+                    formData.append('is_coming_soon', String(payload.is_coming_soon));
+                    formData.append('is_active', String(payload.is_active));
+                    formData.append('image', payload.imageFile);
+                    return apiClient.request<unknown>(
+                        withDetailUrl(),
+                        {
+                            method: 'PUT',
+                            cache: 'no-store',
+                            headers: { Authorization: `Token ${token}` },
+                            body: formData,
+                        },
+                    );
+                }
+
+                return apiClient.put<unknown, NewDashboardBookInput>(
+                    withDetailUrl(),
+                    payload,
+                    {
+                        cache: 'no-store',
+                        headers: { Authorization: `Token ${token}` },
+                    },
+                );
+            };
+
+            let updated: unknown;
+            try {
+                updated = await doPatch();
+            } catch {
+                updated = await doPut();
+            }
+
+            const normalizedUpdated = normalizeBookManageDetail(updated);
+            if (normalizedUpdated) {
+                applyDetail(normalizedUpdated);
+            }
+            await onSaved();
+            onClose();
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to save the book.');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const deactivate = async () => {
+        if (!token) {
+            setError('Missing admin token. Please sign in again.');
+            return;
+        }
+        if (!detail) return;
+
+        setDeactivating(true);
+        setError('');
+        try {
+            const deactivateUrl = `${withDetailUrl()}deactivate/`;
+            await apiClient.patch<unknown, Record<string, never>>(
+                deactivateUrl,
+                {},
+                {
+                    cache: 'no-store',
+                    headers: { Authorization: `Token ${token}` },
+                },
+            );
+            await onSaved();
+            onClose();
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to deactivate the book.');
+        } finally {
+            setDeactivating(false);
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+            <div className={`relative w-full max-w-2xl rounded-2xl border shadow-2xl overflow-hidden ${bg}`} style={{ animation: 'fadeUp 0.3s ease' }}>
+                <div className={`flex items-center justify-between px-5 py-4 border-b ${sec}`}>
+                    <div className="flex items-center gap-2">
+                        <span className="text-blue-500">{Ico.book}</span>
+                        <span className={`font-bold ${tp}`}>Manage Book</span>
+                    </div>
+                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition">{Ico.x}</button>
+                </div>
+
+                <div className="p-5 space-y-4">
+                    {loading && <p className={`text-xs ${ts}`}>Loading book details...</p>}
+                    {!loading && detail && (
+                        <>
+                            <div className={`grid grid-cols-2 gap-3 text-xs pb-3 border-b ${sec}`}>
+                                <div><p className={`${ts}`}>Book ID</p><p className={`font-semibold ${tp}`}>{detail.id}</p></div>
+                                <div><p className={`${ts}`}>Slug</p><p className={`font-semibold ${tp}`}>{detail.slug || '-'}</p></div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="col-span-2">
+                                    <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Title</label>
+                                    <input value={form.title} onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))} className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp}`} />
+                                </div>
+                                <div>
+                                    <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Category</label>
+                                    <select value={form.categoryId} onChange={(e) => setForm((prev) => ({ ...prev, categoryId: e.target.value }))} disabled={effectiveCategoryOptions.length === 0} className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp}`}>
+                                        <option value="" disabled>{effectiveCategoryOptions.length ? 'Select category' : 'No categories available'}</option>
+                                        {effectiveCategoryOptions.map((option) => (
+                                            <option key={`manage-book-category-${option.id}`} value={String(option.id)}>{option.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Author</label>
+                                    <select value={form.authorId} onChange={(e) => setForm((prev) => ({ ...prev, authorId: e.target.value }))} disabled={effectiveAuthorOptions.length === 0} className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp}`}>
+                                        <option value="" disabled>{effectiveAuthorOptions.length ? 'Select author' : 'No authors available'}</option>
+                                        {effectiveAuthorOptions.map((option) => (
+                                            <option key={`manage-book-author-${option.id}`} value={String(option.id)}>{option.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="col-span-2">
+                                    <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Description</label>
+                                    <textarea rows={3} value={form.description} onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))} className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition resize-none ${inp}`} />
+                                </div>
+                                <div>
+                                    <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Price</label>
+                                    <input type="number" min={0.01} step="0.01" value={form.price} onChange={(e) => setForm((prev) => ({ ...prev, price: e.target.value }))} className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp}`} />
+                                </div>
+                                <div>
+                                    <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Stock Quantity</label>
+                                    <input type="number" min={0} value={form.stock_quantity} onChange={(e) => setForm((prev) => ({ ...prev, stock_quantity: e.target.value }))} className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp}`} />
+                                </div>
+                                <div className="col-span-2">
+                                    <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Image Upload (optional)</label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => setForm((prev) => ({ ...prev, imageFile: e.target.files?.[0] ?? null }))}
+                                        className={`w-full text-xs px-3 py-2 rounded-xl border outline-none ${inp}`}
+                                    />
+                                    {form.imageFile && <p className={`text-[10px] mt-1 ${ts}`}>{form.imageFile.name}</p>}
+                                </div>
+                                <label className={`col-span-1 flex items-center gap-2 text-xs font-semibold ${tp}`}>
+                                    <input type="checkbox" checked={form.is_coming_soon} onChange={(e) => setForm((prev) => ({ ...prev, is_coming_soon: e.target.checked }))} />
+                                    is_coming_soon
+                                </label>
+                                <label className={`col-span-1 flex items-center gap-2 text-xs font-semibold ${tp}`}>
+                                    <input type="checkbox" checked={form.is_active} onChange={(e) => setForm((prev) => ({ ...prev, is_active: e.target.checked }))} />
+                                    is_active
+                                </label>
+                            </div>
+                        </>
+                    )}
+
+                    {error && <p className="text-[11px] font-semibold text-red-500">{error}</p>}
+                </div>
+
+                <div className={`px-5 py-4 border-t flex items-center justify-between gap-2 ${sec}`}>
+                    <button onClick={deactivate} disabled={loading || !detail || deactivating || saving} className={`text-xs font-bold px-4 py-2.5 rounded-xl border border-red-300 text-red-600 hover:bg-red-50 transition ${(loading || !detail || deactivating || saving) ? 'opacity-60 cursor-not-allowed' : ''}`}>
+                        {deactivating ? 'Deactivating...' : 'Deactivate'}
+                    </button>
+                    <div className="flex items-center gap-2">
+                        <button onClick={onClose} disabled={saving || deactivating} className={`text-xs font-semibold px-4 py-2.5 rounded-xl border transition ${dark ? 'border-gray-700 text-gray-400 hover:bg-gray-800' : 'border-gray-200 text-gray-500 hover:bg-gray-50'} ${(saving || deactivating) ? 'opacity-60 cursor-not-allowed' : ''}`}>Cancel</button>
+                        <button onClick={save} disabled={loading || !detail || saving || deactivating} className={`text-xs font-bold text-white bg-blue-600 px-5 py-2.5 rounded-xl hover:bg-blue-700 transition ${(loading || !detail || saving || deactivating) ? 'opacity-70 cursor-not-allowed' : ''}`}>
+                            {saving ? 'Saving...' : 'Save'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function AddBookModal({
+    dark,
+    onClose,
+    onSubmit,
+    categoryOptions,
+    authorOptions,
+}: {
+    dark: boolean;
+    onClose: () => void;
+    onSubmit: (payload: NewDashboardBookInput) => Promise<void>;
+    categoryOptions: NamedOption[];
+    authorOptions: NamedOption[];
+}) {
+    const [form, setForm] = useState({
+        categoryId: '',
+        title: '',
+        slug: '',
+        authorId: '',
+        description: '',
+        price: '0.00',
+        stock_quantity: '0',
+        is_coming_soon: false,
+        is_active: true,
+        imageFile: null as File | null,
+    });
+    const [error, setError] = useState('');
+    const [submitting, setSubmitting] = useState(false);
+    const bg = dark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200';
+    const sec = dark ? 'border-gray-800' : 'border-gray-100';
+    const tp = dark ? 'text-gray-100' : 'text-gray-800';
+    const lbl = dark ? 'text-gray-400' : 'text-gray-500';
+    const inp = dark ? 'bg-gray-800 border-gray-700 text-gray-200 placeholder-gray-500' : 'bg-gray-50 border-gray-200 text-gray-700 placeholder-gray-400';
+
+    useEffect(() => {
+        setForm((prev) => ({
+            ...prev,
+            categoryId: categoryOptions.some((option) => String(option.id) === prev.categoryId)
+                ? prev.categoryId
+                : (categoryOptions[0] ? String(categoryOptions[0].id) : ''),
+            authorId: authorOptions.some((option) => String(option.id) === prev.authorId)
+                ? prev.authorId
+                : (authorOptions[0] ? String(authorOptions[0].id) : ''),
+        }));
+    }, [categoryOptions, authorOptions]);
+
+    const updateText = (key: 'categoryId' | 'title' | 'slug' | 'authorId' | 'description' | 'price' | 'stock_quantity', value: string) => {
+        setForm((prev) => ({ ...prev, [key]: value }));
+    };
+
+    const updateBoolean = (key: 'is_coming_soon' | 'is_active', value: boolean) => {
+        setForm((prev) => ({ ...prev, [key]: value }));
+    };
+
+    const submit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (submitting) return;
+
+        setError('');
+        const category = Number(form.categoryId);
+        const title = form.title.trim();
+        const slug = form.slug.trim();
+        const author = Number(form.authorId);
+        const description = form.description.trim();
+        const price = Number(form.price);
+        const stockQuantity = Number(form.stock_quantity);
+
+        if (!Number.isInteger(category) || category <= 0) {
+            setError('Select a category from the backend list.');
+            return;
+        }
+        if (!title) {
+            setError('Title is required.');
+            return;
+        }
+        if (!Number.isInteger(author) || author <= 0) {
+            setError('Select an author from the backend list.');
+            return;
+        }
+        if (!description) {
+            setError('Description is required.');
+            return;
+        }
+        if (!Number.isFinite(price) || price <= 0) {
+            setError('Price must be greater than 0.');
+            return;
+        }
+        if (!Number.isInteger(stockQuantity) || stockQuantity < 0) {
+            setError('Stock quantity must be 0 or greater.');
+            return;
+        }
+
+        try {
+            setSubmitting(true);
+            await onSubmit({
+                category,
+                title,
+                slug,
+                author,
+                description,
+                price: price.toFixed(2),
+                stock_quantity: stockQuantity,
+                is_coming_soon: form.is_coming_soon,
+                is_active: form.is_active,
+                imageFile: form.imageFile,
+            });
+            onClose();
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to create the book.');
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+            <form onSubmit={submit} className={`relative w-full max-w-lg rounded-2xl border shadow-2xl overflow-hidden ${bg}`} style={{ animation: 'fadeUp 0.3s ease' }}>
+                <div className={`flex items-center justify-between px-5 py-4 border-b ${sec}`}>
+                    <div className="flex items-center gap-2">
+                        <span className="text-blue-500">{Ico.book}</span>
+                        <span className={`font-bold ${tp}`}>Add Book</span>
+                    </div>
+                    <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-600 transition">{Ico.x}</button>
+                </div>
+                <div className="p-5 space-y-4">
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="col-span-2">
+                            <label className={`block text-[11px] font-semibold mb-1.5 ${lbl}`}>Title</label>
+                            <input value={form.title} onChange={(e) => updateText('title', e.target.value)} placeholder="Book title"
+                                className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp}`} />
+                        </div>
+                        <div className="col-span-2">
+                            <label className={`block text-[11px] font-semibold mb-1.5 ${lbl}`}>Slug (optional)</label>
+                            <input value={form.slug} onChange={(e) => updateText('slug', e.target.value)} placeholder="sample-book"
+                                className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp}`} />
+                        </div>
+                        <div>
+                            <label className={`block text-[11px] font-semibold mb-1.5 ${lbl}`}>Category</label>
+                            <select value={form.categoryId} onChange={(e) => updateText('categoryId', e.target.value)} disabled={categoryOptions.length === 0}
+                                className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp} ${categoryOptions.length === 0 ? 'opacity-70 cursor-not-allowed' : ''}`}>
+                                <option value="" disabled>{categoryOptions.length ? 'Select category' : 'No categories from backend'}</option>
+                                {categoryOptions.map((option) => (
+                                    <option key={`category-${option.id}`} value={String(option.id)}>{option.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label className={`block text-[11px] font-semibold mb-1.5 ${lbl}`}>Author</label>
+                            <select value={form.authorId} onChange={(e) => updateText('authorId', e.target.value)} disabled={authorOptions.length === 0}
+                                className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp} ${authorOptions.length === 0 ? 'opacity-70 cursor-not-allowed' : ''}`}>
+                                <option value="" disabled>{authorOptions.length ? 'Select author' : 'No authors from backend'}</option>
+                                {authorOptions.map((option) => (
+                                    <option key={`author-${option.id}`} value={String(option.id)}>{option.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="col-span-2">
+                            <label className={`block text-[11px] font-semibold mb-1.5 ${lbl}`}>Description</label>
+                            <textarea rows={3} value={form.description} onChange={(e) => updateText('description', e.target.value)} placeholder="A practical guide to building good habits."
+                                className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition resize-none ${inp}`} />
+                        </div>
+                        <div>
+                            <label className={`block text-[11px] font-semibold mb-1.5 ${lbl}`}>Price</label>
+                            <input type="number" min={0.01} step="0.01" value={form.price} onChange={(e) => updateText('price', e.target.value)}
+                                className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp}`} />
+                        </div>
+                        <div>
+                            <label className={`block text-[11px] font-semibold mb-1.5 ${lbl}`}>Stock Quantity</label>
+                            <input type="number" min={0} value={form.stock_quantity} onChange={(e) => updateText('stock_quantity', e.target.value)}
+                                className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp}`} />
+                        </div>
+                        <div>
+                            <label className={`block text-[11px] font-semibold mb-1.5 ${lbl}`}>Image</label>
+                            <input type="file" accept="image/*" onChange={(e) => setForm((prev) => ({ ...prev, imageFile: e.target.files?.[0] ?? null }))}
+                                className={`w-full text-xs px-3 py-2 rounded-xl border outline-none ${inp}`} />
+                        </div>
+                        <label className={`col-span-1 flex items-center gap-2 text-xs font-medium ${tp}`}>
+                            <input type="checkbox" checked={form.is_coming_soon} onChange={(e) => updateBoolean('is_coming_soon', e.target.checked)} />
+                            is_coming_soon
+                        </label>
+                        <label className={`col-span-1 flex items-center gap-2 text-xs font-medium ${tp}`}>
+                            <input type="checkbox" checked={form.is_active} onChange={(e) => updateBoolean('is_active', e.target.checked)} />
+                            is_active
+                        </label>
+                    </div>
+                    {error && <p className="text-[11px] font-semibold text-red-500">{error}</p>}
+                </div>
+                <div className={`px-5 py-4 border-t flex items-center justify-end gap-2 ${sec}`}>
+                    <button type="button" onClick={onClose} disabled={submitting} className={`text-xs font-semibold px-4 py-2.5 rounded-xl border transition ${dark ? 'border-gray-700 text-gray-400 hover:bg-gray-800' : 'border-gray-200 text-gray-500 hover:bg-gray-50'} ${submitting ? 'opacity-60 cursor-not-allowed' : ''}`}>Cancel</button>
+                    <button type="submit" disabled={submitting} className={`text-xs font-bold text-white bg-blue-600 px-5 py-2.5 rounded-xl hover:bg-blue-700 transition ${submitting ? 'opacity-70 cursor-not-allowed' : ''}`}>{submitting ? 'Creating...' : 'Create Book'}</button>
+                </div>
+            </form>
+        </div>
+    );
+}
+
+function FavoritesModal({ dark, onClose, initialItems }: { dark: boolean; onClose: () => void; initialItems: DashboardFavorite[] }) {
+    const [items, setItems] = useState<DashboardFavorite[]>(initialItems);
+    useEffect(() => {
+        setItems(initialItems);
+    }, [initialItems]);
     const [adding, setAdding] = useState(false);
     const [newName, setNewName] = useState('');
     const bg = dark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200';
@@ -1007,91 +2447,55 @@ function FavoritesModal({ dark, onClose }: { dark: boolean; onClose: () => void 
     );
 }
 
-function ProjectsModal({ dark, onClose }: { dark: boolean; onClose: () => void }) {
-    const [projects, setProjects] = useState([
-        { id: 1, name: 'Bookstore CRM', desc: 'Main CR management', status: 'active', color: 'bg-blue-500' },
-        { id: 2, name: 'Inventory Tracker', desc: 'Stock & orders', status: 'active', color: 'bg-emerald-500' },
-        { id: 3, name: 'Analytics V2', desc: 'Advanced reporting', status: 'planning', color: 'bg-amber-400' },
-    ]);
-    const [adding, setAdding] = useState(false);
-    const [newName, setNewName] = useState('');
-    const bg = dark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200';
-    const sec = dark ? 'border-gray-800' : 'border-gray-100';
-    const tp = dark ? 'text-gray-100' : 'text-gray-800';
-    const ts = dark ? 'text-gray-400' : 'text-gray-500';
-    const add = () => {
-        if (!newName.trim()) return;
-        setProjects(p => [...p, { id: Date.now(), name: newName, desc: 'New project', status: 'planning', color: 'bg-gray-400' }]);
-        setNewName(''); setAdding(false);
-    };
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-            <div className={`relative w-80 rounded-2xl border shadow-2xl overflow-hidden ${bg}`} style={{ animation: 'fadeUp 0.3s ease' }}>
-                <div className={`flex items-center justify-between px-5 py-4 border-b ${sec}`}>
-                    <div className="flex items-center gap-2"><span className="text-blue-600">{Ico.folder}</span><span className={`font-bold ${tp}`}>Projects</span></div>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600">{Ico.x}</button>
-                </div>
-                <div className="px-5 py-4 space-y-2 max-h-72 overflow-y-auto">
-                    {projects.map(p => (
-                        <div key={p.id} className={`p-3 rounded-xl border transition cursor-pointer ${dark ? 'border-gray-800 hover:bg-gray-800' : 'border-gray-100 hover:bg-gray-50'}`}>
-                            <div className="flex items-center gap-2 mb-1">
-                                <span className={`w-2 h-2 rounded-full ${p.color}`} />
-                                <span className={`flex-1 text-xs font-semibold ${tp}`}>{p.name}</span>
-                                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${p.status === 'active' ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'}`}>{p.status}</span>
-                                <button onClick={() => setProjects(prev => prev.filter(x => x.id !== p.id))} className="text-gray-300 hover:text-red-400 transition">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3 h-3"><path d="M18 6L6 18M6 6l12 12" /></svg>
-                                </button>
-                            </div>
-                            <p className={`text-[10px] ${ts} ml-4`}>{p.desc}</p>
-                        </div>
-                    ))}
-                    {adding ? (
-                        <div className="flex gap-2 mt-1">
-                            <input autoFocus value={newName} onChange={e => setNewName(e.target.value)}
-                                onKeyDown={e => { if (e.key === 'Enter') add(); if (e.key === 'Escape') { setAdding(false); setNewName(''); } }}
-                                placeholder="Project name..." className={`flex-1 text-xs px-2.5 py-2 rounded-xl border outline-none ${dark ? 'bg-gray-800 border-gray-700 text-gray-200 placeholder-gray-500' : 'bg-gray-50 border-gray-200'}`} />
-                            <button onClick={add} className="text-xs font-bold bg-blue-600 text-white px-3 py-2 rounded-xl hover:bg-blue-700 transition">Add</button>
-                        </div>
-                    ) : (
-                        <button onClick={() => setAdding(true)} className="flex items-center gap-1.5 w-full text-xs font-semibold py-2 text-blue-500 hover:text-blue-600 transition">
-                            {Ico.plus} New project
-                        </button>
-                    )}
-                </div>
-                <div className={`px-5 py-3 border-t ${sec}`}>
-                    <button onClick={onClose} className="w-full text-xs font-bold bg-blue-600 text-white py-2.5 rounded-xl hover:bg-blue-700 transition">Done</button>
-                </div>
-            </div>
-        </div>
-    );
-}
-
 /* ═══════════════════════════════ DASHBOARD HOME ═══════════════════════════════ */
-function DashboardHome({ dark }: { dark: boolean }) {
-    const tp = dark ? 'text-gray-100' : 'text-gray-800';
+function DashboardHome({
+    dark,
+    overview,
+    leads,
+    revenueSeries,
+    retentionSeries,
+    orders,
+    books,
+    onAddBook,
+    onManageOrder,
+    onManageBook,
+}: {
+    dark: boolean;
+    overview: DashboardOverview;
+    leads: DashboardLeads;
+    revenueSeries: DashboardRevenuePoint[];
+    retentionSeries: DashboardRetentionPoint[];
+    orders: DashboardOrder[];
+    books: DashboardBook[];
+    onAddBook: () => void;
+    onManageOrder: (orderId: string) => void;
+    onManageBook: (bookId: string) => void;
+}) {
+    const leadsUp = leads.leads_delta_pct >= 0;
+    const conversionUp = leads.conversion_delta_pct >= 0;
+    const ltvUp = leads.ltv_delta_pct >= 0;
     return (
         <div className="space-y-4">
             <div className="grid grid-cols-3 gap-3">
-                <KpiCard dark={dark} title="Total Leads" value={<AnimCount to={129} />} sub="+24 vs last week" delta="8%" up={true} color="#3b82f6" icon={Ico.users} sparkData={[40, 55, 48, 62, 57, 70, 65, 80, 75, 90, 85, 100]} delay={100} />
-                <KpiCard dark={dark} title="Conversion Rate" value={<><AnimCount to={24} />%</>} sub="+8 vs last week" delta="2%" up={true} color="#10b981" icon={Ico.percent} sparkData={[18, 20, 17, 22, 20, 24, 22, 26, 24, 28, 26, 30]} delay={200} />
-                <KpiCard dark={dark} title="Customer LTV" value={<><AnimCount to={14} />d</>} sub="+1d vs last week" delta="4%" up={false} color="#f59e0b" icon={Ico.trend} sparkData={[16, 15, 17, 15, 14, 16, 15, 14, 15, 13, 14, 12]} delay={300} />
+                <KpiCard dark={dark} title="Total Revenue" value={<>TK <AnimCount to={overview.total_revenue} dec={2} /></>} sub="Confirmed order revenue" delta={`${Math.abs(leads.leads_delta_pct)}%`} up={leadsUp} color="#3b82f6" icon={Ico.trend} sparkData={leads.spark_leads} delay={100} />
+                <KpiCard dark={dark} title="Total Orders" value={<AnimCount to={overview.total_orders} />} sub={`${overview.pending_orders} pending orders`} delta={`${Math.abs(leads.conversion_delta_pct)}%`} up={conversionUp} color="#10b981" icon={Ico.deals} sparkData={leads.spark_conversion} delay={200} />
+                <KpiCard dark={dark} title="Delivered Orders" value={<AnimCount to={overview.delivered_deliveries} />} sub={`${overview.shipped_deliveries} shipped`} delta={`${Math.abs(leads.ltv_delta_pct)}%`} up={ltvUp} color="#f59e0b" icon={Ico.truck} sparkData={leads.spark_ltv} delay={300} />
             </div>
             <div className="flex gap-4">
-                <div className="flex-1 min-w-0"><RevenueChart dark={dark} /></div>
-                <div className="w-56 flex-shrink-0"><LeadsPanel dark={dark} /></div>
+                <div className="flex-1 min-w-0"><RevenueChart dark={dark} overview={overview} series={revenueSeries} /></div>
+                <div className="w-56 flex-shrink-0"><LeadsPanel dark={dark} leads={leads} /></div>
             </div>
             <div className="flex gap-4">
-                <div className="w-56 flex-shrink-0"><QuickStats dark={dark} /></div>
-                <div className="flex-1 min-w-0"><RetentionChart dark={dark} /></div>
+                <div className="w-56 flex-shrink-0"><QuickStats dark={dark} overview={overview} /></div>
+                <div className="flex-1 min-w-0"><RetentionChart dark={dark} series={retentionSeries} /></div>
             </div>
-            <DeliveryPipeline dark={dark} />
+            <DeliveryPipeline dark={dark} overview={overview} />
             <div className="grid grid-cols-4 gap-3">
                 {[
-                    { l: 'Total Books', v: D.total_books, c: '#3b82f6', pct: 100, icon: Ico.book },
-                    { l: 'Active', v: D.active_books, c: '#10b981', pct: 100, icon: Ico.check },
-                    { l: 'In Stock', v: D.in_stock_books, c: '#8b5cf6', pct: 100, icon: Ico.package },
-                    { l: 'Low Stock', v: D.low_stock_books, c: '#f59e0b', pct: 33, icon: Ico.warn },
+                    { l: 'Total Books', v: overview.total_books, c: '#3b82f6', pct: 100, icon: Ico.book },
+                    { l: 'Active Books', v: overview.active_books, c: '#10b981', pct: 100, icon: Ico.check },
+                    { l: 'In Stock', v: overview.in_stock_books, c: '#8b5cf6', pct: 100, icon: Ico.package },
+                    { l: 'Low Stock', v: overview.low_stock_books, c: '#f59e0b', pct: 33, icon: Ico.warn },
                 ].map((it, i) => (
                     <div key={i} className={`rounded-xl border p-4 flex items-center gap-3 transition-colors ${dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'}`}>
                         <Ring pct={it.pct} color={it.c} size={44} stroke={5} />
@@ -1099,57 +2503,39 @@ function DashboardHome({ dark }: { dark: boolean }) {
                     </div>
                 ))}
             </div>
-            <div className="flex gap-4">
-                <div className="w-72 flex-shrink-0"><CalendarWidget dark={dark} /></div>
-                <div className={`flex-1 rounded-xl border overflow-hidden ${dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'}`}>
-                    <div style={{ height: 170 }}><WorldMap dark={dark} /></div>
-                    <div className="p-4">
-                        <h3 className={`text-sm font-bold mb-2 ${tp}`}>Top Customer Locations</h3>
-                        <div className="space-y-1.5">
-                            {LOCATIONS.map((l, i) => (
-                                <div key={i} className="flex items-center gap-2 text-xs">
-                                    <span className={`text-[10px] font-bold w-4 ${dark ? 'text-gray-500' : 'text-gray-400'}`}>{i + 1}</span>
-                                    <span className="text-base">{l.flag}</span>
-                                    <span className={`flex-1 font-medium ${tp}`}>{l.country}</span>
-                                    <div className="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden mr-1">
-                                        <div className="h-full bg-blue-400 rounded-full" style={{ width: `${l.pct}%`, transition: 'width 1s ease' }} />
-                                    </div>
-                                    <span className={`font-bold text-[11px] ${tp}`}>{l.pct}%</span>
-                                </div>
-                            ))}
-                        </div>
-                        <button className={`mt-3 w-full text-[11px] font-semibold border rounded-xl py-1.5 transition ${dark ? 'border-gray-700 text-gray-400 hover:border-blue-600' : 'border-gray-200 text-gray-500 hover:border-blue-400'}`}>View more →</button>
-                    </div>
-                </div>
-            </div>
-            <OrdersTable dark={dark} />
+            <OrdersTable dark={dark} orders={orders} onManageOrder={onManageOrder} />
+            <BooksTable dark={dark} overview={overview} books={books} onAddBook={onAddBook} onManageBook={onManageBook} />
         </div>
     );
 }
 
-type Modal = 'settings' | 'help' | 'notifs' | 'profile' | 'billing' | 'team' | 'favorites' | 'projects' | null;
+type Modal = 'settings' | 'notifs' | 'profile' | 'favorites' | 'addBook' | 'manageOrder' | 'manageCategory' | 'manageBook' | null;
 
 /* ═══════════════════════════════ LOGIN FORM ═══════════════════════════════ */
-function LoginForm({ onLogin, dark }: { onLogin: () => void; dark: boolean }) {
-    const [email, setEmail] = useState('');
+function LoginForm({ onLogin, dark }: { onLogin: (payload: LoginResponse) => void; dark: boolean }) {
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError('');
 
-        // Simple mock auth for Super Admin
-        setTimeout(() => {
-            if (email === 'admin@bookbuybd.com' && password === 'superadmin123') {
-                onLogin();
-            } else {
-                setError('Invalid Super Admin credentials');
-            }
+        try {
+            const response = await apiClient.post<LoginResponse, { username: string; password: string }>(
+                endpoints.auth.login,
+                { username, password },
+                { cache: 'no-store' },
+            );
+            onLogin(response);
+        } catch (err) {
+            const message = err instanceof Error ? err.message : 'Login failed. Please check your credentials.';
+            setError(message);
+        } finally {
             setLoading(false);
-        }, 800);
+        }
     };
 
     const bg = dark ? 'bg-gray-950' : 'bg-[#f0f4f8]';
@@ -1169,9 +2555,9 @@ function LoginForm({ onLogin, dark }: { onLogin: () => void; dark: boolean }) {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className={`block text-[11px] font-bold mb-1.5 uppercase tracking-wider ${dark ? 'text-gray-400' : 'text-gray-500'}`}>Email Address</label>
-                        <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
-                            className={`w-full px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500/20 transition-all ${inp}`} placeholder="admin@bookbuybd.com" />
+                        <label className={`block text-[11px] font-bold mb-1.5 uppercase tracking-wider ${dark ? 'text-gray-400' : 'text-gray-500'}`}>Username</label>
+                        <input type="text" required value={username} onChange={e => setUsername(e.target.value)}
+                            className={`w-full px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500/20 transition-all ${inp}`} placeholder="admin" />
                     </div>
                     <div>
                         <label className={`block text-[11px] font-bold mb-1.5 uppercase tracking-wider ${dark ? 'text-gray-400' : 'text-gray-500'}`}>Password</label>
@@ -1198,6 +2584,7 @@ function LoginForm({ onLogin, dark }: { onLogin: () => void; dark: boolean }) {
 /* ═══════════════════════════════ ROOT COMPONENT ═══════════════════════════════ */
 export default function Dashboard() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [authUser, setAuthUser] = useState<AuthUser | null>(null);
     const [dark, setDark] = useState(false);
     const [sidebar, setSidebar] = useState(true);
     const [activeNav, setNav] = useState('dashboard');
@@ -1205,8 +2592,337 @@ export default function Dashboard() {
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchQ, setSearchQ] = useState('');
     const [profileOpen, setProfileOpen] = useState(false);
+    const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
+    const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
+    const [activeBookId, setActiveBookId] = useState<string | null>(null);
+    const [overview, setOverview] = useState<DashboardOverview>(DASHBOARD_OVERVIEW_EMPTY);
+    const [revenueSeries, setRevenueSeries] = useState<DashboardRevenuePoint[]>([]);
+    const [retentionSeries, setRetentionSeries] = useState<DashboardRetentionPoint[]>([]);
+    const [leads, setLeads] = useState<DashboardLeads>(DASHBOARD_LEADS_EMPTY);
+    const [orders, setOrders] = useState<DashboardOrder[]>([]);
+    const [books, setBooks] = useState<DashboardBook[]>([]);
+    const [categories, setCategories] = useState<DashboardCategory[]>([]);
+    const [notifications, setNotifications] = useState<DashboardNotification[]>([]);
+    const [inboxMessages, setInboxMessages] = useState<DashboardInboxMessage[]>([]);
+    const [calendarDays, setCalendarDays] = useState<DashboardCalendarDay[]>([]);
+    const [calendarEvents, setCalendarEvents] = useState<DashboardCalendarEvent[]>([]);
+    const [favorites, setFavorites] = useState<DashboardFavorite[]>([]);
+    const [categoryOptions, setCategoryOptions] = useState<NamedOption[]>([]);
+    const [authorOptions, setAuthorOptions] = useState<NamedOption[]>([]);
+    const [authToken, setAuthToken] = useState<string | null>(null);
+    const tokenRef = useRef<string | null>(null);
     const profileRef = useRef<HTMLDivElement>(null);
-    const unread = NOTIFICATIONS_INIT.filter(n => !n.read).length;
+    const unread = notifications.filter((n) => !n.read).length;
+    const inboxUnread = inboxMessages.filter((msg) => {
+        const normalized = msg.status.toLowerCase();
+        return normalized === 'received' || normalized === 'in_review';
+    }).length;
+
+    const resetDashboardData = useCallback(() => {
+        setOverview(DASHBOARD_OVERVIEW_EMPTY);
+        setRevenueSeries([]);
+        setRetentionSeries([]);
+        setLeads(DASHBOARD_LEADS_EMPTY);
+        setOrders([]);
+        setBooks([]);
+        setCategories([]);
+        setNotifications([]);
+        setInboxMessages([]);
+        setCalendarDays([]);
+        setCalendarEvents([]);
+        setFavorites([]);
+        setCategoryOptions([]);
+        setAuthorOptions([]);
+        setActiveOrderId(null);
+        setActiveCategoryId(null);
+        setActiveBookId(null);
+    }, []);
+
+    const loadDashboardData = useCallback(async (token: string) => {
+        const headers = { Authorization: `Token ${token}` };
+        const overviewUrl = resolveEndpoint(() => endpoints.dashboard.overview, '/dashboard/overview/');
+        const monthlyRevenueUrl = resolveEndpoint(() => (endpoints.dashboard as Record<string, string>).monthlyRevenue || (endpoints.dashboard as Record<string, string>).monthly_revenue, '/dashboard/monthly-revenue/');
+        const recentOrdersUrl = resolveEndpoint(() => (endpoints.dashboard as Record<string, string>).recentOrders || (endpoints.dashboard as Record<string, string>).recent_orders, '/dashboard/recent-orders/');
+        const dashboardOrdersUrl = resolveEndpoint(() => (endpoints.orders as Record<string, string>).dashboardList || (endpoints.orders as Record<string, string>).dashboard_list, '/orders/dashboard/list/');
+        const dashboardBooksUrl = resolveEndpoint(() => (endpoints.books as Record<string, string>).dashboardList || (endpoints.books as Record<string, string>).dashboard, '/books/dashboard/');
+        const booksCatalogUrl = resolveEndpoint(() => endpoints.books.list, '/books/');
+        const dashboardCategoriesUrl = resolveEndpoint(
+            () => (endpoints.books as Record<string, string>).dashboardCategories
+                || (endpoints.books as Record<string, string>).dashboard_categories
+                || (endpoints.books as Record<string, string>).categoriesDashboard,
+            '/books/dashboard/categories/',
+        );
+        const categoriesUrl = resolveEndpoint(() => endpoints.books.categories, '/books/categories/');
+        const contactMessagesUrl = resolveEndpoint(
+            () => (endpoints.contact as Record<string, string>).dashboardMessages || endpoints.contact.messages,
+            '/contact/dashboard/messages',
+        );
+
+        const [overviewResult, revenueResult, ordersResult, booksResult, booksCatalogResult, categoriesResult, inboxResult] = await Promise.allSettled([
+            apiClient.get<DashboardOverviewApiResponse>(overviewUrl, { cache: 'no-store', headers }),
+            apiClient.get<unknown>(monthlyRevenueUrl, { cache: 'no-store', headers }),
+            apiClient.get<unknown>(dashboardOrdersUrl, { cache: 'no-store', headers }).catch(async () => apiClient.get<unknown>(recentOrdersUrl, { cache: 'no-store', headers })),
+            apiClient.get<unknown>(dashboardBooksUrl, { cache: 'no-store', headers }),
+            apiClient.get<unknown>(booksCatalogUrl, { cache: 'no-store', headers }),
+            apiClient.get<unknown>(dashboardCategoriesUrl, { cache: 'no-store', headers }).catch(async () => apiClient.get<unknown>(categoriesUrl, { cache: 'no-store', headers })),
+            apiClient.get<unknown>(contactMessagesUrl, { cache: 'no-store', headers }),
+        ]);
+
+        const nextOverview = overviewResult.status === 'fulfilled' ? normalizeDashboardOverview(overviewResult.value) : DASHBOARD_OVERVIEW_EMPTY;
+        const nextRevenue = revenueResult.status === 'fulfilled' ? normalizeRevenue(revenueResult.value) : [];
+        const nextOrders = ordersResult.status === 'fulfilled' ? normalizeOrders(ordersResult.value) : [];
+        const nextBooks = booksResult.status === 'fulfilled' ? normalizeBooks(booksResult.value) : [];
+        const nextCategories = categoriesResult.status === 'fulfilled' ? normalizeDashboardCategories(categoriesResult.value) : [];
+        const nextCategoryOptions = dedupeNamedOptions(
+            nextCategories.map((category) => ({ id: category.id, name: category.name })),
+        );
+        const dashboardBookAuthorOptions = booksResult.status === 'fulfilled' ? normalizeAuthorOptionsFromBooks(booksResult.value) : [];
+        const catalogAuthorOptions = booksCatalogResult.status === 'fulfilled' ? normalizeAuthorOptionsFromBooks(booksCatalogResult.value) : [];
+        const nextAuthorOptions = dedupeNamedOptions([...dashboardBookAuthorOptions, ...catalogAuthorOptions]);
+        const nextInbox = inboxResult.status === 'fulfilled' ? normalizeInboxMessages(inboxResult.value) : [];
+
+        setOverview(nextOverview);
+        setRevenueSeries(nextRevenue);
+        setOrders(nextOrders);
+        setBooks(nextBooks);
+        setCategories(nextCategories);
+        setInboxMessages(nextInbox);
+        setCategoryOptions(nextCategoryOptions);
+        setAuthorOptions(nextAuthorOptions);
+
+        const orderMix = nextOverview.total_orders || (nextOverview.pending_orders + nextOverview.confirmed_orders + nextOverview.rejected_orders);
+        setLeads({
+            open: nextOverview.pending_orders,
+            in_progress: nextOverview.confirmed_orders,
+            lost: nextOverview.rejected_orders,
+            won: nextOverview.delivered_deliveries,
+            total_leads: nextOverview.total_orders,
+            conversion_rate: nextOverview.total_orders ? Number(((nextOverview.confirmed_orders / nextOverview.total_orders) * 100).toFixed(1)) : 0,
+            customer_ltv_days: nextOverview.total_orders ? Math.max(1, Math.round((nextOverview.processing_deliveries + nextOverview.shipped_deliveries + nextOverview.delivered_deliveries) / nextOverview.total_orders * 30)) : 0,
+            leads_delta: nextOverview.confirmed_orders - nextOverview.pending_orders,
+            leads_delta_pct: orderMix ? Number((((nextOverview.confirmed_orders - nextOverview.pending_orders) / Math.max(orderMix, 1)) * 100).toFixed(1)) : 0,
+            conversion_delta_pct: nextOverview.total_orders ? Number((((nextOverview.delivered_deliveries - nextOverview.shipped_deliveries) / Math.max(nextOverview.total_orders, 1)) * 100).toFixed(1)) : 0,
+            ltv_delta_pct: nextOverview.total_orders ? Number((((nextOverview.in_stock_books - nextOverview.low_stock_books) / Math.max(nextOverview.total_books || 1, 1)) * 100).toFixed(1)) : 0,
+            spark_leads: nextRevenue.map((point) => point.value),
+            spark_conversion: nextRevenue.map((point) => point.value / Math.max(nextOverview.total_orders || 1, 1)),
+            spark_ltv: nextRevenue.map((point) => point.value / Math.max(nextOverview.total_books || 1, 1)),
+        });
+
+        setRetentionSeries(nextRevenue.map((point) => ({
+            label: point.label,
+            smes: nextOverview.pending_orders,
+            startups: nextOverview.confirmed_orders,
+            enterprises: nextOverview.delivered_deliveries,
+        })));
+
+        setNotifications([
+            ...(nextOverview.pending_orders > 0 ? [{ id: 'pending-orders', type: 'order', msg: `${nextOverview.pending_orders} pending order(s) need review`, time: 'Now', read: false }] : []),
+            ...(nextOverview.low_stock_books > 0 ? [{ id: 'low-stock', type: 'stock', msg: `${nextOverview.low_stock_books} book(s) are low in stock`, time: 'Now', read: false }] : []),
+            ...(nextOverview.out_of_stock_books > 0 ? [{ id: 'out-stock', type: 'stock', msg: `${nextOverview.out_of_stock_books} book(s) are out of stock`, time: 'Now', read: false }] : []),
+        ]);
+
+        setCalendarDays([]);
+        setCalendarEvents([]);
+        setFavorites([
+            ...(nextBooks.slice(0, 2).map((book, index) => ({ id: `book-${index}`, label: book.title, color: index % 2 === 0 ? 'bg-violet-500' : 'bg-emerald-500' }))),
+        ]);
+    }, []);
+
+    const handleLogin = useCallback((payload: LoginResponse) => {
+        tokenRef.current = payload.token;
+        setAuthToken(payload.token);
+        setAuthUser(payload.user);
+        setIsAuthenticated(true);
+        void loadDashboardData(payload.token);
+    }, [loadDashboardData]);
+
+    const handleAddBook = useCallback(async (payload: NewDashboardBookInput) => {
+        const token = tokenRef.current;
+        if (!token) {
+            throw new Error('Missing admin token. Please sign in again.');
+        }
+
+        const createBookUrl = resolveEndpoint(
+            () => (endpoints.books as Record<string, string>).dashboardCreate
+                || (endpoints.books as Record<string, string>).dashboard
+                || (endpoints.books as Record<string, string>).dashboardList,
+            '/books/dashboard/',
+        );
+
+        const formData = new FormData();
+        formData.append('category', String(payload.category));
+        formData.append('title', payload.title);
+        formData.append('slug', payload.slug);
+        formData.append('author', String(payload.author));
+        formData.append('description', payload.description);
+        formData.append('price', payload.price);
+        formData.append('stock_quantity', String(payload.stock_quantity));
+        formData.append('is_coming_soon', String(payload.is_coming_soon));
+        formData.append('is_active', String(payload.is_active));
+        if (payload.imageFile) formData.append('image', payload.imageFile);
+
+        const created = await apiClient.request<unknown>(
+            createBookUrl,
+            {
+                method: 'POST',
+                cache: 'no-store',
+                headers: { Authorization: `Token ${token}` },
+                body: formData,
+            },
+        );
+
+        const normalizedCreated = normalizeBooks([created])[0];
+        const authorName = authorOptions.find((option) => option.id === payload.author)?.name ?? `Author #${payload.author}`;
+        const categoryName = categoryOptions.find((option) => option.id === payload.category)?.name ?? `Category #${payload.category}`;
+        const nextBook: DashboardBook = normalizedCreated ?? {
+            id: `book-${Date.now().toString(36)}`,
+            title: payload.title,
+            author: authorName,
+            genre: categoryName,
+            image: '',
+            thumbnail: '',
+            stock: payload.stock_quantity,
+            price: parseNumeric(payload.price),
+            status: payload.is_coming_soon ? 'coming soon' : (payload.is_active ? (payload.stock_quantity > 0 ? 'active' : 'out of stock') : 'inactive'),
+            orders: 0,
+        };
+
+        setBooks((prev) => [nextBook, ...prev]);
+        setOverview((prev) => ({
+            ...prev,
+            total_books: prev.total_books + 1,
+            active_books: prev.active_books + (nextBook.status === 'active' ? 1 : 0),
+            in_stock_books: prev.in_stock_books + (nextBook.stock > 0 ? 1 : 0),
+            out_of_stock_books: prev.out_of_stock_books + (nextBook.stock <= 0 ? 1 : 0),
+            low_stock_books: prev.low_stock_books + (nextBook.stock > 0 && nextBook.stock <= 5 ? 1 : 0),
+        }));
+    }, [authorOptions, categoryOptions]);
+
+    const handleCreateCategory = useCallback(async (payload: NewDashboardCategoryInput) => {
+        const token = tokenRef.current;
+        if (!token) {
+            throw new Error('Missing admin token. Please sign in again.');
+        }
+
+        const createCategoryUrl = resolveEndpoint(
+            () => (endpoints.books as Record<string, string>).dashboardCategories
+                || (endpoints.books as Record<string, string>).dashboard_categories
+                || (endpoints.books as Record<string, string>).categoriesDashboard,
+            '/books/dashboard/categories/',
+        );
+
+        const created = await apiClient.post<unknown, NewDashboardCategoryInput>(
+            createCategoryUrl,
+            payload,
+            {
+                cache: 'no-store',
+                headers: { Authorization: `Token ${token}` },
+            },
+        );
+
+        const createdCategory = normalizeDashboardCategories([created])[0];
+        if (!createdCategory) {
+            await loadDashboardData(token);
+            return;
+        }
+
+        setCategories((prev) => {
+            const filtered = prev.filter((category) => category.id !== createdCategory.id);
+            return [createdCategory, ...filtered];
+        });
+        setCategoryOptions((prev) => dedupeNamedOptions([
+            { id: createdCategory.id, name: createdCategory.name },
+            ...prev,
+        ]));
+    }, [loadDashboardData]);
+
+    const handleUpdateCategory = useCallback(async (categoryId: number, payload: UpdateDashboardCategoryInput) => {
+        const token = tokenRef.current;
+        if (!token) {
+            throw new Error('Missing admin token. Please sign in again.');
+        }
+
+        const categoriesBaseUrl = resolveEndpoint(
+            () => endpoints.books.dashboardCategories,
+            '/books/dashboard/categories/',
+        );
+        const categoryDetailUrl = appendResourceId(categoriesBaseUrl, categoryId);
+
+        const updated = await apiClient.patch<unknown, UpdateDashboardCategoryInput>(
+            categoryDetailUrl,
+            payload,
+            {
+                cache: 'no-store',
+                headers: { Authorization: `Token ${token}` },
+            },
+        );
+
+        const updatedCategory = normalizeDashboardCategories([updated])[0] ?? {
+            id: categoryId,
+            name: payload.name,
+            slug: slugify(payload.name),
+            is_active: payload.is_active,
+        };
+
+        setCategories((prev) => {
+            const exists = prev.some((category) => category.id === updatedCategory.id);
+            if (!exists) return [updatedCategory, ...prev];
+            return prev.map((category) => (
+                category.id === updatedCategory.id ? updatedCategory : category
+            ));
+        });
+
+        setCategoryOptions((prev) => {
+            const exists = prev.some((option) => option.id === updatedCategory.id);
+            if (!exists) {
+                return dedupeNamedOptions([
+                    { id: updatedCategory.id, name: updatedCategory.name },
+                    ...prev,
+                ]);
+            }
+
+            return prev.map((option) => (
+                option.id === updatedCategory.id
+                    ? { ...option, name: updatedCategory.name }
+                    : option
+            ));
+        });
+    }, []);
+
+    const openManageCategory = useCallback((categoryId: number) => {
+        setActiveCategoryId(categoryId);
+        setModal('manageCategory');
+    }, []);
+
+    const openManageBook = useCallback((bookId: string) => {
+        setActiveBookId(bookId);
+        setModal('manageBook');
+    }, []);
+
+    const openManageOrder = useCallback((orderId: string) => {
+        setActiveOrderId(orderId);
+        setModal('manageOrder');
+    }, []);
+
+    const handleBookSaved = useCallback(async () => {
+        const token = tokenRef.current;
+        if (token) {
+            await loadDashboardData(token);
+        }
+    }, [loadDashboardData]);
+
+    const handleOrderStatusSaved = useCallback(async (orderId: string, orderStatus: string, deliveryStatus: string) => {
+        setOrders((prev) => prev.map((order) => (
+            order.id === orderId
+                ? { ...order, status: orderStatus, delivery: deliveryStatus }
+                : order
+        )));
+
+        const token = tokenRef.current;
+        if (token) {
+            await loadDashboardData(token);
+        }
+    }, [loadDashboardData]);
 
     useEffect(() => {
         const h = (e: MouseEvent) => { if (profileRef.current && !profileRef.current.contains(e.target as Node)) setProfileOpen(false); };
@@ -1219,33 +2935,96 @@ export default function Dashboard() {
     const bdr = dark ? 'border-gray-800' : 'border-gray-100';
     const tp = dark ? 'text-gray-100' : 'text-gray-800';
     const ts = dark ? 'text-gray-400' : 'text-gray-500';
+    const activeCategory = activeCategoryId === null
+        ? null
+        : (categories.find((category) => category.id === activeCategoryId) ?? null);
+    const profileName = authUser?.username ?? 'User';
+    const profileEmail = authUser?.email ?? '';
+    const profileInitials = profileName.slice(0, 2).toUpperCase() || 'AD';
+    const profileRole = authUser?.is_staff ? 'Admin' : 'User';
+    const workspaceUsers = authUser ? 1 : 0;
 
     const navItems = [
         { id: 'dashboard', label: 'Dashboard', icon: Ico.grid, badge: 0 },
-        { id: 'deals', label: 'Deals', icon: Ico.deals, badge: D.total_orders },
         { id: 'books', label: 'Books', icon: Ico.book, badge: 0 },
-        { id: 'orders', label: 'Orders', icon: Ico.package, badge: D.pending_orders },
+        { id: 'orders', label: 'Orders', icon: Ico.package, badge: overview.pending_orders },
         { id: 'reports', label: 'Reports', icon: Ico.reports, badge: 0 },
-        { id: 'workflows', label: 'Workflows', icon: Ico.workflows, badge: 0 },
-        { id: 'inbox', label: 'Inbox', icon: Ico.inbox, badge: 3 },
+        { id: 'inbox', label: 'Inbox', icon: Ico.inbox, badge: inboxUnread },
     ];
 
     const renderPage = () => {
         switch (activeNav) {
-            case 'orders': return <div className="space-y-4"><h2 className={`text-lg font-bold ${tp}`}>Orders</h2><DeliveryPipeline dark={dark} /><OrdersTable dark={dark} /></div>;
-            case 'books': return <div className="space-y-4"><h2 className={`text-lg font-bold ${tp}`}>Book Inventory</h2><div className="grid grid-cols-4 gap-3">{[{ l: 'Total Books', v: D.total_books, c: '#3b82f6', pct: 100, icon: Ico.book }, { l: 'Active', v: D.active_books, c: '#10b981', pct: 100, icon: Ico.check }, { l: 'In Stock', v: D.in_stock_books, c: '#8b5cf6', pct: 100, icon: Ico.package }, { l: 'Low Stock', v: D.low_stock_books, c: '#f59e0b', pct: 33, icon: Ico.warn }].map((it, i) => <div key={i} className={`rounded-xl border p-4 flex items-center gap-3 ${dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'}`}><Ring pct={it.pct} color={it.c} size={44} stroke={5} /><div><div className="text-xl font-black font-mono" style={{ color: it.c }}><AnimCount to={it.v} /></div><p className={`text-[10px] ${ts}`}>{it.l}</p></div></div>)}</div><BooksTable dark={dark} /></div>;
-            case 'reports': return <div className="space-y-4"><h2 className={`text-lg font-bold ${tp}`}>Reports</h2><RevenueChart dark={dark} /><RetentionChart dark={dark} /></div>;
-            case 'deals': return <div className="space-y-4"><h2 className={`text-lg font-bold ${tp}`}>Deals</h2><LeadsPanel dark={dark} /><OrdersTable dark={dark} /></div>;
-            case 'inbox': return <div className={`rounded-xl border p-12 text-center ${dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'}`}><div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-3"><span className="text-blue-600">{Ico.inbox}</span></div><h3 className={`font-bold ${tp}`}>Inbox</h3><p className={`text-xs mt-1 ${ts}`}>No new messages.</p></div>;
-            case 'workflows': return <div className={`rounded-xl border p-12 text-center ${dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'}`}><div className="w-14 h-14 bg-violet-100 rounded-2xl flex items-center justify-center mx-auto mb-3"><span className="text-violet-600">{Ico.workflows}</span></div><h3 className={`font-bold ${tp}`}>Workflows</h3><p className={`text-xs mt-1 mb-4 ${ts}`}>Automate your processes.</p><button className="bg-violet-600 text-white text-xs font-bold px-6 py-2.5 rounded-full hover:bg-violet-700 transition">Create Workflow</button></div>;
-            default: return <DashboardHome dark={dark} />;
+            case 'orders': return <div className="space-y-4"><h2 className={`text-lg font-bold ${tp}`}>Orders</h2><DeliveryPipeline dark={dark} overview={overview} /><OrdersTable dark={dark} orders={orders} onManageOrder={openManageOrder} /></div>;
+            case 'books':
+                return (
+                    <div className="space-y-4">
+                        <h2 className={`text-lg font-bold ${tp}`}>Book Inventory</h2>
+                        <div className="grid grid-cols-4 gap-3">
+                            {[
+                                { l: 'Total Books', v: overview.total_books, c: '#3b82f6', pct: 100, icon: Ico.book },
+                                { l: 'Active', v: overview.active_books, c: '#10b981', pct: 100, icon: Ico.check },
+                                { l: 'In Stock', v: overview.in_stock_books, c: '#8b5cf6', pct: 100, icon: Ico.package },
+                                { l: 'Low Stock', v: overview.low_stock_books, c: '#f59e0b', pct: 33, icon: Ico.warn },
+                            ].map((it, i) => (
+                                <div key={i} className={`rounded-xl border p-4 flex items-center gap-3 ${dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'}`}>
+                                    <Ring pct={it.pct} color={it.c} size={44} stroke={5} />
+                                    <div>
+                                        <div className="text-xl font-black font-mono" style={{ color: it.c }}>
+                                            <AnimCount to={it.v} />
+                                        </div>
+                                        <p className={`text-[10px] ${ts}`}>{it.l}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <BooksTable dark={dark} overview={overview} books={books} onAddBook={() => setModal('addBook')} onManageBook={openManageBook} />
+                        <CategoriesSection
+                            dark={dark}
+                            categories={categories}
+                            onCreateCategory={handleCreateCategory}
+                            onManageCategory={openManageCategory}
+                        />
+                    </div>
+                );
+            case 'reports': return <div className="space-y-4"><h2 className={`text-lg font-bold ${tp}`}>Reports</h2><RevenueChart dark={dark} overview={overview} series={revenueSeries} /><RetentionChart dark={dark} series={retentionSeries} /></div>;
+            case 'inbox':
+                return (
+                    <div className={`rounded-xl border ${dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'}`}>
+                        <div className={`px-4 py-3 border-b flex items-center justify-between ${dark ? 'border-gray-800' : 'border-gray-100'}`}>
+                            <div>
+                                <h3 className={`text-sm font-bold ${tp}`}>Inbox</h3>
+                                <p className={`text-[11px] ${ts}`}>Contact Us submissions</p>
+                            </div>
+                            <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-blue-100 text-blue-700">{inboxMessages.length} message(s)</span>
+                        </div>
+                        <div className="max-h-[460px] overflow-y-auto">
+                            {inboxMessages.map((msg) => (
+                                <div key={msg.id} className={`px-4 py-3 border-b ${dark ? 'border-gray-800' : 'border-gray-100'}`}>
+                                    <div className="flex items-center justify-between gap-3 mb-1">
+                                        <p className={`text-xs font-bold ${tp}`}>{msg.subject}</p>
+                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${msg.status.toLowerCase() === 'resolved' ? 'bg-emerald-100 text-emerald-700' : msg.status.toLowerCase() === 'closed' ? 'bg-gray-200 text-gray-700' : 'bg-amber-100 text-amber-700'}`}>{msg.status}</span>
+                                    </div>
+                                    <p className={`text-[11px] ${ts}`}>{msg.name} • {msg.email || 'No email'}{msg.phone ? ` • ${msg.phone}` : ''}</p>
+                                    <p className={`text-[11px] mt-1 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>{msg.message || 'No message body.'}</p>
+                                    <p className="text-[10px] text-gray-400 mt-1">
+                                        Submitted: {msg.submittedAt ? new Date(msg.submittedAt).toLocaleString() : 'N/A'} • Updated: {msg.updatedAt ? new Date(msg.updatedAt).toLocaleString() : 'N/A'}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                        {inboxMessages.length === 0 && (
+                            <p className="px-4 py-6 text-[11px] text-gray-400 text-center">No contact messages yet.</p>
+                        )}
+                    </div>
+                );
+            default: return <DashboardHome dark={dark} overview={overview} leads={leads} revenueSeries={revenueSeries} retentionSeries={retentionSeries} orders={orders} books={books} onAddBook={() => setModal('addBook')} onManageOrder={openManageOrder} onManageBook={openManageBook} />;
         }
     };
 
     return (
         <div className={`flex h-screen ${bg} overflow-hidden transition-colors duration-300`}
             style={{ fontFamily: "'DM Sans','Segoe UI',sans-serif" }}>
-            {!isAuthenticated && <LoginForm onLogin={() => setIsAuthenticated(true)} dark={dark} />}
+            {!isAuthenticated && <LoginForm onLogin={handleLogin} dark={dark} />}
             <style>{`
         @keyframes slideInRight{from{transform:translateX(100%)}to{transform:translateX(0)}}
         @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -1261,7 +3040,7 @@ export default function Dashboard() {
                 <div className="w-7 h-7 bg-blue-600 rounded-xl flex items-center justify-center mb-1 shadow-md shadow-blue-200/60">
                     <svg viewBox="0 0 24 24" fill="white" className="w-4 h-4"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>
                 </div>
-                {[Ico.grid, Ico.deals, Ico.book, Ico.reports, Ico.package].map((ic, i) => (
+                {[Ico.grid, Ico.book, Ico.reports, Ico.package].map((ic, i) => (
                     <button key={i} className={`w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:bg-blue-50 hover:text-blue-600 transition`}>{ic}</button>
                 ))}
                 <div className="flex-1" />
@@ -1283,9 +3062,9 @@ export default function Dashboard() {
                             <span className={ts}>{Ico.chevD}</span>
                         </div>
                         <div className={`flex items-center gap-3 mt-2 text-[9px] ${ts}`}>
-                            <span className="flex items-center gap-1">{Ico.users} 24</span>
-                            <span className="flex items-center gap-1">{Ico.msg} 83</span>
-                            <span className="flex items-center gap-1">{Ico.calendar} 12</span>
+                            <span className="flex items-center gap-1">{Ico.users} {workspaceUsers}</span>
+                            <span className="flex items-center gap-1">{Ico.msg} {inboxMessages.length}</span>
+                            <span className="flex items-center gap-1">{Ico.calendar} {calendarEvents.length}</span>
                         </div>
                     </div>
 
@@ -1314,15 +3093,6 @@ export default function Dashboard() {
                             </span>
                         </button>
 
-                        {/* ── PROJECTS ── fully functional */}
-                        <button onClick={() => setModal('projects')}
-                            className={`w-full flex items-center gap-1.5 px-2 py-1.5 rounded-xl text-xs font-semibold ${ts} hover:bg-gray-50 ${dark ? 'hover:bg-gray-800 hover:text-gray-200' : ''} transition group`}>
-                            <span className="text-blue-500">{Ico.folder}</span>
-                            Projects
-                            <span className={`ml-auto flex items-center gap-1 opacity-0 group-hover:opacity-100 transition`}>
-                                <span className="hover:text-blue-500">{Ico.plus}</span>
-                            </span>
-                        </button>
                     </div>
 
                     {/* Bottom */}
@@ -1331,19 +3101,15 @@ export default function Dashboard() {
                             className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold ${ts} hover:bg-gray-50 ${dark ? 'hover:bg-gray-800' : ''} transition`}>
                             {Ico.settings} Settings
                         </button>
-                        <button onClick={() => setModal('help')}
-                            className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold ${ts} hover:bg-gray-50 ${dark ? 'hover:bg-gray-800' : ''} transition`}>
-                            {Ico.help} Help Center
-                        </button>
 
                         {/* ── PROFILE ── */}
                         <div className="relative mt-1" ref={profileRef}>
                             <button onClick={() => setProfileOpen(v => !v)}
                                 className={`w-full flex items-center gap-2 p-2 rounded-xl border transition-all ${dark ? 'border-gray-800 hover:border-blue-700 hover:bg-gray-800' : 'border-gray-100 hover:border-blue-200 hover:bg-blue-50'}`}>
-                                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-[9px] font-black flex-shrink-0">AD</div>
+                                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-[9px] font-black flex-shrink-0">{profileInitials}</div>
                                 <div className="flex-1 min-w-0 text-left">
-                                    <p className={`text-[10px] font-bold ${tp} truncate`}>Admin User</p>
-                                    <p className={`text-[8px] ${ts} truncate`}>admin@bookbuybd.com</p>
+                                    <p className={`text-[10px] font-bold ${tp} truncate`}>{profileName}</p>
+                                    <p className={`text-[8px] ${ts} truncate`}>{profileEmail}</p>
                                 </div>
                                 <span className={ts}>{Ico.chevD}</span>
                             </button>
@@ -1353,10 +3119,10 @@ export default function Dashboard() {
                                 <div className={`absolute bottom-full left-0 right-0 mb-1 rounded-xl border shadow-xl overflow-hidden z-50 fi ${dark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}>
                                     {/* Header */}
                                     <div className={`p-3 border-b flex items-center gap-2 ${dark ? 'border-gray-800' : 'border-gray-100'}`}>
-                                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-black flex-shrink-0">AD</div>
+                                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-black flex-shrink-0">{profileInitials}</div>
                                         <div className="flex-1 min-w-0">
-                                            <p className={`text-xs font-bold ${tp} truncate`}>Admin User</p>
-                                            <span className="text-[9px] bg-blue-100 text-blue-600 font-bold px-1.5 py-0.5 rounded-full">Admin</span>
+                                            <p className={`text-xs font-bold ${tp} truncate`}>{profileName}</p>
+                                            <span className="text-[9px] bg-blue-100 text-blue-600 font-bold px-1.5 py-0.5 rounded-full">{profileRole}</span>
                                         </div>
                                     </div>
                                     {/* Profile Settings */}
@@ -1364,19 +3130,16 @@ export default function Dashboard() {
                                         className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold transition-all ${dark ? 'text-gray-300 hover:bg-gray-800 hover:text-white' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700'}`}>
                                         <span style={{ color: '#3b82f6' }}>{Ico.edit}</span> Profile Settings
                                     </button>
-                                    {/* Billing & Plan */}
-                                    <button onClick={() => { setProfileOpen(false); setModal('billing'); }}
-                                        className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold transition-all ${dark ? 'text-gray-300 hover:bg-gray-800 hover:text-white' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700'}`}>
-                                        <span style={{ color: '#8b5cf6' }}>{Ico.credit}</span> Billing & Plan
-                                    </button>
-                                    {/* Team Members */}
-                                    <button onClick={() => { setProfileOpen(false); setModal('team'); }}
-                                        className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold transition-all ${dark ? 'text-gray-300 hover:bg-gray-800 hover:text-white' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700'}`}>
-                                        <span style={{ color: '#10b981' }}>{Ico.team}</span> Team Members
-                                    </button>
                                     {/* Divider + Sign Out */}
                                     <div className={`h-px ${dark ? 'bg-gray-800' : 'bg-gray-100'}`} />
-                                    <button onClick={() => setIsAuthenticated(false)} className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-bold text-red-500 hover:bg-red-50 transition">
+                                    <button onClick={() => {
+                                        tokenRef.current = null;
+                                        setAuthToken(null);
+                                        setAuthUser(null);
+                                        resetDashboardData();
+                                        setProfileOpen(false);
+                                        setIsAuthenticated(false);
+                                    }} className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-bold text-red-500 hover:bg-red-50 transition">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" /></svg>
                                         Sign Out
                                     </button>
@@ -1438,13 +3201,47 @@ export default function Dashboard() {
 
             {/* ── MODALS ── */}
             {modal === 'settings' && <SettingsPanel dark={dark} setDark={setDark} onClose={() => setModal(null)} />}
-            {modal === 'help' && <HelpPanel dark={dark} onClose={() => setModal(null)} />}
-            {modal === 'notifs' && <NotifPanel dark={dark} onClose={() => setModal(null)} />}
-            {modal === 'profile' && <ProfileForm dark={dark} onClose={() => setModal(null)} />}
-            {modal === 'billing' && <BillingPanel dark={dark} onClose={() => setModal(null)} />}
-            {modal === 'team' && <TeamPanel dark={dark} onClose={() => setModal(null)} />}
-            {modal === 'favorites' && <FavoritesModal dark={dark} onClose={() => setModal(null)} />}
-            {modal === 'projects' && <ProjectsModal dark={dark} onClose={() => setModal(null)} />}
+            {modal === 'notifs' && <NotifPanel dark={dark} notifications={notifications} onNotificationsChange={setNotifications} onClose={() => setModal(null)} />}
+            {modal === 'profile' && <ProfileForm dark={dark} user={authUser} onClose={() => setModal(null)} />}
+            {modal === 'favorites' && <FavoritesModal dark={dark} initialItems={favorites} onClose={() => setModal(null)} />}
+            {modal === 'addBook' && <AddBookModal dark={dark} onClose={() => setModal(null)} onSubmit={handleAddBook} categoryOptions={categoryOptions} authorOptions={authorOptions} />}
+            {modal === 'manageBook' && activeBookId && (
+                <ManageBookModal
+                    dark={dark}
+                    bookId={activeBookId}
+                    token={authToken}
+                    categoryOptions={categoryOptions}
+                    authorOptions={authorOptions}
+                    onSaved={handleBookSaved}
+                    onClose={() => {
+                        setModal(null);
+                        setActiveBookId(null);
+                    }}
+                />
+            )}
+            {modal === 'manageCategory' && activeCategory && (
+                <ManageCategoryModal
+                    dark={dark}
+                    category={activeCategory}
+                    onSubmit={handleUpdateCategory}
+                    onClose={() => {
+                        setModal(null);
+                        setActiveCategoryId(null);
+                    }}
+                />
+            )}
+            {modal === 'manageOrder' && activeOrderId && (
+                <ManageOrderModal
+                    dark={dark}
+                    orderId={activeOrderId}
+                    token={authToken}
+                    onSaved={handleOrderStatusSaved}
+                    onClose={() => {
+                        setModal(null);
+                        setActiveOrderId(null);
+                    }}
+                />
+            )}
         </div>
     );
 }

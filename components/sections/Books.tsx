@@ -86,6 +86,7 @@ function extractGenreOptions(payload: unknown): GenreOption[] {
 ══════════════════════════════════════ */
 interface Book {
   id: number;
+  slug: string;
   title: string;
   author: string;
   genre: string;
@@ -369,6 +370,10 @@ function normalizeApiBook(item: unknown, index: number): Book | null {
   if (!title) return null;
 
   const id = toNumber(item.id, index + 1);
+  const slug =
+    typeof item.slug === 'string' && item.slug.trim()
+      ? item.slug.trim()
+      : String(id);
   const authorRaw = resolveAuthorName(item);
   const author = formatAuthorLabel(authorRaw);
 
@@ -392,6 +397,7 @@ function normalizeApiBook(item: unknown, index: number): Book | null {
 
   return {
     id,
+    slug,
     title,
     author,
     genre: categoryName,
@@ -565,11 +571,11 @@ function BookCard({ book }: { book: Book }) {
   const [liked, setLiked] = useState(false);
   return (
     <div className="flex gap-4 py-5 border-b border-gray-100 group">
-      <Link href={`/book`} className="flex-shrink-0 rounded-lg shadow-md overflow-hidden w-24 sm:w-28 aspect-[2/3] block">
+      <Link href={`/book?slug=${book.slug}`} className="flex-shrink-0 rounded-lg shadow-md overflow-hidden w-24 sm:w-28 aspect-[2/3] block">
         <BookCoverImg src={book.img} color={book.imgFallbackColor} title={book.title} />
       </Link>
       <div className="flex-1 min-w-0">
-        <Link href={`/book`} className="block">
+        <Link href={`/book?slug=${book.slug}`} className="block">
           <h4 className="text-sm font-bold text-gray-900 group-hover:text-blue-600 transition leading-tight mb-0.5 cursor-pointer line-clamp-1">{book.title}</h4>
         </Link>
         <p className="text-xs text-gray-400 mb-2">{book.author}</p>
@@ -605,12 +611,12 @@ function BookCardGrid({ book }: { book: Book }) {
   const [liked, setLiked] = useState(false);
   return (
     <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md transition-shadow group flex flex-col">
-      <Link href={`/book`} className="relative overflow-hidden w-full aspect-[2/3] block">
+      <Link href={`/book?slug=${book.slug}`} className="relative overflow-hidden w-full aspect-[2/3] block">
         <BookCoverImg src={book.img} color={book.imgFallbackColor} title={book.title} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       </Link>
       <div className="p-3 flex-1 flex flex-col">
-        <Link href={`/book`} className="block group-hover:text-blue-600 transition">
+        <Link href={`/book?slug=${book.slug}`} className="block group-hover:text-blue-600 transition">
           <h4 className="text-xs font-bold text-gray-900 transition leading-tight mb-0.5 line-clamp-1 group-hover:text-blue-600">{book.title}</h4>
         </Link>
         <p className="text-[10px] text-gray-400 mb-1.5">{book.author}</p>

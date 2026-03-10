@@ -2,7 +2,8 @@ import { apiClient } from '@/lib/api/client';
 import type {
   BestSellingBook,
   BestSellingQuery,
-  BookDetails,
+  BookAuthor,
+  BookDetailResponse,
   BookListItem,
   BookListQuery,
   PaginatedResponse,
@@ -50,6 +51,10 @@ export const booksService = {
     return apiClient.get<unknown>(endpoints.books.authorOfWeek);
   },
 
+  getAuthorBySlug(authorSlug: string) {
+    return apiClient.get<BookAuthor>(endpoints.books.authorDetail(authorSlug));
+  },
+
   getBooksOfYear(query: { year?: number; limit?: number } = {}) {
     const year =
       typeof query.year === 'number' && Number.isFinite(query.year)
@@ -65,8 +70,12 @@ export const booksService = {
     });
   },
 
+  getBySlug(bookSlug: string) {
+    return apiClient.get<BookDetailResponse>(endpoints.books.detail(bookSlug));
+  },
+
   getById(bookId: string) {
-    return apiClient.get<BookDetails>(endpoints.books.detail(bookId));
+    return apiClient.get<BookDetailResponse>(endpoints.books.detail(bookId));
   },
 
   like(bookId: string) {
