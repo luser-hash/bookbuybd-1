@@ -52,6 +52,28 @@ function getObjectValueAsMessage(value: unknown): string | null {
   return null;
 }
 
+function findFirstNestedMessage(value: unknown): string | null {
+  const direct = getObjectValueAsMessage(value);
+  if (direct) return direct;
+
+  if (Array.isArray(value)) {
+    for (const entry of value) {
+      const nested = findFirstNestedMessage(entry);
+      if (nested) return nested;
+    }
+    return null;
+  }
+
+  if (value && typeof value === 'object') {
+    for (const entry of Object.values(value as Record<string, unknown>)) {
+      const nested = findFirstNestedMessage(entry);
+      if (nested) return nested;
+    }
+  }
+
+  return null;
+}
+
 function extractErrorMessage(body: unknown, status: number): string {
   if (typeof body === 'string') {
     return isLikelyHtmlDocument(body) ? `Request failed with status ${status}` : body || 'Request failed';
@@ -63,9 +85,7 @@ function extractErrorMessage(body: unknown, status: number): string {
     if (direct) return direct;
 
     if (record.errors && typeof record.errors === 'object') {
-      const firstError = Object.values(record.errors as Record<string, unknown>)
-        .map(getObjectValueAsMessage)
-        .find(Boolean);
+      const firstError = findFirstNestedMessage(record.errors);
       if (firstError) return firstError;
     }
 

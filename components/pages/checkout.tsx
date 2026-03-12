@@ -47,7 +47,7 @@ function validate(f: CheckoutForm): Errors {
   const e: Errors = {};
   if (!f.fullName.trim()) e.fullName = 'Full name is required';
   if (!f.phone.trim()) e.phone = 'Phone number is required';
-  else if (!/^(\+8801|01)[0-9]{9}$/.test(f.phone.replace(/\s/g, ''))) e.phone = 'Enter a valid BD phone number';
+  else if (!/^(?:\+8801|8801|01)[3-9]\d{8}$/.test(f.phone.replace(/\s/g, ''))) e.phone = 'Enter a valid BD phone number';
   if (f.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) e.email = 'Enter a valid email';
   if (!f.address.trim()) e.address = 'Delivery address is required';
   if (!f.city.trim()) e.city = 'City / Thana is required';

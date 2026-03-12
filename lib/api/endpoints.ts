@@ -55,14 +55,18 @@ export const endpoints = {
     summary: '/cart/summary',
   },
   orders: {
-    list: '/orders/',
-    create: '/orders/',
+    list: '/orders',
+    create: '/orders',
   },
   printing: {
     dashboardOrders: '/printing/dashboard/orders/',
     dashboardOrderDetail: (orderId: string) => `/printing/dashboard/orders/${encodeURIComponent(orderId)}/`,
     dashboardOrderStatus: (orderId: string) => `/printing/dashboard/orders/${encodeURIComponent(orderId)}/status/`,
     dashboardPricing: '/printing/dashboard/pricing/',
+    dashboardCategories: '/printing/dashboard/categories/',
+    dashboardCategoryDetail: (categoryId: string) => `/printing/dashboard/categories/${encodeURIComponent(categoryId)}/`,
+    dashboardItems: '/printing/dashboard/items/',
+    dashboardItemDetail: (itemId: string) => `/printing/dashboard/items/${encodeURIComponent(itemId)}/`,
     dashboardItemPricing: (itemId: string) => `/printing/dashboard/items/${encodeURIComponent(itemId)}/pricing/`,
   },
 } as const;

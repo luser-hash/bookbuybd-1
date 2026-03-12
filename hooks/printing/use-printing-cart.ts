@@ -105,8 +105,8 @@ export function usePrintingCart() {
     setIsMutating(true);
     setCartError(null);
     try {
-      await clearPrintingCart();
-      setCart((prev) => ({ ...EMPTY_CART, currency: prev.currency || "BDT" }));
+      const response = await clearPrintingCart();
+      setCart(response);
     } catch (error) {
       const message = getErrorMessage(error, "Failed to clear cart");
       setCartError(message);

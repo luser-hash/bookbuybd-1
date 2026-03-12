@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server';
-import { getContactSubjects } from '@/lib/server/contact-store';
+import { proxyBackendRequest } from '@/lib/server/backend-proxy';
 
-export async function GET() {
-  return NextResponse.json(getContactSubjects());
+const BACKEND_CONTACT_SUBJECTS_PATH = '/contact/subjects/';
+
+export async function GET(request: Request) {
+  return proxyBackendRequest(request, BACKEND_CONTACT_SUBJECTS_PATH);
 }

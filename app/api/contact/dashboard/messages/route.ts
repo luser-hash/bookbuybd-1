@@ -1,18 +1,7 @@
-import { NextResponse } from 'next/server';
-import { listContactMessages } from '@/lib/server/contact-store';
+import { proxyBackendRequest } from '@/lib/server/backend-proxy';
 
-function hasTokenAuth(request: Request): boolean {
-  const auth = request.headers.get('authorization') ?? '';
-  return /^token\s+\S+/i.test(auth.trim());
-}
+const BACKEND_CONTACT_DASHBOARD_MESSAGES_PATH = '/contact/dashboard/messages/';
 
 export async function GET(request: Request) {
-  if (!hasTokenAuth(request)) {
-    return NextResponse.json(
-      { message: 'Authentication credentials were not provided.' },
-      { status: 401 },
-    );
-  }
-
-  return NextResponse.json(listContactMessages());
+  return proxyBackendRequest(request, BACKEND_CONTACT_DASHBOARD_MESSAGES_PATH);
 }

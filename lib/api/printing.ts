@@ -64,7 +64,8 @@ function buildCartItemBody(
 
 async function apiFetch<T>(url: string, options?: RequestInit): Promise<T> {
   const isFormDataBody = typeof FormData !== "undefined" && options?.body instanceof FormData;
-  const headers: HeadersInit = isFormDataBody
+  const hasRequestBody = options?.body !== undefined && options?.body !== null;
+  const headers: HeadersInit = (isFormDataBody || !hasRequestBody)
     ? { ...(options?.headers || {}) }
     : {
         "Content-Type": "application/json",
@@ -80,8 +81,18 @@ async function apiFetch<T>(url: string, options?: RequestInit): Promise<T> {
   });
 
   if (!res.ok) {
-    const errorData = await res.json().catch(() => null);
-    throw new Error(errorData?.detail || "Something went wrong");
+    const contentType = res.headers.get("content-type") || "";
+    const errorData = contentType.includes("application/json")
+      ? await res.json().catch(() => null)
+      : await res.text().then((text) => ({ message: text })).catch(() => null);
+
+    const message = typeof errorData?.detail === "string" && errorData.detail.trim()
+      ? errorData.detail
+      : typeof errorData?.message === "string" && errorData.message.trim()
+        ? errorData.message
+        : "Something went wrong";
+
+    throw new Error(message);
   }
 
   if (res.status === 204) return undefined as T;
@@ -131,7 +142,7 @@ export function deletePrintingCartItem(pk: number) {
 }
 
 export function clearPrintingCart() {
-  return apiFetch<{ detail: string }>("/api/printing/cart/", {
+  return apiFetch<PrintingCartResponse>("/api/printing/cart/", {
     method: "DELETE",
   });
 }

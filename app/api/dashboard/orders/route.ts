@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server';
-import { getDashboardOrders } from '@/lib/server/dashboard-store';
+import { proxyBackendRequest } from '@/lib/server/backend-proxy';
 
-export async function GET() {
-  return NextResponse.json(getDashboardOrders());
+const BACKEND_DASHBOARD_ORDERS_PATH = '/orders/dashboard/list/';
+
+export async function GET(request: Request) {
+  return proxyBackendRequest(request, BACKEND_DASHBOARD_ORDERS_PATH);
 }

@@ -128,6 +128,33 @@ export default function ShopFlow() {
             setIsPlacingOrder(true);
             const subtotal = items.reduce((sum, item) => sum + item.price * item.qty, 0);
             const deliveryCharge = calculateDeliveryCharge(subtotal, deliverySettings);
+            const orderItems = items
+              .map((item) => {
+                const bookId = Number(item.id);
+                if (!Number.isInteger(bookId) || bookId <= 0) return null;
+                return {
+                  book_id: bookId,
+                  quantity: item.qty,
+                  unit_price: item.price,
+                  ...(item.variant ? { book_variant: item.variant } : {}),
+                  ...(item.quality ? { book_quality: item.quality } : {}),
+                  ...(item.edition ? { edition: item.edition } : {}),
+                };
+              })
+              .filter((item): item is {
+                book_id: number;
+                quantity: number;
+                unit_price: number;
+                book_variant?: 'paperback' | 'hardcover';
+                book_quality?: string;
+                edition?: string;
+              } => item !== null);
+
+            if (orderItems.length !== items.length) {
+              setIsPlacingOrder(false);
+              setPlaceOrderError('Some cart items are invalid. Please remove and add them again.');
+              return;
+            }
 
             try {
               await apiClient.post(endpoints.orders.create, {
@@ -140,14 +167,7 @@ export default function ShopFlow() {
                 postal_code: f.postalCode || undefined,
                 notes: f.note || undefined,
                 payment_method: 'cod',
-                items: items.map((item) => ({
-                  book_id: item.id,
-                  quantity: item.qty,
-                  unit_price: item.price,
-                  ...(item.variant ? { book_variant: item.variant } : {}),
-                  ...(item.quality ? { book_quality: item.quality } : {}),
-                  ...(item.edition ? { edition: item.edition } : {}),
-                })),
+                items: orderItems,
                 subtotal,
                 delivery_charge: deliveryCharge,
                 total_amount: subtotal + deliveryCharge,

@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server';
-import { getContactInfo } from '@/lib/server/contact-store';
+import { proxyBackendRequest } from '@/lib/server/backend-proxy';
 
-export async function GET() {
-  return NextResponse.json(getContactInfo());
+const BACKEND_CONTACT_INFO_PATH = '/contact/info/';
+
+export async function GET(request: Request) {
+  return proxyBackendRequest(request, BACKEND_CONTACT_INFO_PATH);
 }

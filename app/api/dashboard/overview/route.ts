@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server';
-import { getDashboardOverview } from '@/lib/server/dashboard-store';
+import { proxyBackendRequest } from '@/lib/server/backend-proxy';
 
-export async function GET() {
-  return NextResponse.json(getDashboardOverview());
+const BACKEND_DASHBOARD_OVERVIEW_PATH = '/dashboard/overview/';
+
+export async function GET(request: Request) {
+  return proxyBackendRequest(request, BACKEND_DASHBOARD_OVERVIEW_PATH);
 }

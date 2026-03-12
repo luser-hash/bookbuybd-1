@@ -137,6 +137,15 @@ interface DashboardPrintingPricingCategory {
     items: DashboardPrintingPricingItem[];
 }
 
+interface DashboardPrintingItemCreateDraft {
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    baseRate: string;
+    sortOrder: string;
+}
+
 interface DashboardOrderDetail extends DashboardOrder {
     items: number;
     email: string;
@@ -374,6 +383,17 @@ function parseBoolean(value: unknown, fallback = false): boolean {
         if (value === 0) return false;
     }
     return fallback;
+}
+
+function createEmptyPrintingItemDraft(): DashboardPrintingItemCreateDraft {
+    return {
+        id: '',
+        name: '',
+        description: '',
+        icon: '',
+        baseRate: '',
+        sortOrder: '',
+    };
 }
 
 function normalizeDeliverySettings(payload: unknown): DashboardDeliverySettings {
@@ -4042,9 +4062,15 @@ function BusinessSettingsTab({ dark, token }: { dark: boolean; token: string | n
     const [settingsForm, setSettingsForm] = useState<DashboardDeliverySettings>(DEFAULT_DELIVERY_SETTINGS);
     const [pricingCatalog, setPricingCatalog] = useState<DashboardPrintingPricingCategory[]>([]);
     const [rateDrafts, setRateDrafts] = useState<Record<string, string>>({});
+    const [categoryDraft, setCategoryDraft] = useState({ id: '', label: '', icon: '', sortOrder: '0' });
+    const [itemDrafts, setItemDrafts] = useState<Record<string, DashboardPrintingItemCreateDraft>>({});
     const [loading, setLoading] = useState(true);
     const [savingSettings, setSavingSettings] = useState(false);
     const [savingItemId, setSavingItemId] = useState<string | null>(null);
+    const [creatingCategory, setCreatingCategory] = useState(false);
+    const [deletingCategoryId, setDeletingCategoryId] = useState<string | null>(null);
+    const [creatingItemCategoryId, setCreatingItemCategoryId] = useState<string | null>(null);
+    const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
     const [error, setError] = useState('');
     const [notice, setNotice] = useState('');
 
@@ -4052,6 +4078,35 @@ function BusinessSettingsTab({ dark, token }: { dark: boolean; token: string | n
     const tp = dark ? 'text-gray-100' : 'text-gray-800';
     const ts = dark ? 'text-gray-400' : 'text-gray-500';
     const inp = dark ? 'bg-gray-800 border-gray-700 text-gray-100' : 'bg-gray-50 border-gray-200 text-gray-700';
+
+    const applyPricingCatalog = (pricingPayload: unknown) => {
+        const normalizedPricing = normalizePrintingPricingCatalog(pricingPayload);
+        const drafts = normalizedPricing
+            .flatMap((category) => category.items)
+            .reduce<Record<string, string>>((acc, item) => {
+                acc[item.id] = item.baseRate.toFixed(2);
+                return acc;
+            }, {});
+
+        setPricingCatalog(normalizedPricing);
+        setRateDrafts(drafts);
+        setItemDrafts((prev) => normalizedPricing.reduce<Record<string, DashboardPrintingItemCreateDraft>>((acc, category) => {
+            acc[category.id] = prev[category.id] ?? createEmptyPrintingItemDraft();
+            return acc;
+        }, {}));
+    };
+
+    const refreshPricingCatalog = async (authToken: string) => {
+        const pricingUrl = resolveEndpoint(
+            () => endpoints.printing.dashboardPricing,
+            '/printing/dashboard/pricing/',
+        );
+        const pricingPayload = await apiClient.get<unknown>(pricingUrl, {
+            cache: 'no-store',
+            headers: { Authorization: `Token ${authToken}` },
+        });
+        applyPricingCatalog(pricingPayload);
+    };
 
     useEffect(() => {
         let mounted = true;
@@ -4061,14 +4116,8 @@ function BusinessSettingsTab({ dark, token }: { dark: boolean; token: string | n
             return () => { mounted = false; };
         }
 
-        const settingsUrl = resolveEndpoint(
-            () => (endpoints.business as unknown as Record<string, string>).dashboardDeliverySettings,
-            '/business/delivery-settings/dashboard/',
-        );
-        const pricingUrl = resolveEndpoint(
-            () => (endpoints.printing as unknown as Record<string, string>).dashboardPricing,
-            '/printing/dashboard/pricing/',
-        );
+        const settingsUrl = resolveEndpoint(() => endpoints.business.dashboardDeliverySettings, '/business/delivery-settings/dashboard/');
+        const pricingUrl = resolveEndpoint(() => endpoints.printing.dashboardPricing, '/printing/dashboard/pricing/');
 
         const load = async () => {
             setLoading(true);
@@ -4089,17 +4138,8 @@ function BusinessSettingsTab({ dark, token }: { dark: boolean; token: string | n
                 if (!mounted) return;
 
                 const normalizedSettings = normalizeDeliverySettings(settingsPayload);
-                const normalizedPricing = normalizePrintingPricingCatalog(pricingPayload);
-                const drafts = normalizedPricing
-                    .flatMap((category) => category.items)
-                    .reduce<Record<string, string>>((acc, item) => {
-                        acc[item.id] = item.baseRate.toFixed(2);
-                        return acc;
-                    }, {});
-
                 setSettingsForm(normalizedSettings);
-                setPricingCatalog(normalizedPricing);
-                setRateDrafts(drafts);
+                applyPricingCatalog(pricingPayload);
             } catch (err) {
                 if (!mounted) return;
                 setError(err instanceof Error ? err.message : 'Failed to load business settings.');
@@ -4125,10 +4165,7 @@ function BusinessSettingsTab({ dark, token }: { dark: boolean; token: string | n
             setError('Missing admin token. Please sign in again.');
             return;
         }
-        const settingsUrl = resolveEndpoint(
-            () => (endpoints.business as unknown as Record<string, string>).dashboardDeliverySettings,
-            '/business/delivery-settings/dashboard/',
-        );
+        const settingsUrl = resolveEndpoint(() => endpoints.business.dashboardDeliverySettings, '/business/delivery-settings/dashboard/');
 
         setSavingSettings(true);
         setError('');
@@ -4162,7 +4199,7 @@ function BusinessSettingsTab({ dark, token }: { dark: boolean; token: string | n
         }
 
         const itemRateUrl = resolveEndpoint(
-            () => (endpoints.printing as unknown as { dashboardItemPricing?: (id: string) => string }).dashboardItemPricing?.(itemId),
+            () => endpoints.printing.dashboardItemPricing(itemId),
             `/printing/dashboard/items/${encodeURIComponent(itemId)}/pricing/`,
         );
 
@@ -4191,6 +4228,168 @@ function BusinessSettingsTab({ dark, token }: { dark: boolean; token: string | n
             setError(err instanceof Error ? err.message : 'Failed to update printing base rate.');
         } finally {
             setSavingItemId(null);
+        }
+    };
+
+    const updateItemDraft = (categoryId: string, key: keyof DashboardPrintingItemCreateDraft, value: string) => {
+        setItemDrafts((prev) => ({
+            ...prev,
+            [categoryId]: {
+                ...(prev[categoryId] ?? createEmptyPrintingItemDraft()),
+                [key]: value,
+            },
+        }));
+    };
+
+    const createCategory = async () => {
+        if (!token) {
+            setError('Missing admin token. Please sign in again.');
+            return;
+        }
+
+        const label = categoryDraft.label.trim();
+        if (!label) {
+            setError('Category label is required.');
+            return;
+        }
+
+        const categoriesUrl = resolveEndpoint(() => endpoints.printing.dashboardCategories, '/printing/dashboard/categories/');
+        const sortOrder = Math.max(0, Math.trunc(parseNumeric(categoryDraft.sortOrder, 0)));
+        const payload: Record<string, string | number> = {
+            label,
+            icon: categoryDraft.icon.trim(),
+            sort_order: sortOrder,
+        };
+        const id = categoryDraft.id.trim();
+        if (id) payload.id = id;
+
+        setCreatingCategory(true);
+        setError('');
+        setNotice('');
+        try {
+            await apiClient.post<unknown, Record<string, string | number>>(categoriesUrl, payload, {
+                headers: { Authorization: `Token ${token}` },
+            });
+            await refreshPricingCatalog(token);
+            setCategoryDraft({ id: '', label: '', icon: '', sortOrder: '0' });
+            setNotice('Printing category added.');
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to add printing category.');
+        } finally {
+            setCreatingCategory(false);
+        }
+    };
+
+    const deleteCategory = async (categoryId: string, categoryLabel: string) => {
+        if (!token) {
+            setError('Missing admin token. Please sign in again.');
+            return;
+        }
+
+        if (typeof window !== 'undefined') {
+            const confirmed = window.confirm(`Delete category "${categoryLabel}" and all its items?`);
+            if (!confirmed) return;
+        }
+
+        const categoryDetailUrl = resolveEndpoint(
+            () => endpoints.printing.dashboardCategoryDetail(categoryId),
+            `/printing/dashboard/categories/${encodeURIComponent(categoryId)}/`,
+        );
+
+        setDeletingCategoryId(categoryId);
+        setError('');
+        setNotice('');
+        try {
+            await apiClient.delete<void>(categoryDetailUrl, {
+                headers: { Authorization: `Token ${token}` },
+            });
+            await refreshPricingCatalog(token);
+            setNotice(`Deleted category ${categoryLabel}.`);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to delete printing category.');
+        } finally {
+            setDeletingCategoryId(null);
+        }
+    };
+
+    const createItem = async (categoryId: string) => {
+        if (!token) {
+            setError('Missing admin token. Please sign in again.');
+            return;
+        }
+
+        const draft = itemDrafts[categoryId] ?? createEmptyPrintingItemDraft();
+        const name = draft.name.trim();
+        if (!name) {
+            setError('Item name is required.');
+            return;
+        }
+
+        const baseRate = parseNumeric(draft.baseRate, Number.NaN);
+        if (!Number.isFinite(baseRate) || baseRate < 0) {
+            setError('Item base rate must be a non-negative number.');
+            return;
+        }
+
+        const itemsUrl = resolveEndpoint(() => endpoints.printing.dashboardItems, '/printing/dashboard/items/');
+        const sortOrder = Math.max(0, Math.trunc(parseNumeric(draft.sortOrder, 0)));
+        const payload: Record<string, string | number> = {
+            category: categoryId,
+            name,
+            description: draft.description.trim(),
+            icon: draft.icon.trim(),
+            base_rate: Number(baseRate.toFixed(2)),
+            sort_order: sortOrder,
+        };
+        const id = draft.id.trim();
+        if (id) payload.id = id;
+
+        setCreatingItemCategoryId(categoryId);
+        setError('');
+        setNotice('');
+        try {
+            await apiClient.post<unknown, Record<string, string | number>>(itemsUrl, payload, {
+                headers: { Authorization: `Token ${token}` },
+            });
+            await refreshPricingCatalog(token);
+            setItemDrafts((prev) => ({ ...prev, [categoryId]: createEmptyPrintingItemDraft() }));
+            setNotice(`Added item to ${categoryId}.`);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to add printing item.');
+        } finally {
+            setCreatingItemCategoryId(null);
+        }
+    };
+
+    const deleteItem = async (itemId: string, itemName: string) => {
+        if (!token) {
+            setError('Missing admin token. Please sign in again.');
+            return;
+        }
+
+        if (typeof window !== 'undefined') {
+            const confirmed = window.confirm(`Delete printing item "${itemName}"?`);
+            if (!confirmed) return;
+        }
+
+        const itemDetailUrl = resolveEndpoint(
+            () => endpoints.printing.dashboardItemDetail(itemId),
+            `/printing/dashboard/items/${encodeURIComponent(itemId)}/`,
+        );
+
+        setDeletingItemId(itemId);
+        setError('');
+        setNotice('');
+        try {
+            await apiClient.delete<void>(itemDetailUrl, {
+                headers: { Authorization: `Token ${token}` },
+            });
+            await refreshPricingCatalog(token);
+            setNotice(`Deleted item ${itemName}.`);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to delete printing item.');
+        } finally {
+            setDeletingItemId(null);
         }
     };
 
@@ -4257,7 +4456,51 @@ function BusinessSettingsTab({ dark, token }: { dark: boolean; token: string | n
             <div className={`rounded-xl border p-4 ${card}`}>
                 <div className="mb-4">
                     <h3 className={`text-sm font-bold ${tp}`}>Printing Base Rates</h3>
-                    <p className={`text-[11px] ${ts}`}>Update per-item base rate used by estimate and checkout.</p>
+                    <p className={`text-[11px] ${ts}`}>Create and manage categories/items, then update item base rates used by estimate and checkout.</p>
+                </div>
+
+                <div className={`mb-4 rounded-xl border p-3 ${dark ? 'border-gray-800 bg-gray-900/40' : 'border-gray-100 bg-gray-50'}`}>
+                    <p className={`text-[11px] font-bold mb-2 ${tp}`}>Add Printing Category</p>
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
+                        <input
+                            type="text"
+                            placeholder="Category ID (optional)"
+                            value={categoryDraft.id}
+                            onChange={(e) => setCategoryDraft((prev) => ({ ...prev, id: e.target.value }))}
+                            className={`w-full text-xs px-2.5 py-2 rounded-lg border outline-none ${inp}`}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Label"
+                            value={categoryDraft.label}
+                            onChange={(e) => setCategoryDraft((prev) => ({ ...prev, label: e.target.value }))}
+                            className={`w-full text-xs px-2.5 py-2 rounded-lg border outline-none ${inp}`}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Icon"
+                            value={categoryDraft.icon}
+                            onChange={(e) => setCategoryDraft((prev) => ({ ...prev, icon: e.target.value }))}
+                            className={`w-full text-xs px-2.5 py-2 rounded-lg border outline-none ${inp}`}
+                        />
+                        <input
+                            type="number"
+                            min={0}
+                            placeholder="Sort Order"
+                            value={categoryDraft.sortOrder}
+                            onChange={(e) => setCategoryDraft((prev) => ({ ...prev, sortOrder: e.target.value }))}
+                            className={`w-full text-xs px-2.5 py-2 rounded-lg border outline-none ${inp}`}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => { void createCategory(); }}
+                            disabled={creatingCategory || loading}
+                            className={`px-2.5 py-2 rounded-lg text-[10px] font-bold transition ${creatingCategory || loading ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : 'bg-emerald-600 text-white hover:bg-emerald-700'}`}
+                        >
+                            {creatingCategory ? 'Adding...' : 'Add Category'}
+                        </button>
+                    </div>
+                    <p className={`mt-2 text-[10px] ${ts}`}>Leave ID empty to auto-generate from label.</p>
                 </div>
 
                 {loading ? (
@@ -4266,12 +4509,30 @@ function BusinessSettingsTab({ dark, token }: { dark: boolean; token: string | n
                     <p className={`text-xs font-semibold ${ts}`}>No printing categories found.</p>
                 ) : (
                     <div className="space-y-4">
-                        {pricingCatalog.map((category) => (
-                            <div key={category.id} className={`rounded-xl border ${dark ? 'border-gray-800' : 'border-gray-100'}`}>
-                                <div className={`px-3 py-2 border-b text-xs font-bold ${dark ? 'border-gray-800 text-gray-100 bg-gray-900/60' : 'border-gray-100 text-gray-800 bg-gray-50'}`}>
-                                    {category.icon ? `${category.icon} ` : ''}{category.label}
-                                </div>
+                        {pricingCatalog.map((category) => {
+                            const createDraft = itemDrafts[category.id] ?? createEmptyPrintingItemDraft();
+                            return (
+                                <div key={category.id} className={`rounded-xl border ${dark ? 'border-gray-800' : 'border-gray-100'}`}>
+                                    <div className={`px-3 py-2 border-b ${dark ? 'border-gray-800 bg-gray-900/60' : 'border-gray-100 bg-gray-50'}`}>
+                                        <div className="flex items-center justify-between gap-3">
+                                            <p className={`text-xs font-bold ${tp}`}>
+                                                {category.icon ? `${category.icon} ` : ''}{category.label}
+                                                <span className={`ml-2 font-mono ${ts}`}>({category.id})</span>
+                                            </p>
+                                            <button
+                                                type="button"
+                                                onClick={() => { void deleteCategory(category.id, category.label); }}
+                                                disabled={deletingCategoryId === category.id}
+                                                className={`px-2 py-1.5 rounded-lg text-[10px] font-bold transition ${deletingCategoryId === category.id ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : 'bg-rose-600 text-white hover:bg-rose-700'}`}
+                                            >
+                                                {deletingCategoryId === category.id ? 'Deleting...' : 'Delete Category'}
+                                            </button>
+                                        </div>
+                                    </div>
                                 <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                                    {category.items.length === 0 && (
+                                        <p className={`px-3 py-3 text-[11px] ${ts}`}>No items yet for this category.</p>
+                                    )}
                                     {category.items.map((item) => (
                                         <div key={item.id} className="px-3 py-2.5 flex items-center gap-3">
                                             <div className="min-w-0 flex-1">
@@ -4296,11 +4557,78 @@ function BusinessSettingsTab({ dark, token }: { dark: boolean; token: string | n
                                             >
                                                 {savingItemId === item.id ? 'Saving...' : 'Save'}
                                             </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => { void deleteItem(item.id, item.name); }}
+                                                disabled={deletingItemId === item.id}
+                                                className={`px-2.5 py-2 rounded-lg text-[10px] font-bold transition ${deletingItemId === item.id ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : 'bg-rose-600 text-white hover:bg-rose-700'}`}
+                                            >
+                                                {deletingItemId === item.id ? 'Deleting...' : 'Delete'}
+                                            </button>
                                         </div>
                                     ))}
                                 </div>
-                            </div>
-                        ))}
+                                    <div className={`px-3 py-3 border-t ${dark ? 'border-gray-800' : 'border-gray-100'}`}>
+                                        <p className={`text-[11px] font-bold mb-2 ${tp}`}>Add Item</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-6 gap-2">
+                                            <input
+                                                type="text"
+                                                placeholder="Item ID (optional)"
+                                                value={createDraft.id}
+                                                onChange={(e) => updateItemDraft(category.id, 'id', e.target.value)}
+                                                className={`w-full text-xs px-2.5 py-2 rounded-lg border outline-none ${inp}`}
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Name"
+                                                value={createDraft.name}
+                                                onChange={(e) => updateItemDraft(category.id, 'name', e.target.value)}
+                                                className={`w-full text-xs px-2.5 py-2 rounded-lg border outline-none ${inp}`}
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Icon"
+                                                value={createDraft.icon}
+                                                onChange={(e) => updateItemDraft(category.id, 'icon', e.target.value)}
+                                                className={`w-full text-xs px-2.5 py-2 rounded-lg border outline-none ${inp}`}
+                                            />
+                                            <input
+                                                type="number"
+                                                min={0}
+                                                step="0.01"
+                                                placeholder="Base Rate (Per unit, BDT)"
+                                                value={createDraft.baseRate}
+                                                onChange={(e) => updateItemDraft(category.id, 'baseRate', e.target.value)}
+                                                className={`w-full text-xs px-2.5 py-2 rounded-lg border outline-none ${inp}`}
+                                            />
+                                            <input
+                                                type="number"
+                                                min={0}
+                                                placeholder="Sort Order (0 = first)"
+                                                value={createDraft.sortOrder}
+                                                onChange={(e) => updateItemDraft(category.id, 'sortOrder', e.target.value)}
+                                                className={`w-full text-xs px-2.5 py-2 rounded-lg border outline-none ${inp}`}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => { void createItem(category.id); }}
+                                                disabled={creatingItemCategoryId === category.id}
+                                                className={`px-2.5 py-2 rounded-lg text-[10px] font-bold transition ${creatingItemCategoryId === category.id ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : 'bg-emerald-600 text-white hover:bg-emerald-700'}`}
+                                            >
+                                                {creatingItemCategoryId === category.id ? 'Adding...' : 'Add Item'}
+                                            </button>
+                                        </div>
+                                        <textarea
+                                            placeholder="Description (optional)"
+                                            value={createDraft.description}
+                                            onChange={(e) => updateItemDraft(category.id, 'description', e.target.value)}
+                                            className={`w-full mt-2 text-xs px-2.5 py-2 rounded-lg border outline-none ${inp}`}
+                                            rows={2}
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 )}
             </div>
