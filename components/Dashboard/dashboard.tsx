@@ -3537,9 +3537,9 @@ function ManageBookModal({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 overflow-y-auto p-2 sm:p-4">
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-            <div className={`relative w-full max-w-2xl rounded-2xl border shadow-2xl overflow-hidden ${bg}`} style={{ animation: 'fadeUp 0.3s ease' }}>
+            <div className={`relative mx-auto my-2 sm:my-4 w-full max-w-2xl max-h-[calc(100vh-1rem)] sm:max-h-[90vh] rounded-2xl border shadow-2xl overflow-hidden flex flex-col ${bg}`} style={{ animation: 'fadeUp 0.3s ease' }}>
                 <div className={`flex items-center justify-between px-5 py-4 border-b ${sec}`}>
                     <div className="flex items-center gap-2">
                         <span className="text-blue-500">{Ico.book}</span>
@@ -3548,17 +3548,17 @@ function ManageBookModal({
                     <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition">{Ico.x}</button>
                 </div>
 
-                <div className="p-5 space-y-4">
+                <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
                     {loading && <p className={`text-xs ${ts}`}>Loading book details...</p>}
                     {!loading && detail && (
                         <>
-                            <div className={`grid grid-cols-2 gap-3 text-xs pb-3 border-b ${sec}`}>
+                            <div className={`grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pb-3 border-b ${sec}`}>
                                 <div><p className={`${ts}`}>Book ID</p><p className={`font-semibold ${tp}`}>{detail.id}</p></div>
                                 <div><p className={`${ts}`}>Slug</p><p className={`font-semibold ${tp}`}>{detail.slug || '-'}</p></div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="col-span-2">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div className="sm:col-span-2">
                                     <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Title</label>
                                     <input value={form.title} onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))} className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp}`} />
                                 </div>
@@ -3580,7 +3580,7 @@ function ManageBookModal({
                                         ))}
                                     </select>
                                 </div>
-                                <div className="col-span-2">
+                                <div className="sm:col-span-2">
                                     <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Description</label>
                                     <textarea rows={3} value={form.description} onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))} className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition resize-none ${inp}`} />
                                 </div>
@@ -3604,7 +3604,7 @@ function ManageBookModal({
                                     <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Stock Quantity</label>
                                     <input type="number" min={0} value={form.stock_quantity} onChange={(e) => setForm((prev) => ({ ...prev, stock_quantity: e.target.value }))} className={`w-full text-xs px-3 py-2.5 rounded-xl border outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition ${inp}`} />
                                 </div>
-                                <div className="col-span-2">
+                                <div className="sm:col-span-2">
                                     <label className={`block text-[11px] font-semibold mb-1.5 ${ts}`}>Image Upload (optional)</label>
                                     <input
                                         type="file"
@@ -3629,11 +3629,11 @@ function ManageBookModal({
                     {error && <p className="text-[11px] font-semibold text-red-500">{error}</p>}
                 </div>
 
-                <div className={`px-5 py-4 border-t flex items-center justify-between gap-2 ${sec}`}>
+                <div className={`px-4 sm:px-5 py-4 border-t flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between ${sec}`}>
                     <button onClick={deactivate} disabled={loading || !detail || deactivating || saving} className={`text-xs font-bold px-4 py-2.5 rounded-xl border border-red-300 text-red-600 hover:bg-red-50 transition ${(loading || !detail || deactivating || saving) ? 'opacity-60 cursor-not-allowed' : ''}`}>
                         {deactivating ? 'Deactivating...' : 'Deactivate'}
                     </button>
-                    <div className="flex items-center gap-2">
+                    <div className="flex w-full sm:w-auto items-center justify-end gap-2">
                         <button onClick={onClose} disabled={saving || deactivating} className={`text-xs font-semibold px-4 py-2.5 rounded-xl border transition ${dark ? 'border-gray-700 text-gray-400 hover:bg-gray-800' : 'border-gray-200 text-gray-500 hover:bg-gray-50'} ${(saving || deactivating) ? 'opacity-60 cursor-not-allowed' : ''}`}>Cancel</button>
                         <button onClick={save} disabled={loading || !detail || saving || deactivating} className={`text-xs font-bold text-white bg-blue-600 px-5 py-2.5 rounded-xl hover:bg-blue-700 transition ${(loading || !detail || saving || deactivating) ? 'opacity-70 cursor-not-allowed' : ''}`}>
                             {saving ? 'Saving...' : 'Save'}
